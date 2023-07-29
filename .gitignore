@@ -1,1 +1,29 @@
-venv
+# Arquivos temporários
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Arquivos de ambiente local
+.env
+.env.*
+*.sqlite3
+
+# Diretório de configuração local do Python
+/.venv/
+/venv/
+/pip-selfcheck.json
+
+# Arquivos de log e cache
+/log/
+/cache/
+
+# Diretório de arquivos estáticos coletados
+/staticfiles/
+
+# Diretório de arquivos de mídia enviados pelo usuário
+/media/
+*.png
+# Arquivos de dependências gerados pelo gerenciador de pacotes pip
+/requirements.txt
+/pip.lock
