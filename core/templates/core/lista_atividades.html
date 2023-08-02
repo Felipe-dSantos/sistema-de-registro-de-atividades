@@ -1,3 +1,11 @@
+
+<form action="{% url 'core_nova_atividade' %}" method="POST"> 
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit"> Salvar </button>
+</form>
+
+
 <h1>Lista de ATividades</h1>
 
 <ul>
@@ -5,3 +13,5 @@
         <li> Tema:{{ atividade.tema }} | Responsável: {{ atividade.nome_responsavel }} | Descrição:{{ atividade.descricao }} | Local: {{ atividade.local }}  </li>
     {% endfor %}
 </ul>
+
+

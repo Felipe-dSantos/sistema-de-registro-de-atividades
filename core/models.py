@@ -11,26 +11,30 @@ class Professor(models.Model):
     def __str__(self):
         return f"{self.nome} , CPF: {self.cpf}, Data de Nascimento: {self.data_nascimento}"
 
+
 class Local(models.Model):
     nome = models.CharField(max_length=255)
     
     def __str__(self):
         return self.nome
     
+    
 class Atividade(models.Model):
     tema = models.CharField(max_length=255)
     nome_responsavel = models.CharField(max_length=255)
     descricao = models.TextField()
+    local = models.ForeignKey(Local, on_delete=models.CASCADE)
     quantidade_ptc = models.IntegerField()
     data_inicio = models.DateField(max_length=10)
     data_encerramento = models.DateField(max_length=10)
-    imagem = models.ImageField()
-    local = models.ForeignKey(Local, on_delete=models.CASCADE)
+    # arquivo = models.FileField(upload_to='arquivos/')
     
-    # calcula o intervalo entre a data de inicio e data de encerramento de uma ativida
+    
+    
+    # calcula o intervalo entre a data de inicio e data de encerramento de uma atividade
     def duracao(self):
         duracao = self.data_encerramento - self.data_inicio
-        return duracao.days
+        return duracao.days 
     
     def status(self):
         today = date.today()
@@ -41,3 +45,4 @@ class Atividade(models.Model):
 
     def __str__(self):
         return f"{self.tema} , Responsavel:{self.nome_responsavel}, Local: {self.local} Data de inicio: {self.data_inicio} - Data de encerramento: {self.data_encerramento}"
+    

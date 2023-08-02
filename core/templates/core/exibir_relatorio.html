@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Relatório de Atividades</title>
+</head>
+<body>
+    <h1>Relatório de Atividades</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Tema</th>
+                <th>Nome do Responsável</th>
+                <th>Local</th>
+                <th>Descrição</th>
+                <th>Quantidade de Participantes</th>
+                <th>Data de Início</th>
+                <th>Data de Encerramento</th>
+                <th>Duração</th>
+                <th>Status</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {% for atividade in atividades %}
+            <tr>
+                <td>{{ atividade.tema }}</td>
+                <td>{{ atividade.nome_responsavel }}</td>
+                <td>{{ atividade.local }}</td>
+                <td>{{ atividade.descricao }}</td>
+                <td>{{ atividade.quantidade_ptc }}</td>
+                <td>{{ atividade.data_inicio }}</td>
+                <td>{{ atividade.data_encerramento }}</td>
+                <td>{{atividade.duracao}} dias</td>
+                <td>{{atividade.status}}</td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
