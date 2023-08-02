@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Professor, Atividade, Local
+from .models import Atividade, Local
 
 
 class ListaAtividades(admin.ModelAdmin):
@@ -7,6 +7,5 @@ class ListaAtividades(admin.ModelAdmin):
 
 
 # Register your models here.
-admin.site.register(Professor) 
 admin.site.register(Atividade, ListaAtividades) 
 admin.site.register(Local) 

@@ -3,15 +3,6 @@ from django.db import models
 import math
 from datetime import timedelta, date
 
-class Professor(models.Model):
-    nome = models.CharField(max_length=255)
-    cpf = models.CharField(max_length=14)
-    data_nascimento = models.DateField(max_length=10)
-    
-    def __str__(self):
-        return f"{self.nome} , CPF: {self.cpf}, Data de Nascimento: {self.data_nascimento}"
-
-
 class Local(models.Model):
     nome = models.CharField(max_length=255)
     
