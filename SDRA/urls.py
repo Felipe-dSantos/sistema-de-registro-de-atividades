@@ -21,5 +21,8 @@ from django.urls import path, include
 urlpatterns = [
     path('core/', include('core.urls')),
     path('admin/', admin.site.urls),
-    path("accounts/", include("django.contrib.auth.urls")),
 ]
+
+admin.site.site_header = 'SDRA - LIFE'
+admin.site.site_title = 'Life'
+admin.site.index_title = 'Sistema de Registro de Atividades'

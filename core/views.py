@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
+from django.http import JsonResponse
 from .models import Atividade
 from .forms import AtividadeForm
 
-# Create your views here.
+# Create views.
 def home(request):
     data = {'mensagem': 'inicio'}
     return render(request, 'core/index.html', data)
@@ -13,7 +14,6 @@ def lista_atividades(request):
     form = AtividadeForm()
     data = {'atividades': atividades , 'form': form}
     return render(request, 'core/lista_atividades.html',data)
-
 
 def nova_atividade(request):
     form = AtividadeForm(request.POST or None)
