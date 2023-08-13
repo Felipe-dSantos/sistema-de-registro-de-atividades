@@ -1,12 +1,7 @@
+{% extends "core/base.html" %}
+{% load static %}
 
-<form action="{% url 'core_nova_atividade' %}" method="POST"> 
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit"> Salvar </button>
-</form>
-
-
-<h1>Lista de ATividades</h1>
+<h1>Lista de Atividades</h1>
 
 <ul>
     {% for atividade in atividades %}

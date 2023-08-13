@@ -1,0 +1,24 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+/* main{
+    height: 100vh;
+    
+} */
+
+#user{
+    color: white;
+}
+
+footer div{
+    color: #3b3b3b;
+}
+
+
+a#link_user{
+    width: 150px;
+    text-align: center;
+}
+

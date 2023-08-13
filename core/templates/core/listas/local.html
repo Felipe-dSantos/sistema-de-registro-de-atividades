@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block titulo %}
+<title>Locais</title>
+{% endblock %}
+
+
+{% block main %}
+
+    <h3 style="margin-top: 15px ;">Lista de Locais</h3>
+    <a href="{% url 'cadastro-local' %}" class="btn btn-success">Cadastrar Local</a>
+    <hr>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered ">
+            <thead>
+                <tr>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Opções</th>
+                </tr>
+            </thead>
+            <tbody >
+                {% for local in object_list %}
+                <tr>
+                    <td>{{ local.nome }}</td>
+                    <td class="">
+                        <a href="{% url 'editar-local' local.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                        <a href="{% url 'excluir-local' local.pk  %}" class="btn btn-danger btn-sm">Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock main %}
+
+{% block footer %}
+<footer id="rodape" class=" fixed-bottom  text-center text-white">
+    <div class="container-fluid  p-3 ">
+        © 2023 Copyright: Felipe dos Santos & Alexandre Lira
+    </div>
+</footer>
+{% endblock footer %}
