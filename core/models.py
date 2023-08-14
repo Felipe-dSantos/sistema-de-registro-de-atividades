@@ -1,11 +1,11 @@
 from django.db import models
 from datetime import date
-from django.contrib.auth.models import BaseUserManager, AbstractUser
+# from django.contrib.auth.models import BaseUserManager, AbstractUser
 # from django.contrib.auth.models import User, UserManager
 
 # Create Models
-class UserManager(BaseUserManager):
-    use_in_migrations = True
+# class UserManager(BaseUserManager):
+#     use_in_migrations = True
     
     # def normalize_cpf(cpf):
     #     # # Remove quaisquer caracteres não numéricos do CPF
@@ -15,42 +15,42 @@ class UserManager(BaseUserManager):
     #     # cpf = cpf.zfill(11)
     
     #     # return cpf
-    def _create_user(self, email, password, **extra_fields):
+#     def _create_user(self, email, password, **extra_fields):
         
-        email = self.normalize_email(email)
-        user = self.model(email=email, username=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+#         email = self.normalize_email(email)
+#         user = self.model(email=email, username=email, **extra_fields)
+#         user.set_password(password)
+#         user.save(using=self._db)
+#         return user
     
-    def create_user(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_superuser', False)
-        return self._create_user(email, password, **extra_fields)
+#     def create_user(self, email, password=None, **extra_fields):
+#         extra_fields.setdefault('is_superuser', False)
+#         return self._create_user(email, password, **extra_fields)
     
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_staff', True)
+#     def create_superuser(self, email, password=None, **extra_fields):
+#         extra_fields.setdefault('is_superuser', True)
+#         extra_fields.setdefault('is_staff', True)
         
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser precisa ter is_superuser=True')
+#         if extra_fields.get('is_superuser') is not True:
+#             raise ValueError('Superuser precisa ter is_superuser=True')
         
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser precisa ter is_staff=True')
+#         if extra_fields.get('is_staff') is not True:
+#             raise ValueError('Superuser precisa ter is_staff=True')
         
-        return self._create_user(email, password, **extra_fields)
+#         return self._create_user(email, password, **extra_fields)
         
-class CustomUser(AbstractUser):
-    email = models.EmailField('E-mail', unique=True)
+# class CustomUser(AbstractUser):
+#     email = models.EmailField('E-mail', unique=True)
     
-    is_staff = models.BooleanField('Membro da equipe', default=True)
+#     is_staff = models.BooleanField('Membro da equipe', default=True)
     
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+#     USERNAME_FIELD = 'email'
+#     REQUIRED_FIELDS = ['first_name', 'last_name']
     
-    def __str__(self):
-        return self.cpf
+#     def __str__(self):
+#         return self.cpf
     
-    objects = UserManager()
+#     objects = UserManager()
     
 class Local(models.Model):
     nome = models.CharField(max_length=255)

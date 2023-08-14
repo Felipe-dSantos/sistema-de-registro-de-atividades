@@ -23,3 +23,11 @@
     </div>
 </footer>
 {% endblock footer %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function(){
+            $(input[name*=data]).attr("type", "date");
+        });
+    </script>
+{% endblock scripts %}

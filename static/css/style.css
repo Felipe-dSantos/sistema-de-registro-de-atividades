@@ -3,8 +3,8 @@ body{
     padding: 0;
 }
 
-/* main{
-    height: 100vh;
+/* main#conteudo{
+    width: 80%;
     
 } */
 
@@ -22,3 +22,6 @@ a#link_user{
     text-align: center;
 }
 
+a#sdra{
+    font-size: 15px;
+}

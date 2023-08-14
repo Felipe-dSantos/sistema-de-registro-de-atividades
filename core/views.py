@@ -3,27 +3,10 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from .models import Local, Atividade
 from django.urls import reverse_lazy
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+ 
 
 # Create views.
-def home(request):
-    data = {'mensagem': 'inicio'}
-    return render(request, 'core/index.html', data)
-
-
-def lista_atividades(request):
-    atividades = Atividade.objects.all()
-    # form = AtividadeForm()
-    data = {'atividades': atividades}
-    #  data = {'atividades': atividades , 'form': form}
-    return render(request, 'core/lista_atividades.html', data)
-
-# def nova_atividade(request):
-#     form = AtividadeForm(request.POST or None)
-#     if form.is_valid():
-#         form.save()
-    # return redirect('core_lista_atividades')
-
 
 def exibir_relatorio(request):
     atividades = Atividade.objects.all()
@@ -33,14 +16,16 @@ def exibir_relatorio(request):
 ################### CREATE #########################
 
 
-class LocalCreate(CreateView):
+class LocalCreate(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
     model = Local
     fields = ['nome']
     template_name = 'core/registros/form.html'
     success_url = reverse_lazy('listar-local')
 
 
-class AtividadeCreate(CreateView):
+class AtividadeCreate(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login')
     model = Atividade
     fields = ['tema', 'nome_responsavel', 'descricao', 'local',
               'quantidade_ptc', 'data_inicio', 'data_encerramento']
@@ -50,14 +35,16 @@ class AtividadeCreate(CreateView):
 ################### UPDATE #########################
 
 
-class LocalUpdate(UpdateView):
+class LocalUpdate(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Local
     fields = ['nome']
     template_name = 'core/registros/form.html'
     success_url = reverse_lazy('listar-local')
 
 
-class AtividadeUpdate(UpdateView):
+class AtividadeUpdate(LoginRequiredMixin, UpdateView):
+    login_url = reverse_lazy('login')
     model = Atividade
     fields = ['tema', 'nome_responsavel', 'descricao', 'local',
               'quantidade_ptc', 'data_inicio', 'data_encerramento']
@@ -67,13 +54,15 @@ class AtividadeUpdate(UpdateView):
 ################### Delete #########################
 
 
-class LocalDelete(DeleteView):
+class LocalDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Local
     template_name = 'core/registros/form_excluir.html'
     success_url = reverse_lazy('listar-local')
 
 
-class AtividadeDelete(DeleteView):
+class AtividadeDelete(LoginRequiredMixin, DeleteView):
+    login_url = reverse_lazy('login')
     model = Atividade
     template_name = 'core/registros/form_excluir.html'
     success_url = reverse_lazy('listar-atividade')
@@ -81,11 +70,13 @@ class AtividadeDelete(DeleteView):
     ################### Read #########################
 
 
-class LocalList(ListView):
+class LocalList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Local
     template_name = 'core/listas/Local.html'
 
 
-class AtividadeList(ListView):
+class AtividadeList(LoginRequiredMixin, ListView):
+    login_url = reverse_lazy('login')
     model = Atividade
     template_name = 'core/listas/Atividade.html'

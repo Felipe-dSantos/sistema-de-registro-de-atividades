@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from .views import LocalList, AtividadeList
 from .views import (
-    home,
-    lista_atividades,
     exibir_relatorio,
     LocalCreate,
     AtividadeCreate,
@@ -14,9 +13,12 @@ from .views import (
 )
 
 urlpatterns = [
-    path('', home, name='core_home'),
-    path('lista-atividades/', lista_atividades, name='core_lista_atividades'),
-    # path('nova_atividade/', nova_atividade, name='core_nova_atividade'),
+    #url de login e logout
+    path('login/', auth_views.LoginView.as_view(
+        template_name='core/usuarios/login.html'
+    ), name="login"),
+     path('logout/', auth_views.LogoutView.as_view() , name='logout'),
+    
     path('relatorio/', exibir_relatorio, name='core_exibir_relatorio'),
     path('cadastro-atividade/', AtividadeCreate.as_view(), name='cadastro-atividade'),
     path('cadastro-local/', LocalCreate.as_view(), name='cadastro-local'),
@@ -29,4 +31,5 @@ urlpatterns = [
     #list views
     path('listar/locais/', LocalList.as_view(), name='listar-local'),
     path('listar/atividades/', AtividadeList.as_view() , name='listar-atividade'),
+    
 ]

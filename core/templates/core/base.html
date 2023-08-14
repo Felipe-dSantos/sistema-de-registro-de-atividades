@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"> -->
+   
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- BootStrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -22,12 +22,14 @@
 </head>
 
 <body>
-
+    {% if request.user.is_authenticated %}
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary  ">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow ">
             <div class="container-fluid">
-                
-                <a class="navbar-brand" href="#">SDRA - Sistema de Registro de Atividades</a>
+                <div id="logoimg" class="text-center">
+                    <img id="logo" src="/static/img/Logo-ufac.png" style="max-width: 25px; margin-right: 20px;" alt="">
+                </div>
+                <a id="sdra" class="navbar-brand" href="#">Universidade Federal do Acre - UFAC <br>Sistema de Registro de Atividades - SIRA</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -38,7 +40,7 @@
                         <li class="nav-item dropdown ">
                             <a id="link_user" class="nav-link dropdown-toggle active" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                Regitros
+                                Registros
                             </a>
                             <ul class="dropdown-menu dropdown-center">
                                 <li><a class="dropdown-item" href="{% url 'listar-atividade'%}">Atividades</a></li>
@@ -49,27 +51,35 @@
                     </ul>
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item dropdown ">
+
                             <a id="link_user" class="nav-link dropdown-toggle active" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fa-solid fa-user fa-sm" style="color: #ffffff;"></i>
-                                Usuário
+                                <i class="fa-regular fa-circle-user" style="color: #ffffff;"></i>
+                                <span id="username">{{ user.username }}</span>
                             </a>
+
                             <ul class="dropdown-menu dropdown-center">
-                                <li><a class="dropdown-item" href="#">Alterar senha</a></li>
-                                <li><a class="dropdown-item" href="#">Sair</a></li>
+                                <li><a class="dropdown-item" href="#">
+                                        <i class="fa-solid fa-lock" style="color: #000000;"></i>
+                                        Alterar senha</a>
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}">
+                                        <i class="fa-solid fa-arrow-right-from-bracket" style="color: #030303;"></i>
+                                        Sair</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
-                    
-                    
+
+
                 </div>
 
         </nav>
     </header>
+    {% endif %}
 
 
-
-    <main>
+    <main id="conteudo">
 
         <div class="container">
             {% block main %}
@@ -88,5 +98,8 @@
     {% endblock footer %}
 
 </body>
+{% block scripts %}
+
+{% endblock scripts %}
 
 </html>
