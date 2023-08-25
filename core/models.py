@@ -17,7 +17,7 @@ class Atividade(models.Model):
     quantidade_ptc = models.IntegerField()
     data_inicio = models.DateField(max_length=10)
     data_encerramento = models.DateField(max_length=10)
-    # arquivo = models.FileField(upload_to='arquivos/')
+    arquivos = models.FileField(upload_to='arquivos/')
     
     # calcula o intervalo entre a data de inicio e data de encerramento de uma atividade
     def duracao(self):

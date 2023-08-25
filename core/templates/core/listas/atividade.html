@@ -5,45 +5,48 @@
 <title>Atividades</title>
 {% endblock %}
 
-
-
 {% block main %}
-
-    <h3 style="margin-top: 15px ;">Lista de Atividades</h3>
-
-    <a href="{% url 'cadastro-atividade' %}" class="btn btn-success">Registrar Atividade</a>
-
-    <hr>
-    <div class="table-responsive">
-        <table class="table table-hover table-bordered ">
-            <thead>
-                <tr>
-                    <th scope="col">Atividade</th>
-                    <th scope="col">Local</th>
-                    <th scope="col">Responsável</th>
-                    <th scope="col">Opções</th>
-                </tr>
-            </thead>
-            <tbody >
-                {% for atividade in object_list %}
-                <tr>
-                    <td>{{ atividade.tema }}</td>
-                    <td>{{ atividade.local }}</td>
-                    <td>{{ atividade.usuario }}</td>
-                    <td>
-                        <a href="{% url 'editar-atividade' atividade.pk %}" class="btn btn-warning btn-sm">Editar 
-                            <i class="fa-solid fa-pen-to-square aria-hidden="true" style="color: #2d2e2f;"></i>
-                             
-                        </a>
-                        <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm">Excluir
-                            <i class="fa-solid fa-trash" aria-hidden="true" style="color: #fff;"></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="row align-items-center mt-3" id="titulo_lista">
+    <div class="col-md-6">
+      <h3>Lista de Atividades</h3>
     </div>
+    <div class="col-md-6 text-md-end">
+      <a href="{% url 'cadastro-atividade' %}" class="btn btn-success">Registrar Atividade</a>
+    </div>
+  </div>
+<hr>
+<div class="table-responsive">
+    <table class="table table-hover table-bordered ">
+        <thead>
+            <tr>
+                <th scope="col">Atividade</th>
+                <th scope="col">Local</th>
+                <th scope="col">Responsável</th>
+                <th scope="col">Anexos</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for atividade in object_list %}
+            <tr>
+                <td>{{ atividade.tema }}</td>
+                <td>{{ atividade.local }}</td>
+                <td>{{ atividade.usuario }}</td>
+                <td><a href="{{ atividade.arquivos.url }}" target="_blank" class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver Anexo</a></td>
+                <td>
+                    <a href="{% url 'editar-atividade' atividade.pk %}" class="btn btn-warning btn-sm">Editar
+                        <i class="fa-solid fa-pen-to-square aria-hidden=" true" style="color: #2d2e2f;"></i>
+
+                    </a>
+                    <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm">Excluir
+                        <i class="fa-solid fa-trash" aria-hidden="true" style="color: #fff;"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock main %}
 
 {% block footer %}

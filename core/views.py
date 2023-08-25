@@ -1,9 +1,12 @@
+
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import render
 from django.views.generic.edit import View, CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from .models import Local, Atividade
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group
 from .forms import UsuarioForm
 from django.urls import reverse_lazy
 
@@ -20,6 +23,15 @@ class UsuarioCreate(CreateView):
     template_name = 'core/usuarios/form.html'
     form_class = UsuarioForm
     success_url = reverse_lazy('login')
+    
+    def form_valid(self, form):
+        
+        grupo = get_object_or_404(Group, name="Docente")
+        url = super().form_valid(form)
+        self.object.groups.add(grupo)
+        self.object.save()
+        
+        return url
     
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -79,8 +91,8 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Atividade
     fields = ['tema', 'descricao', 'local',
-              'quantidade_ptc', 'data_inicio', 'data_encerramento']
-    template_name = 'core/registros/form.html'
+              'quantidade_ptc', 'data_inicio', 'data_encerramento', 'arquivos']
+    template_name = 'core/registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
     
     def form_valid(self, form):
@@ -101,8 +113,8 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
 class AtividadeUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Atividade
-    fields = ['tema', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento']
-    template_name = 'core/registros/form.html'
+    fields = ['tema', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'arquivos']
+    template_name = 'core/registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
 
     def get_object(self, queryset=None):
