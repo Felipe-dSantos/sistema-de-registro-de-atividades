@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # configuraçoes de Autenticação
 
-LOGIN_REDIRECT_URL = 'listar-atividade'
+LOGIN_REDIRECT_URL = 'custom_login_redirect'
 LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
 

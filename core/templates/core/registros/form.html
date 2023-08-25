@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block main %}
-  <h3 style="margin-top: 15px ;">Registro</h3>
+  <h3 style="margin-top: 15px ;">{{titulo}}</h3>
 
   <hr>
 
@@ -12,8 +12,8 @@
 
     {{ form|crispy }}
 
-    <button type="submit" class="btn btn-success">Salvar</button>
-    <a href="{% url 'listar-atividade'%}" class="btn btn-danger">Cancelar</a>
+    <button type="submit" class="btn btn-success">{{ botao }}</button>
+    <a href="{{ url }}" class="btn btn-danger">Cancelar</a>
   </form>
 {% endblock main %}
 {% block footer %}

@@ -6,9 +6,17 @@
 <title>Login</title>
 {% endblock titulo %}
 
+
 {% block main %}
-<div class="row te">
+<div class="row">
     <div class="col-md-4 mx-auto">
+        {% if request.user.is_authenticated %}
+            <h3> Ação não permitida</h3>
+            <hr>
+            <p class="lead">
+                se vc não conseguiu acessar essa opção é por que você não tem permissão 
+            </p>
+        {% else %}
         <h3 style="margin-top: 15px ;" class="text-center">Bem vindo!</h3>
         <hr>
         <p class="lead">
@@ -20,9 +28,11 @@
             {{ form|crispy }}
             <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary text-center">Entrar</button>
+                <span class="text-center">Não é Registrado no sistema?<a href="{% url 'registrar-usuario' %}">Resgistre-se</a></span>
             </div>
 
         </form>
+        {% endif %}
     </div>
 </div>
 
@@ -35,4 +45,6 @@
     </div>
 </footer>
 {% endblock footer %}
+
+
 
