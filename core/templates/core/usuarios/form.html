@@ -18,6 +18,7 @@
                 {{ form|crispy }}
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary text-center">{{botao}}</button>
+                    <a href="{% url 'login' %}" class="btn btn-danger">Cancelar</a>
                 </div>
 
             </form>
