@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block titulo %}
+<title>{{titulo}}</title>
+{% endblock titulo %}
+
+{% block main %}
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <h3 style="margin-top: 15px ;" class="text-center">{{titulo}}</h3>
+        <hr>
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            {{ form|crispy }}
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary text-center">{{botao}}</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+{% endblock main %}
+
+{% block footer %}
+<footer id="rodape" class="text-center text-white">
+    <div class="container-fluid  p-3 ">
+        © 2023 Copyright: Felipe dos Santos & Alexandre Lira
+    </div>
+</footer>
+{% endblock footer %}
+
