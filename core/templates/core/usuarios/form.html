@@ -7,22 +7,23 @@
 {% endblock titulo %}
 
 {% block main %}
-<div class="row">
-    <div class="col-md-4 mx-auto">
-        <h3 style="margin-top: 15px ;" class="text-center">{{titulo}}</h3>
-        <hr>
-        <form action="" method="POST">
-            {% csrf_token %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 mx-auto">
+            <h3 style="margin-top: 15px ;" class="text-center">{{titulo}}</h3>
+            <hr>
+            <form action="" method="POST">
+                {% csrf_token %}
 
-            {{ form|crispy }}
-            <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary text-center">{{botao}}</button>
-            </div>
+                {{ form|crispy }}
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary text-center">{{botao}}</button>
+                </div>
 
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-
 {% endblock main %}
 
 {% block footer %}
@@ -32,4 +33,3 @@
     </div>
 </footer>
 {% endblock footer %}
-

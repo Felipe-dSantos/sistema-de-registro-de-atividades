@@ -137,6 +137,12 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Arquivo de Media/upload
+
+# MEDIA_ROOT = '/Arquivos/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+MEDIA_URL = "/uploads/"
 
 # configuraçoes de Autenticação
 
