@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from .views import LocalList, AtividadeList, AtividadeGeralList
+from . import views
 from .views import (
     LocalCreate,
     AtividadeCreate,
@@ -10,7 +11,8 @@ from .views import (
     LocalDelete,
     AtividadeDelete,
     CustomLoginRedirectView,
-    UsuarioCreate
+    UsuarioCreate,
+
 )
 
 urlpatterns = [
@@ -37,5 +39,7 @@ urlpatterns = [
     path('listar/locais/', LocalList.as_view(), name='listar-local'),
     path('listar/atividades/', AtividadeList.as_view(), name='listar-atividade'),
     path('listar/atividadesGerais/', AtividadeGeralList.as_view(),name='listar-atividade-geral'),
+    
+    path('export-pdf/', views.export_pdf, name='export-pdf')
 
 ]

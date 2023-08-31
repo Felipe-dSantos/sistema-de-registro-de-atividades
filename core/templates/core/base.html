@@ -10,11 +10,9 @@
     <!-- BootStrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"
-        defer></script>
-    <script src="https://kit.fontawesome.com/f1b27c82b7.js" crossorigin="anonymous" defer></script>
 
+    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.css" rel="stylesheet">
+    
     {% block titulo %}
     <title>Base</title>
     {% endblock titulo %}
@@ -87,17 +85,26 @@
     </main>
 
 
-    {% block footer %}
+    <!-- {% block footer %}
     <footer id="rodape" class="text-center text-white">
         <div class="container-fluid  p-3 ">
             © 2023 Copyright: Felipe dos Santos & Alexandre Lira
         </div>
     </footer>
-    {% endblock footer %}
+    {% endblock footer %} -->
 
+    <script src="{% static 'js/jquery-3.7.0.min.js' %}"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/f1b27c82b7.js" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script>
+
+    {% block scripts %}
+
+    {% endblock scripts %}
 </body>
-{% block scripts %}
 
-{% endblock scripts %}
 
 </html>
