@@ -1,21 +1,23 @@
 {% extends "core/base.html" %}
+
 {% load static %}
+
 {% load crispy_forms_tags %}
 
 {% block main %}
 <div class="container">
-  <h3 style="margin-top: 15px ;">{{titulo}}</h3>
+    <h3 style="margin-top: 15px ;">{{titulo}}</h3>
 
-  <hr>
+    <hr>
 
-  <form action="" method="POST">
-    {% csrf_token %}
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
 
-    {{ form|crispy }}
+        {{ form|crispy }}
 
-    <button type="submit" class="btn btn-success">{{ botao }}</button>
-    <a href="{{ url }}" class="btn btn-danger">Cancelar</a>
-  </form>
+        <button type="submit" class="btn btn-success">{{ botao }}</button>
+        <a href="{{ url }}" class="btn btn-danger">Cancelar</a>
+    </form>
 </div>
 {% endblock main %}
 {% block footer %}
@@ -26,10 +28,4 @@
 </footer>
 {% endblock footer %}
 
-{% block scripts %}
-    <script>
-        $(document).ready(function(){
-            $(input[name*=data]).attr("type", "date");
-        });
-    </script>
-{% endblock scripts %}
+

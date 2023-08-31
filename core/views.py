@@ -1,21 +1,30 @@
 
-from django.forms.models import BaseModelForm
+# Importações de módulos padrão
+import datetime
+import tempfile
+
+# Importações do Django
 from django.http import HttpResponse
-from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.models import Group
+from django.template.loader import render_to_string
+
+# Importações de módulos do Django específicos
 from django.views.generic.edit import View, CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from .models import Local, Atividade
-from django.contrib.auth.models import Group
-from .forms import UsuarioForm
-from django.urls import reverse_lazy
+from django.forms.models import BaseModelForm
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+# Importações de módulos de terceiros
+import weasyprint
 from braces.views import GroupRequiredMixin
 
-from django.shortcuts import redirect
+# Importações locais
+from .models import Local, Atividade
+from .forms import UsuarioForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-from django.shortcuts import get_object_or_404
+
 
 # Create views.
 
@@ -96,11 +105,11 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('listar-atividade')
     
     def form_valid(self, form):
-        #antes do super não foi criado objeto
+       
         form.instance.usuario = self.request.user #captura o usuario que esta fazendo o cadastro
         url = super().form_valid(form)
         
-        #depois do super, o bjeto foi criado
+       
         return url
 
     def get_context_data(self, *args, **kwargs):
@@ -145,6 +154,7 @@ class AtividadeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Atividade
     template_name = 'core/listas/Atividade.html'
+    paginate_by = 10
 
     def get_queryset(self):
         self.object_list = Atividade.objects.filter(usuario=self.request.user)
@@ -155,8 +165,9 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     group_required = [u"Administrador", u"Tecnico"]
     model = Atividade
     template_name = 'core/listas/atividadesGerais.html'
-
-
+    # paginate_by = 5
+    
+  
 class CustomLoginRedirectView(View):
     def get(self, request, *args, **kwargs):
         if request.user.groups.filter(name='Tecnico').exists():
@@ -165,3 +176,34 @@ class CustomLoginRedirectView(View):
             return redirect('listar-atividade')  # Substitua pelo nome da URL da página inicial do dicente
         else:
             return redirect('listar-atividade') 
+        
+####################GERAR RELATÓRIO EM PDF#####################################
+
+ 
+def export_pdf(request): 
+
+    obj = request.GET.get('obj')
+    # products = Product.objects.filter(name__icontains=obj) # lista todos os produtos 
+    print(obj) 
+    if obj:  
+        atividades = Atividade.objects.filter(name__icontains=obj)  
+    else:
+         atividades = Atividade.objects.all()   
+         
+    context = {'atividades': atividades}
+
+    html_index = render_to_string('core/listas/relatorio.html', context)  
+
+    weasyprint_html = weasyprint.HTML(string=html_index, base_url='http://localhost:8000/media')
+    pdf = weasyprint_html.write_pdf(stylesheets=[weasyprint.CSS(string='body { font-family: serif} img {margin: 10px; width: 50px;}')]) 
+    
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=Atividades'+str(datetime.datetime.now())+'.pdf' 
+    response['Content-Transfer-Encoding'] = 'binary'
+    
+    with tempfile.NamedTemporaryFile(delete=True) as output:
+        output.write(pdf)
+        output.flush() 
+        output.seek(0)
+        response.write(output.read()) 
+    return response

@@ -9,18 +9,23 @@
 
 {% block main %}
 
-<div class="row align-items-center mt-3" id="titulo_lista">
+<div class="row  mt-3" id="titulo_lista">
     <div class="col-md-6">
         <h3>Lista de Atividades Gerais</h3>
     </div>
     <div class="col-md-6 text-md-end">
-
+        <a class="btn btn-primary" href="{% url 'export-pdf' %}?obj={{request.GET.obj}}">Gerar Relatório</a>
     </div>
 </div>
-
+<!-- <hr>
+<form action="?" method="GET">
+    <input type="text" name="nome" id="" value="{{  request.GET.nome }}" class="p-1 border" autocomplete="off">
+    <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+    <a href="{%url 'listar-atividade-geral'%}" class="btn btn-outline-primary btn-sm">limpar</a>
+</form> -->
 <hr>
 <div class="table-responsive">
-    <table class="table table-hover table-bordered ">
+    <table class="table table-hover table-bordered" id="tabela-listar">
         <thead>
             <tr>
                 <th scope="col">Local</th>
@@ -34,7 +39,7 @@
         </thead>
         <tbody>
             {% for atividade in object_list %}
-            <tr>
+            <tr onclick="table-active">
                 <td>{{ atividade.local }}</td>
                 <td>{{ atividade.tema }}</td>
                 <td>{{ atividade.usuario}}</td>
@@ -46,7 +51,7 @@
                         <i class="fa-solid fa-pen-to-square aria-hidden=" true" style="color: #2d2e2f;"></i>
 
                     </a>
-                    <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm">Excluir
+                    <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm" alt="Excluir">Excluir
                         <i class="fa-solid fa-trash" aria-hidden="true" style="color: #fff;"></i>
                     </a>
                     <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-success btn-sm">Ver
@@ -57,6 +62,58 @@
             {% endfor %}
         </tbody>
     </table>
+    <!-- <div>
+        {% if page_obj.has_previous %}
+        <a href="?page={{page_obj.previous_page_number}}">Anterior</a>
+        {% endif%}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}">Proximo</a>
+        {% endif%}
+    </div> -->
+    <!-- <div class="d-flex justify-content-center"> 
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i
+                            class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link"><i class="fa fa-chevron-left"
+                            aria-hidden="true"></i></span></li>
+                {% endif %}
+
+                {% if page_obj.number|add:'-4' > 1 %}
+                <li class="page-item"><a class="page-link" href="?page=1">&hellip;</a></li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span
+                            class="sr-only">(current)</span></span></li>
+                {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %} <li class="page-item"><a
+                        class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+                    <li class="page-item"><a class="page-link"
+                            href="?page={{ page_obj.paginator.num_pages }}">&hellip;</a></li>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
+                                class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link"><i class="fa fa-chevron-right"
+                                aria-hidden="true"></i></span></li>
+                    {% endif %}
+
+            </ul>
+        </nav>
+    </div> -->
+
+
 </div>
 {% endblock main %}
 
@@ -67,3 +124,42 @@
     </div>
 </footer>
 {% endblock footer %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('#tabela-listar').DataTable({
+                responsive: true,
+                // "bSort": false,
+                "aaSorting": [],
+                "pageLength": 30,
+                "lengthMenu": [5, 10, 20, 30],
+                "language": {
+                    "emptyTable": "Sem dados disponíveis",
+                    "info": "Mostrando de _START_ até _END_ de _TOTAL_ registos",
+                    "infoEmpty": "Mostrando de 0 até 0 de 0 registos",
+                    "infoFiltered": "(filtrado de _MAX_ registos no total)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ registos",
+                    "loadingRecords": "A carregar dados...",
+                    "processing": "A processar...",
+                    "search": "Procurar:",
+                    "zeroRecords": "Não foram encontrados resultados",
+                    "paginate": {
+                        "first": "Primeiro",
+                        "last": "Último",
+                        "next": "Seguinte",
+                        "previous": "Anterior"
+                    },
+                    "aria": {
+                        "sortAscending": ": ordem crescente",
+                        "sortDescending": ": ordem decrescente"
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endblock scripts %}

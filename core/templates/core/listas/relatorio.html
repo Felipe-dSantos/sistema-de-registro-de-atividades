@@ -1,0 +1,49 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block titulo %}
+<title>Relatório de Atividades Gerais</title>
+{% endblock %}
+
+{% block main %}
+<div class="container mt-4">
+    <div class="text-center">
+        <img src="{% static '/img/logo-ufac-cor.png' %}" alt="">
+        <h1 class="text-center">Relatório de Atividades do LIFE</h1>
+    </div>
+    {% for atividade in atividades %}
+    <div>
+    <table class=" table-bordered mt-4 ">
+        <tbody>
+            <tr>
+                <td scope="row" class="text-end  text-light" ><h3>Tema:</h3></td>
+                <td><h3>{{ atividade.tema }}</h3></td>
+            </tr>
+            <tr>
+                <td scope="row" class="text-start">Local:</td>
+                <td>{{ atividade.local }}</td>
+            </tr>
+
+            <tr>
+                <td scope="row" class="text-start">Responsável: </td>
+                <td>{{ atividade.usuario}}</td>
+            </tr>
+
+            <tr>
+                <td scope="row" class="text-start">Descrição: </td>
+                <td>{{ atividade.descricao}}</td>
+            </tr>
+            <tr>
+                <td scope="row" class="text-start">Data de Início: </td>
+                <td>{{ atividade.data_inicio }}</td>
+            </tr>
+            <tr>
+                <td scope="row" class="text-start">Data de Encerramento: </td>
+                <td>{{ atividade.data_encerramento }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    {% endfor %}
+</div>
+{% endblock main %}
