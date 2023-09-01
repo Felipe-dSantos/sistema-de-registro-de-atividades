@@ -25,7 +25,7 @@
 </form> -->
 <hr>
 <div class="table-responsive">
-    <table class="table table-hover table-bordered" id="tabela-listar">
+    <table class="table table-hover table-bordered">
         <thead>
             <tr>
                 <th scope="col">Local</th>
@@ -71,7 +71,7 @@
         <a href="?page={{page_obj.next_page_number}}">Proximo</a>
         {% endif%}
     </div> -->
-    <!-- <div class="d-flex justify-content-center"> 
+    <div class="d-flex justify-content-center"> 
         <nav aria-label="Page navigation example">
             <ul class="pagination">
 
@@ -90,7 +90,7 @@
                 {% for i in page_obj.paginator.page_range %}
                 {% if page_obj.number == i %}
                 <li class="page-item active"><span class="page-link">{{ i }} <span
-                            class="sr-only">(current)</span></span></li>
+                            class="sr-only"></span></span></li>
                 {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %} <li class="page-item"><a
                         class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                     {% endif %}
@@ -111,7 +111,7 @@
 
             </ul>
         </nav>
-    </div> -->
+    </div>
 
 
 </div>
@@ -124,7 +124,7 @@
     </div>
 </footer>
 {% endblock footer %}
-
+<!-- 
 {% block scripts %}
 <script>
     $(document).ready(function () {
@@ -162,4 +162,4 @@
         });
     });
 </script>
-{% endblock scripts %}
+{% endblock scripts %} -->

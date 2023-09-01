@@ -25,23 +25,22 @@ from .forms import UsuarioForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-
 # Create views.
 
 class UsuarioCreate(CreateView):
     template_name = 'core/usuarios/form.html'
     form_class = UsuarioForm
     success_url = reverse_lazy('login')
-    
+
     def form_valid(self, form):
-        
+
         grupo = get_object_or_404(Group, name="Docente")
         url = super().form_valid(form)
         self.object.groups.add(grupo)
         self.object.save()
-        
+
         return url
-    
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['titulo'] = "Registro de Usuario"
@@ -49,6 +48,8 @@ class UsuarioCreate(CreateView):
         return context
 
 ################### CRUD LOCAL #########################
+
+
 class LocalCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     group_required = u"Administrador"
@@ -56,7 +57,7 @@ class LocalCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     fields = ['nome']
     template_name = 'core/registros/form.html'
     success_url = reverse_lazy('listar-local')
-    
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['titulo'] = "Cadastro de Local"
@@ -71,15 +72,15 @@ class LocalUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     fields = ['nome']
     template_name = 'core/registros/form.html'
     success_url = reverse_lazy('listar-local')
-    
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['titulo'] = "Editar Local"
         context['botao'] = "Salvar"
         context['url'] = reverse('listar-local')
-        
+
         return context
-    
+
 
 class LocalDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
@@ -96,6 +97,8 @@ class LocalList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     template_name = 'core/listas/Local.html'
 
 ################### CRUD ATIVIDADE #########################
+
+
 class AtividadeCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Atividade
@@ -103,13 +106,13 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
               'quantidade_ptc', 'data_inicio', 'data_encerramento', 'arquivos']
     template_name = 'core/registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
-    
+
     def form_valid(self, form):
-       
-        form.instance.usuario = self.request.user #captura o usuario que esta fazendo o cadastro
+
+        # captura o usuario que esta fazendo o cadastro
+        form.instance.usuario = self.request.user
         url = super().form_valid(form)
-        
-       
+
         return url
 
     def get_context_data(self, *args, **kwargs):
@@ -118,19 +121,22 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
         context['botao'] = "Registrar"
         context['url'] = reverse('listar-atividade')
         return context
-        
+
+
 class AtividadeUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Atividade
-    fields = ['tema', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'arquivos']
+    fields = ['tema', 'descricao', 'local', 'quantidade_ptc',
+              'data_inicio', 'data_encerramento', 'arquivos']
     template_name = 'core/registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
 
     def get_object(self, queryset=None):
-        pk = self.kwargs.get('pk')  
-        self.object = get_object_or_404(Atividade, pk=pk, usuario=self.request.user)
+        pk = self.kwargs.get('pk')
+        self.object = get_object_or_404(
+            Atividade, pk=pk, usuario=self.request.user)
         return self.object
-    
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['titulo'] = "Editar Registro de Atividade"
@@ -138,15 +144,17 @@ class AtividadeUpdate(LoginRequiredMixin, UpdateView):
         context['url'] = reverse('listar-atividade')
         return context
 
+
 class AtividadeDelete(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     model = Atividade
     template_name = 'core/registros/form_excluir.html'
     success_url = reverse_lazy('listar-atividade')
-    
+
     def get_object(self, queryset=None):
-        pk = self.kwargs.get('pk')  
-        self.object = get_object_or_404(Atividade, pk=pk, usuario=self.request.user)
+        pk = self.kwargs.get('pk')
+        self.object = get_object_or_404(
+            Atividade, pk=pk, usuario=self.request.user)
         return self.object
 
 
@@ -160,50 +168,56 @@ class AtividadeList(LoginRequiredMixin, ListView):
         self.object_list = Atividade.objects.filter(usuario=self.request.user)
         return self.object_list
 
+
 class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     group_required = [u"Administrador", u"Tecnico"]
     model = Atividade
     template_name = 'core/listas/atividadesGerais.html'
-    # paginate_by = 5
-    
-  
+    paginate_by = 4
+
+
 class CustomLoginRedirectView(View):
     def get(self, request, *args, **kwargs):
         if request.user.groups.filter(name='Tecnico').exists():
-            return redirect('listar-atividade-geral')  # Substitua pelo nome da URL da página inicial do técnico
+            # Substitua pelo nome da URL da página inicial do técnico
+            return redirect('listar-atividade-geral')
         elif request.user.groups.filter(name='Dicente').exists():
-            return redirect('listar-atividade')  # Substitua pelo nome da URL da página inicial do dicente
+            # Substitua pelo nome da URL da página inicial do dicente
+            return redirect('listar-atividade')
         else:
-            return redirect('listar-atividade') 
-        
-####################GERAR RELATÓRIO EM PDF#####################################
+            return redirect('listar-atividade')
 
- 
-def export_pdf(request): 
+#################### GERAR RELATÓRIO EM PDF#####################################
+
+
+def export_pdf(request):
 
     obj = request.GET.get('obj')
-    # products = Product.objects.filter(name__icontains=obj) # lista todos os produtos 
-    print(obj) 
-    if obj:  
-        atividades = Atividade.objects.filter(name__icontains=obj)  
+    # atividades = Atividade.objects.filter(name__icontains=obj)
+    print(obj)
+    if obj:
+        atividades = Atividade.objects.filter(name__icontains=obj)
     else:
-         atividades = Atividade.objects.all()   
-         
+        atividades = Atividade.objects.all()
+
     context = {'atividades': atividades}
 
-    html_index = render_to_string('core/listas/relatorio.html', context)  
+    html_index = render_to_string('core/listas/relatorio.html', context)
 
-    weasyprint_html = weasyprint.HTML(string=html_index, base_url='http://localhost:8000/media')
-    pdf = weasyprint_html.write_pdf(stylesheets=[weasyprint.CSS(string='body { font-family: serif} img {margin: 10px; width: 50px;}')]) 
-    
+    weasyprint_html = weasyprint.HTML(
+        string=html_index, base_url='http://localhost:8000/media')
+    pdf = weasyprint_html.write_pdf(stylesheets=[weasyprint.CSS(
+        string='body { font-family: serif} img {margin: 10px; width: 50px;}')])
+
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=Atividades'+str(datetime.datetime.now())+'.pdf' 
+    response['Content-Disposition'] = 'attachment; filename= Relatório-de-Atividades-LIFE' + \
+        str(datetime.datetime.now())+'.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
-    
+
     with tempfile.NamedTemporaryFile(delete=True) as output:
         output.write(pdf)
-        output.flush() 
+        output.flush()
         output.seek(0)
-        response.write(output.read()) 
+        response.write(output.read())
     return response
