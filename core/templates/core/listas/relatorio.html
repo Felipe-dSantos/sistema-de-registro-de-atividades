@@ -13,37 +13,42 @@
     </div>
     {% for atividade in atividades %}
     <div>
-    <table class=" table-bordered mt-4 ">
-        <tbody>
-            <tr>
-                <td scope="row" class="text-end  text-light" ><h3>Tema:</h3></td>
-                <td><h3>{{ atividade.tema }}</h3></td>
-            </tr>
-            <tr>
-                <td scope="row" class="text-start">Local:</td>
-                <td>{{ atividade.local }}</td>
-            </tr>
+        <table class=" table-bordered mt-4 ">
+            <tbody>
+                <tr>
+                    <td scope="row" class="text-end  text-light">
+                        <h3>Tema:</h3>
+                    </td>
+                    <td>
+                        <h3>{{ atividade.tema }}</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row" class="text-start">Local:</td>
+                    <td>{{ atividade.local }}</td>
+                </tr>
 
-            <tr>
-                <td scope="row" class="text-start">Responsável: </td>
-                <td>{{ atividade.usuario}}</td>
-            </tr>
+                <tr>
+                    <td scope="row" class="text-start">Responsável: </td>
+                    <td>{{ atividade.usuario}}</td>
+                </tr>
 
-            <tr>
-                <td scope="row" class="text-start">Descrição: </td>
-                <td>{{ atividade.descricao}}</td>
-            </tr>
-            <tr>
-                <td scope="row" class="text-start">Data de Início: </td>
-                <td>{{ atividade.data_inicio }}</td>
-            </tr>
-            <tr>
-                <td scope="row" class="text-start">Data de Encerramento: </td>
-                <td>{{ atividade.data_encerramento }}</td>
-            </tr>
-        </tbody>
-    </table>
-    
-    {% endfor %}
+                <tr>
+                    <td scope="row" class="text-start">Descrição: </td>
+                    <td>{{ atividade.descricao}}</td>
+                </tr>
+                <tr>
+                    <td scope="row" class="text-start">Data de Início: </td>
+                    <td>{{ atividade.data_inicio }}</td>
+                </tr>
+                <tr>
+                    <td scope="row" class="text-start">Data de Encerramento: </td>
+                    <td>{{ atividade.data_encerramento }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        {% endfor %}
+    </div>
 </div>
 {% endblock main %}

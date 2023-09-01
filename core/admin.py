@@ -20,7 +20,7 @@ from .models import Atividade, Local
 
 
 class ListaAtividades(admin.ModelAdmin):
-    list_display = ('tema', 'usuario', 'local', 'data_inicio', 'data_encerramento', 'duracao', 'status')
+    list_display = ('tema', 'usuario', 'local', 'data_inicio', 'data_encerramento', 'duracao')
 
 
 # Register your models here.
