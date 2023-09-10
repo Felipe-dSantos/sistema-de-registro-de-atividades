@@ -26,3 +26,27 @@ a#sdra{
     font-size: 15px;
 }
 
+div#bloco-atividade {
+   border-radius: 10px;
+   padding: 20px;
+   align-items: center;
+}
+
+div#bloco-atividade:hover {
+    background-color: #cfcfcf;
+}
+
+
+div#bloco-atividade a:hover ,i:hover {
+    background-color: #0b3a25; 
+}
+
+div#bloco-atividade span#titulo-relatorio{
+    text-justify: auto;
+ }
+ 
+ /* div#btrel{
+    display: flex;
+    align-items: center;
+    text-align: center;
+ } */

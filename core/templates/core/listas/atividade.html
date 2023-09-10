@@ -6,56 +6,28 @@
 {% endblock %}
 
 {% block main %}
-<div class="row align-items-center mt-3" id="titulo_lista">
-    <div class="col-md-6">
-        <h3>Lista de Atividades</h3>
-    </div>
-    <div class="col-md-6 text-md-end">
-        <a href="{% url 'cadastro-atividade' %}" class="btn btn-success">Registrar Atividade</a>
+<div class="container p-3 text-center" id="titulo_lista">
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="col text-start ">
+            <h3 id="teste">Lista de Atividades</h3>
+        </div>
+        <div class="col text-end ">
+            <a href="{% url 'cadastro-atividade' %}" class="btn btn-success">Registrar Atividade</a>
+        </div>
     </div>
 </div>
-<hr> 
+
+
+
 {% for atividade in object_list %}
-<div class="row relatorio-item border p-3 m-3 shadow-sm">
-    <span class="col">Relatório - {{ atividade.tema }} </span>
+<div id="bloco-atividade" class="row relatorio-item border p-3 m-3 shadow">
+    <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
     <div class="col text-end">
         <a  href="" download="" class="btn btn-success btn-sm"> <i class="fa-regular fa-file-pdf" style="color: #ffffff;"></i> Baixar</a>
     </div>
 </div>
 {% endfor %}
-<!-- <div class="table-responsive">
-    <table class="table table-hover table-bordered" id="tabela-listar">
-        <thead>
-            <tr>
-                <th scope="col">Atividade</th>
-                <th scope="col">Local</th>
-                <th scope="col">Responsável</th>
-                <th scope="col">Anexos</th>
-                <th scope="col">Opções</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for atividade in object_list %}
-            <tr>
-                <td>{{ atividade.tema }}</td>
-                <td>{{ atividade.local }}</td>
-                <td>{{ atividade.usuario }}</td>
-                <td><a href="{{ atividade.arquivos.url }}" target="_blank"
-                        class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Ver
-                        Anexo</a></td>
-                <td>
-                    <a href="{% url 'editar-atividade' atividade.pk %}" class="btn btn-warning btn-sm">Editar
-                        <i class="fa-solid fa-pen-to-square aria-hidden=" true" style="color: #2d2e2f;"></i>
 
-                    </a>
-                    <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm">Excluir
-                        <i class="fa-solid fa-trash" aria-hidden="true" style="color: #fff;"></i>
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
     <div>
         {% if page_obj.has_previous %}
         <a href="?page={{page_obj.previous_page_number}}">Voltar</a>
@@ -76,41 +48,3 @@
 </footer>
 
 {% endblock footer %} -->
-
-<!-- {% block scripts %}
-<script>
-    $(document).ready(function () {
-        $(document).ready(function () {
-            $('#tabela-listar').DataTable({
-                responsive: true,
-                // "bSort": false,
-                "aaSorting": [],
-                "pageLength": 50,
-                "language": {
-                    "emptyTable": "Sem dados disponíveis",
-                    "info": "Mostrando de _START_ até _END_ de _TOTAL_ registos",
-                    "infoEmpty": "Mostrando de 0 até 0 de 0 registos",
-                    "infoFiltered": "(filtrado de _MAX_ registos no total)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ registos",
-                    "loadingRecords": "A carregar dados...",
-                    "processing": "A processar...",
-                    "search": "Procurar:",
-                    "zeroRecords": "Não foram encontrados resultados",
-                    "paginate": {
-                        "first": "Primeiro",
-                        "last": "Último",
-                        "next": "Seguinte",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending": ": ordem crescente",
-                        "sortDescending": ": ordem decrescente"
-                    }
-                }
-            });
-        });
-    });
-</script>
-{% endblock scripts %} -->

@@ -5,18 +5,50 @@
 <title>Atividades</title>
 {% endblock %}
 
-
-
 {% block main %}
 
-<div class="row  mt-3" id="titulo_lista">
-    <div class="col-md-6">
-        <h3>Lista de Atividades Gerais</h3>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Lista de Atividades Gerais</h3>
+        </div>
+        <div class="col-md-6 text-md-end">
+            <a class="btn btn-primary" href="{% url 'export-pdf' %}?obj={{ request.GET.obj|default:'' }}&start_date={{ request.GET.start_date|default:'' }}&end_date={{ request.GET.end_date|default:'' }}&last_days={{ request.GET.last_days|default:'' }}" target="_blank">Gerar Relatório</a>
+        </div>
     </div>
-    <div class="col-md-6 text-md-end">
-        <a class="btn btn-primary" href="{% url 'export-pdf' %}?obj={{request.GET.obj}}">Gerar Relatório</a>
+    <div class="row mt-3">
+        <div class="col-md-4 col-12">
+            <a class="btn btn-outline-primary m-1" href="?last_days=15">Últimos 15 dias</a>
+            <a class="btn btn-outline-primary m-1" href="?last_days=30">Últimos 30 dias</a>
+            <a class="btn btn-outline-primary m-1" href="?last_days=60">Últimos 60 dias</a>
+            <a class="btn btn-outline-primary m-1" href="?last_days=90">Últimos 90 dias</a>
+        </div>
+        <div class="col-md-3 col-12">
+            <form  action="{% url 'listar-atividade-geral' %}" method="GET">
+                <div class="row align-items-center">
+                    <div class="col-md-3 col-12 text-md-end ">
+                        <label for="start_date">De</label>
+                    </div>
+                    <div class="col-md-7 col-12 m-1">
+                        <input class="form-control" name="start_date" type="date" value="{{request.GET.start_date}}" id="start_date_input"
+                            placeholder="Selecione a data">
+                    </div>
+                    <div class="col-md-3 col-12 text-md-end">
+                        <label for="end_date">até</label>
+                    </div>
+                    <div class="col-md-7 col-12 form-group m-1">
+                        <input class="form-control" name="end_date" type="date" value="{{request.GET.end_date}}"  placeholder="Selecione a data">
+                    </div>
+                    <div class="col-md-1 col-12 form-group text-md-end">
+                        <button class="btn btn-primary" type="submit">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
     </div>
 </div>
+
 <!-- <hr>
 <form action="?" method="GET">
     <input type="text" name="nome" id="" value="{{  request.GET.nome }}" class="p-1 border" autocomplete="off">
@@ -51,7 +83,8 @@
                         <i class="fa-solid fa-pen-to-square aria-hidden=" true" style="color: #2d2e2f;"></i>
 
                     </a>
-                    <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm" alt="Excluir">Excluir
+                    <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm"
+                        alt="Excluir">Excluir
                         <i class="fa-solid fa-trash" aria-hidden="true" style="color: #fff;"></i>
                     </a>
                     <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-success btn-sm">Ver
@@ -62,16 +95,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <!-- <div>
-        {% if page_obj.has_previous %}
-        <a href="?page={{page_obj.previous_page_number}}">Anterior</a>
-        {% endif%}
-
-        {% if page_obj.has_next %}
-        <a href="?page={{page_obj.next_page_number}}">Proximo</a>
-        {% endif%}
-    </div> -->
-    <div class="d-flex justify-content-center"> 
+    <div class="d-flex justify-content-center">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
 
@@ -89,8 +113,8 @@
 
                 {% for i in page_obj.paginator.page_range %}
                 {% if page_obj.number == i %}
-                <li class="page-item active"><span class="page-link">{{ i }} <span
-                            class="sr-only"></span></span></li>
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
+                </li>
                 {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %} <li class="page-item"><a
                         class="page-link" href="?page={{ i }}">{{ i }}</a></li>
                     {% endif %}
@@ -103,7 +127,7 @@
 
                     {% if page_obj.has_next %}
                     <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
-                                class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+                                class="fa-solid fa-chevron-right"></i></a></li>
                     {% else %}
                     <li class="page-item disabled"><span class="page-link"><i class="fa fa-chevron-right"
                                 aria-hidden="true"></i></span></li>
@@ -124,42 +148,6 @@
     </div>
 </footer>
 {% endblock footer %}
-<!-- 
+
 {% block scripts %}
-<script>
-    $(document).ready(function () {
-        $(document).ready(function () {
-            $('#tabela-listar').DataTable({
-                responsive: true,
-                // "bSort": false,
-                "aaSorting": [],
-                "pageLength": 30,
-                "lengthMenu": [5, 10, 20, 30],
-                "language": {
-                    "emptyTable": "Sem dados disponíveis",
-                    "info": "Mostrando de _START_ até _END_ de _TOTAL_ registos",
-                    "infoEmpty": "Mostrando de 0 até 0 de 0 registos",
-                    "infoFiltered": "(filtrado de _MAX_ registos no total)",
-                    "infoPostFix": "",
-                    "thousands": ",",
-                    "lengthMenu": "Mostrar _MENU_ registos",
-                    "loadingRecords": "A carregar dados...",
-                    "processing": "A processar...",
-                    "search": "Procurar:",
-                    "zeroRecords": "Não foram encontrados resultados",
-                    "paginate": {
-                        "first": "Primeiro",
-                        "last": "Último",
-                        "next": "Seguinte",
-                        "previous": "Anterior"
-                    },
-                    "aria": {
-                        "sortAscending": ": ordem crescente",
-                        "sortDescending": ": ordem decrescente"
-                    }
-                }
-            });
-        });
-    });
-</script>
-{% endblock scripts %} -->
+{% endblock scripts %}
