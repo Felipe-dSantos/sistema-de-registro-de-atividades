@@ -3,17 +3,20 @@
 import datetime
 import tempfile
 
+
 # Importações do Django
-from django.http import HttpResponse
+from django.http import HttpResponse, request
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.models import Group
 from django.template.loader import render_to_string
 
+
 # Importações de módulos do Django específicos
 from django.views.generic.edit import View, CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.forms.models import BaseModelForm
+
 
 # Importações de módulos de terceiros
 import weasyprint
@@ -23,6 +26,8 @@ from braces.views import GroupRequiredMixin
 from .models import Local, Atividade
 from .forms import UsuarioForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from dateutil.parser import parse
+from datetime import timedelta, datetime
 
 
 # Create views.
@@ -174,8 +179,42 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     group_required = [u"Administrador", u"Tecnico"]
     model = Atividade
     template_name = 'core/listas/atividadesGerais.html'
-    paginate_by = 4
+    paginate_by = 15
 
+    def get_queryset(self):
+        # Parâmetros da URL
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        last_days = self.request.GET.get('last_days')
+
+        if start_date and end_date:
+            # Converte em data e adiciona um dia ao fim
+            end_date = parse(end_date) + timedelta(1)
+            # Filtra atividades com base nas datas de início e encerramento
+            queryset = Atividade.objects.filter(
+                data_inicio__gte=start_date, data_encerramento__lte=end_date)
+        elif start_date:
+            # Filtra atividades com base apenas na data de início
+            queryset = Atividade.objects.filter(data_inicio=start_date)
+        elif end_date:
+            # Filtra atividades com base apenas na data de encerramento
+            queryset = Atividade.objects.filter(data_encerramento=end_date)
+        elif last_days:
+            try:
+                last_days = int(last_days)
+                # Data atual
+                today = datetime.now().date()
+                # Data de início do período (30, 60 ou 90 dias atrás)
+                start_date = today - timedelta(days=last_days)
+                # Filtra atividades com base na data de início
+                queryset = Atividade.objects.filter(data_inicio__gte=start_date)
+            except ValueError:
+                # Lida com valor inválido para last_days
+                queryset = Atividade.objects.all()
+        else:
+            queryset = Atividade.objects.all()
+
+        return queryset
 
 class CustomLoginRedirectView(View):
     def get(self, request, *args, **kwargs):
@@ -190,14 +229,32 @@ class CustomLoginRedirectView(View):
 
 #################### GERAR RELATÓRIO EM PDF#####################################
 
-
 def export_pdf(request):
-
     obj = request.GET.get('obj')
-    # atividades = Atividade.objects.filter(name__icontains=obj)
-    print(obj)
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    last_days = request.GET.get('last_days')
+
+    # Filtra as atividades com base nos parâmetros de filtro
+   
     if obj:
-        atividades = Atividade.objects.filter(name__icontains=obj)
+        atividades = Atividade.objects.filter(tema__icontains=obj)
+    elif start_date and end_date:
+        end_date = parse(end_date) + timedelta(1)
+        atividades = Atividade.objects.filter(
+            data_inicio__gte=start_date, data_encerramento__lte=end_date)
+    elif start_date:
+        atividades = Atividade.objects.filter(data_inicio=start_date)
+    elif end_date:
+        atividades = Atividade.objects.filter(data_encerramento=end_date)
+    elif last_days:
+        try:
+            last_days = int(last_days)
+            today = datetime.now().date()
+            start_date = today - timedelta(days=last_days)
+            atividades = Atividade.objects.filter(data_inicio__gte=start_date)
+        except ValueError:
+            atividades = Atividade.objects.all()
     else:
         atividades = Atividade.objects.all()
 
@@ -211,8 +268,7 @@ def export_pdf(request):
         string='body { font-family: serif} img {margin: 10px; width: 50px;}')])
 
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename= Relatório-de-Atividades-LIFE' + \
-        str(datetime.datetime.now())+'.pdf'
+    response['Content-Disposition'] = 'inline; filename=Relatório-de-Atividades-LIFE' + datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.pdf'
     response['Content-Transfer-Encoding'] = 'binary'
 
     with tempfile.NamedTemporaryFile(delete=True) as output:
