@@ -37,9 +37,8 @@ div#bloco-atividade:hover {
 }
 
 
-div#bloco-atividade a:hover ,i:hover {
-    background-color: #0b3a25; 
-}
+
+
 
 div#bloco-atividade span#titulo-relatorio{
     text-justify: auto;

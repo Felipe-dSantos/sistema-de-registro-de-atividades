@@ -20,10 +20,11 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(
         template_name='core/usuarios/login.html'
     ), name="login"),
-    path('custom_login_redirect/', CustomLoginRedirectView.as_view(), name='custom_login_redirect'),
+    path('custom_login_redirect/', CustomLoginRedirectView.as_view(),
+         name='custom_login_redirect'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('registrar/', UsuarioCreate.as_view(), name='registrar-usuario'),
-     # create views
+    # create views
     path('cadastro-atividade/', AtividadeCreate.as_view(),
          name='cadastro-atividade'),
     path('cadastro-local/', LocalCreate.as_view(), name='cadastro-local'),
@@ -38,8 +39,13 @@ urlpatterns = [
     # list views
     path('listar/locais/', LocalList.as_view(), name='listar-local'),
     path('listar/atividades/', AtividadeList.as_view(), name='listar-atividade'),
-    path('listar/atividadesGerais/', AtividadeGeralList.as_view(),name='listar-atividade-geral'),
-    
-    path('export-pdf/', views.export_pdf, name='export-pdf')
+    path('listar/atividadesGerais/', AtividadeGeralList.as_view(),
+         name='listar-atividade-geral'),
+
+    path('export-pdf/', views.export_pdf, name='export-pdf'),
+    # path('gerar-pdf-dinamico/', views.gerar_pdf_dinamico,
+    #      name='gerar-pdf-dinamico'),
+    path('relatorio/<int:pk>/gerar_pdf/', views.gerar_pdf_relatorio, name='gerar-pdf-relatorio'),
+    path('relatorio/<int:pk>/', views.exibir_relatorio, name='exibir-relatorio'),
 
 ]

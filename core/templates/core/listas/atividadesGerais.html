@@ -79,17 +79,14 @@
                 <td>{{ atividade.data_inicio }}</td>
                 <td>{{ atividade.data_encerramento }}</td>
                 <td>
-                    <a href="{% url 'editar-atividade' atividade.pk %}" class="btn btn-warning btn-sm">Editar
+                    <!-- <a href="{% url 'editar-atividade' atividade.pk %}" class="btn btn-warning btn-sm">Editar
                         <i class="fa-solid fa-pen-to-square aria-hidden=" true" style="color: #2d2e2f;"></i>
-
                     </a>
                     <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-danger btn-sm"
                         alt="Excluir">Excluir
                         <i class="fa-solid fa-trash" aria-hidden="true" style="color: #fff;"></i>
-                    </a>
-                    <a href="{% url 'excluir-atividade' atividade.pk  %}" class="btn btn-success btn-sm">Ver
-                        <i class="fa-solid fa-file" style="color: #ffffff;"></i>
-                    </a>
+                    </a> -->
+                    <a  href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-success btn-sm" title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg" style="color: #fff;"></i></a>
                 </td>
             </tr>
             {% endfor %}

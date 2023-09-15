@@ -23,7 +23,7 @@
 <div id="bloco-atividade" class="row relatorio-item border p-3 m-3 shadow">
     <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
     <div class="col text-end">
-        <a  href="" download="" class="btn btn-success btn-sm"> <i class="fa-regular fa-file-pdf" style="color: #ffffff;"></i> Baixar</a>
+        <a  href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-success btn-sm" title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg" style="color: #fff;"></i></a>
     </div>
 </div>
 {% endfor %}
