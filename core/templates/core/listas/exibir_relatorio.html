@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block main  %}
+  <h1>Detalhes do Relatório</h1>
+  <hr>
+
+  <h2>Tema: {{ relatorio.tema }}</h2>
+  <p>Descrição: {{ relatorio.descricao }}</p>
+  <p>Local: {{ relatorio.local }}</p>
+  <p>Data de Início: {{ relatorio.data_inicio }}</p>
+  <p>Data de Encerramento: {{ relatorio.data_encerramento }}</p>
+  <p>Quantidade de Participantes: {{ relatorio.quantidade_ptc }}</p>
+
+  <!-- Adicione mais informações do relatório conforme necessário -->
+  
+  <!-- Usuário é um técnico -->
+  <a onclick="goBack()" class="btn btn-secondary">Voltar para a Lista</a>
+
+  <a href="{% url 'gerar-pdf-relatorio' relatorio.pk %}" class="btn btn-success">Gerar PDF</a>
+</div>
+
+<script>
+    function goBack() {
+      window.history.back();
+    }
+  </script>
+{% endblock %}
+
+

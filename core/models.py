@@ -33,3 +33,5 @@ class Atividade(models.Model):
         return f"{self.tema} , Local: {self.local} Data de inicio: {self.data_inicio} - Data de encerramento: {self.data_encerramento}"
 
     
+class PDFModel(models.Model):
+    pdf_file = models.FileField(upload_to='pdfs/')

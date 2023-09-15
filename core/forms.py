@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.forms.widgets import DateInput # need to import
 
+
 from .models import Atividade
 
 from django import forms
