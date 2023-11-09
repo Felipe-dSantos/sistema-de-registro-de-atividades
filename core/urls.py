@@ -1,7 +1,9 @@
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from .views import LocalList, AtividadeList, AtividadeGeralList
+from .views import ChangePasswordView, LocalList, AtividadeList, AtividadeGeralList
+
+from core import  views as v
 from . import views
 from .views import (
     LocalCreate,
@@ -45,7 +47,14 @@ urlpatterns = [
     path('export-pdf/', views.export_pdf, name='export-pdf'),
     # path('gerar-pdf-dinamico/', views.gerar_pdf_dinamico,
     #      name='gerar-pdf-dinamico'),
-    path('relatorio/<int:pk>/gerar_pdf/', views.gerar_pdf_relatorio, name='gerar-pdf-relatorio'),
+    path('relatorio/<int:pk>/gerar_pdf/',
+         views.gerar_pdf_relatorio, name='gerar-pdf-relatorio'),
     path('relatorio/<int:pk>/', views.exibir_relatorio, name='exibir-relatorio'),
 
+    path('alterar-senha/', ChangePasswordView.as_view(), name='alterar_senha'),
+
+    path('password_reset/', v.MyPasswordReset.as_view(), name='password_reset'),  # noqa E501
+    path('password_reset/done/', v.MyPasswordResetDone.as_view(), name='password_reset_done'),  # noqa E501
+    path('reset/<uidb64>/<token>/', v.MyPasswordResetConfirm.as_view(), name='password_reset_confirm'),
+    path('reset/done/', v.MyPasswordResetComplete.as_view(), name='password_reset_complete'),
 ]

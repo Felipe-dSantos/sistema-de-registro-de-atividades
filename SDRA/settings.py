@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+
+from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +28,7 @@ SECRET_KEY = 'django-insecure-&+llfpu)pz3lbomx@&k_+z&!+94oq1_y)9j51-8+irf-u0pt2p
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost']
-
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Application definition
 
@@ -41,8 +43,9 @@ INSTALLED_APPS = [
     'core',
     'crispy_forms',
     'crispy_bootstrap5',
-    'django_cleanup.apps.CleanupConfig',
+    # 'django_cleanup.apps.CleanupConfig',
     'widget_tweaks',
+    'multiupload',
 ]
 
 #Cripy forms
@@ -65,7 +68,7 @@ ROOT_URLCONF = 'SDRA.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -153,3 +156,31 @@ LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
 
 # AUTH_USER_MODEL = 'core.CustomUser'
+
+# settings.py
+
+# Use SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# # The host to use for sending email.
+# EMAIL_HOST = 'smtp.gmail.com'
+
+# # Port to use for the SMTP server defined in EMAIL_HOST.
+# EMAIL_PORT = 587
+
+# # Whether to use a TLS (secure) connection when talking to the SMTP server.
+# EMAIL_USE_TLS = True
+
+# # Username to use for the SMTP server defined in EMAIL_HOST.
+# EMAIL_HOST_USER = 'lds.dossantos1@gmail.com'
+
+# # Password to use for the SMTP server defined in EMAIL_HOST.
+# EMAIL_HOST_PASSWORD = 'eugckvmjobjpzblqq'
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warnig',
+    messages.ERROR: 'danger'
+}

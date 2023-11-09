@@ -6,45 +6,72 @@
 {% endblock %}
 
 {% block main %}
-<div class="container p-3 text-center" id="titulo_lista">
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="col text-start ">
-            <h3 id="teste">Lista de Atividades</h3>
-        </div>
-        <div class="col text-end ">
-            <a href="{% url 'cadastro-atividade' %}" class="btn btn-success">Registrar Atividade</a>
+<div class="container col-8 mb-3 shadow " id="conteudo">
+    <div class="container p-3 text-center" id="titulo_lista">
+        {% include 'core/mensagens.html' %}
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="col text-start ">
+                <h3 id="teste">Lista de Atividades</h3>
+            </div>
+            <div class="col text-end ">
+                <a href="{% url 'cadastro-atividade' %}" class="btn btn-success">Registrar Atividade</a>
+            </div>
         </div>
     </div>
-</div>
 
 
 
-{% for atividade in object_list %}
-<div id="bloco-atividade" class="row relatorio-item border p-3 m-3 shadow">
-    <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
-    <div class="col text-end">
-        <a  href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-success btn-sm" title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg" style="color: #fff;"></i></a>
+    {% for atividade in object_list %}
+    <div id="bloco-atividade" class="row relatorio-item border p-3 m-3 shadow">
+        <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
+        <div class="col text-end">
+            <a href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-primary btn-sm"
+                title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg" style="color: #fff;"></i></a>
+        </div>
     </div>
-</div>
-{% endfor %}
+    {% endfor %}
 
-    <div>
-        {% if page_obj.has_previous %}
-        <a href="?page={{page_obj.previous_page_number}}">Voltar</a>
-        {% endif%}
 
-        {% if page_obj.has_next %}
-            <a href="?page={{page_obj.next_page_number}}">Anterior</a>
-        {% endif%}
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}"><i
+                            class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+                {% else %}
+                <li class="page-item disabled"><span class="page-link"><i class="fa fa-chevron-left"
+                            aria-hidden="true"></i></span></li>
+                {% endif %}
+
+                {% if page_obj.number|add:'-4' > 1 %}
+                <li class="page-item"><a class="page-link" href="?page=1">&hellip;</a></li>
+                {% endif %}
+
+                {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only"></span></span>
+                </li>
+                {% elif i > page_obj.number|add:'-5' and i < page_obj.number|add:'5' %} <li class="page-item"><a
+                        class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.paginator.num_pages > page_obj.number|add:'4' %}
+                    <li class="page-item"><a class="page-link"
+                            href="?page={{ page_obj.paginator.num_pages }}">&hellip;</a></li>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}"><i
+                                class="fa-solid fa-chevron-right"></i></a></li>
+                    {% else %}
+                    <li class="page-item disabled"><span class="page-link"><i class="fa fa-chevron-right"
+                                aria-hidden="true"></i></span></li>
+                    {% endif %}
+
+            </ul>
+        </nav>
     </div>
 </div>
 {% endblock main %}
-
-<!-- {% block footer %}
-<footer id="rodape" class=" fixed-bottom  text-center text-white">
-    <div class="container-fluid  p-3 ">
-        © 2023 Copyright: Felipe dos Santos & Alexandre Lira
-    </div>
-</footer>
-
-{% endblock footer %} -->
