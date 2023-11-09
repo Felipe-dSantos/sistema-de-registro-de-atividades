@@ -16,7 +16,7 @@
                 {% csrf_token %}
 
                 {{ form|crispy }}
-                <div class="d-grid gap-2">
+                <div class="d-grid gap-2 mb-3">
                     <button type="submit" class="btn btn-primary text-center">{{botao}}</button>
                     <a href="{% url 'login' %}" class="btn btn-danger">Cancelar</a>
                 </div>

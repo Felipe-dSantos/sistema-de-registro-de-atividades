@@ -2,8 +2,11 @@
 {% load static %}
 {% load widget_tweaks %}
 
-
-{% block main  %}
+{% block titulo %}
+<title>Detalhes</title>
+{% endblock titulo %}
+{% block main %}
+<div class="container col-8 mb-3 shadow " id="conteudo">
   <h1>Detalhes do Relatório</h1>
   <hr>
 
@@ -13,20 +16,22 @@
   <p>Data de Início: {{ relatorio.data_inicio }}</p>
   <p>Data de Encerramento: {{ relatorio.data_encerramento }}</p>
   <p>Quantidade de Participantes: {{ relatorio.quantidade_ptc }}</p>
+  <!-- <p>anexo: <a href="{{ relatorio.arquivo.url }}" target="_blank">{{ relatorio.arquivo.title }}</a></p> -->
 
-  <!-- Adicione mais informações do relatório conforme necessário -->
-  
-  <!-- Usuário é um técnico -->
-  <a onclick="goBack()" class="btn btn-secondary">Voltar para a Lista</a>
 
-  <a href="{% url 'gerar-pdf-relatorio' relatorio.pk %}" class="btn btn-success">Gerar PDF</a>
+
+  <div class="py-3">
+    <a onclick="goBack()" class="btn btn-secondary"><i class="fa-solid fa-arrow-left px-2"
+        style="color: #ffffff;"></i>Voltar para a Lista</a>
+
+    <a href="{% url 'gerar-pdf-relatorio' relatorio.pk %}" class="btn btn-success" target="_blank"> <i
+        class="fa-regular fa-file-pdf px-2" style="color: #ffffff;"></i>Gerar PDF</a>
+  </div>
 </div>
-
+</div>
 <script>
-    function goBack() {
-      window.history.back();
-    }
-  </script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
 {% endblock %}
-
-

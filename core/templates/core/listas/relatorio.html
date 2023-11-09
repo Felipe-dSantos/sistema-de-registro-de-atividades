@@ -7,42 +7,42 @@
 
 {% block main %}
 <div class="container mt-4">
-    <div class="text-center">
-        <img src="{% static '/img/logo-ufac-cor.png' %}" alt="">
-        <h1 class="text-center">Relatório de Atividades do LIFE</h1>
+    <div class="d-flex flex-row align-items-center justify-content-center ">
+        <img src="{% static '/img/logo-ufac-cor.png' %}" alt="" class="px-2">
+        <h1 class="text-center ">RELATÓRIO DE ATIVIDADES DO LIFE</h1>
     </div>
     {% for atividade in atividades %}
-    <div>
-        <table class=" table-bordered mt-4 ">
+    <div class="container-fluid">
+        <table class=" table-bordered mt-4 container-fluid ">
             <tbody>
                 <tr>
-                    <td scope="row" class="text-end  text-light">
+                    <th scope="row" class="text-center  text-light col-3 bg-dark">
                         <h3>Tema:</h3>
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <h3>{{ atividade.tema }}</h3>
-                    </td>
+                    </th>
                 </tr>
                 <tr>
-                    <td scope="row" class="text-start">Local:</td>
+                    <td scope="row" class="text-start col-1">Local:</td>
                     <td>{{ atividade.local }}</td>
                 </tr>
 
                 <tr>
-                    <td scope="row" class="text-start">Responsável: </td>
+                    <td scope="row" class="text-start col-1">Responsável: </td>
                     <td>{{ atividade.usuario}}</td>
                 </tr>
 
                 <tr>
-                    <td scope="row" class="text-start">Descrição: </td>
+                    <td scope="row" class="text-start col-1">Descrição: </td>
                     <td>{{ atividade.descricao}}</td>
                 </tr>
                 <tr>
-                    <td scope="row" class="text-start">Data de Início: </td>
+                    <td scope="row" class="text-start col-1">Data de Início: </td>
                     <td>{{ atividade.data_inicio }}</td>
                 </tr>
                 <tr>
-                    <td scope="row" class="text-start">Data de Encerramento: </td>
+                    <td scope="row" class="text-start col-1">Data de Encerramento: </td>
                     <td>{{ atividade.data_encerramento }}</td>
                 </tr>
             </tbody>
