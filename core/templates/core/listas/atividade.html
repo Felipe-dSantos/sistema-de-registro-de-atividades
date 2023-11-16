@@ -6,7 +6,9 @@
 {% endblock %}
 
 {% block main %}
-<div class="container col-8 mb-3 shadow " id="conteudo">
+{% include 'core/breadcrumb.html' %}
+
+<div class="container col-8 mb-3" id="conteudo">
     <div class="container p-3 text-center" id="titulo_lista">
         {% include 'core/mensagens.html' %}
         <div class="d-flex justify-content-between align-items-center">
@@ -19,20 +21,21 @@
         </div>
     </div>
 
-
-
     {% for atividade in object_list %}
-    <div id="bloco-atividade" class="row relatorio-item border p-3 m-3 shadow">
-        <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
-        <div class="col text-end">
-            <a href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-primary btn-sm"
-                title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg" style="color: #fff;"></i></a>
+    
+        <div id="bloco-atividade" class="row relatorio-item border  p-3 m-2 ">
+            <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
+            <div class="col text-end">
+                <a href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-primary btn-sm"
+                    title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg"
+                        style="color: #fff;"></i></a>
+            </div>
         </div>
-    </div>
+  
     {% endfor %}
 
 
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center my-3">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
 

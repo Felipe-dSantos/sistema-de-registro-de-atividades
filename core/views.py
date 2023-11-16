@@ -1,4 +1,12 @@
 # Importações de módulos padrão
+from django.views.generic import TemplateView
+from reportlab.platypus import FrameBreak
+from reportlab.platypus import Image
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import Table, TableStyle, PageTemplate, Frame
+from reportlab.lib.pagesizes import letter, landscape
+from django.utils.timezone import now
 from django.contrib.auth.views import (
     PasswordResetView, PasswordResetDoneView, PasswordResetCompleteView, PasswordResetConfirmView)
 from django.contrib.auth.forms import PasswordChangeForm
@@ -53,8 +61,7 @@ from datetime import timedelta, datetime
 from django.contrib import messages
 
 
-# Create views.
-
+# views para registro de usuarios
 class UsuarioCreate(CreateView):
     template_name = 'core/usuarios/form.html'
     form_class = UsuarioForm
@@ -76,6 +83,100 @@ class UsuarioCreate(CreateView):
         context['titulo'] = "Registro de Usuario"
         context['botao'] = "Registrar"
         return context
+
+
+# views para reset senha
+class MyPasswordReset(PasswordResetView):
+    '''
+    Requer
+    registration/password_reset_form.html
+    registration/password_reset_email.html
+    registration/password_reset_subject.txt  Opcional
+    '''
+    template_name = 'core/usuarios/password_reset_form.html'
+    ...
+
+
+class MyPasswordResetDone(PasswordResetDoneView):
+    '''
+    Requer
+    registration/password_reset_done.html
+    '''
+
+    template_name = 'core/usuarios/password_reset_done.html'
+    ...
+
+
+class MyPasswordResetConfirm(PasswordResetConfirmView):
+    '''
+    Requer password_reset_confirm.html
+    '''
+    template_name = 'core/usuarios/password_reset_confirm.html'
+
+    def form_valid(self, form):
+        self.user.is_active = True
+        self.user.save()
+        messages.success(self.request, 'Sua senha foi atualizada com sucesso!')
+        return super(MyPasswordResetConfirm, self).form_valid(form)
+
+
+class MyPasswordResetComplete(PasswordResetCompleteView):
+    '''
+    Requer password_reset_complete.html
+    '''
+    template_name = 'core/usuarios/password_reset_complete.html'
+    ...
+
+# view para alterar senha
+
+
+class ChangePasswordView(LoginRequiredMixin, FormView):
+    template_name = 'core/usuarios/change_password.html'
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('listar-atividade')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        update_session_auth_hash(self.request, form.user)
+        messages.success(self.request, 'Sua senha foi atualizada com sucesso!')
+        return super().form_valid(form)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['titulo'] = "Alterar Senha"
+        context['botao'] = "Alterar minha Senha"
+        context['url'] = reverse('listar-atividade')
+        context['breadcrumb'] = [
+            {'title': 'Inicio', 'url': '/home/'},
+            {'title': 'alterar senha', 'url': '/alterar_senha/'},
+            
+        ]
+        return context
+    
+
+
+class Home(TemplateView):
+    template_name = 'core/home/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumb'] = [
+            {'title': 'Inicio', 'url': '/home/'},
+        ]
+        return context
+
+class HomeTecnico(TemplateView):
+    template_name = 'inicioTecnico.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
 
 ################### CRUD LOCAL #########################
 
@@ -152,6 +253,11 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
         context['titulo'] = "Registro de Atividade"
         context['botao'] = "Registrar"
         context['url'] = reverse('listar-atividade')
+        context['breadcrumb'] = [
+            {'title': 'Inicio', 'url': '/home/'},
+            {'title': 'atividades', 'url': '/listar/atividades/'},
+            {'title': 'registro de atividade', 'url': '/cadastro-atividade/'},
+        ]
 
         return context
 
@@ -200,6 +306,14 @@ class AtividadeList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         self.object_list = Atividade.objects.filter(usuario=self.request.user)
         return self.object_list
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['breadcrumb'] = [
+            {'title': 'Inicio', 'url': '/home/'},
+            {'title': 'atividades', 'url': '/listar-atividade/'},
+            
+        ]
+        return context
 
 
 class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
@@ -256,85 +370,178 @@ class CustomLoginRedirectView(View):
         if request.user.groups.filter(name='Tecnico').exists():
 
             return redirect('listar-atividade-geral')
-        elif request.user.groups.filter(name='Dicente').exists():
+        elif request.user.groups.filter(name='Docente').exists():
 
-            return redirect('listar-atividade')
+            return redirect('home')
         else:
-            return redirect('listar-atividade')
+            return redirect('home')
+
 
 #################### GERAR RELATÓRIO EM PDF#####################################
+# def export_pdf(request):
+#     c=canvas.Canvas('teste.pdf')
+#     c.drawString(200,200, 'olá mundo')
+#     c.showPage()
+#     c.save()
 
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'inline; filename="nome_do_arquivo.pdf"'
 
-@login_required
+#     # Escreva o PDF no objeto de resposta
+#     pdf = c.getpdfdata()
+#     response.write(pdf)
+
+#     return response
+
 def export_pdf(request):
-    obj = request.GET.get('obj')
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
-    last_days = request.GET.get('last_days')
 
-    # Filtra as atividades com base nos parâmetros de filtro
+    # Obtenha todas as atividades
+    relatorios = Atividade.objects.all()
 
-    if obj:
-        atividades = Atividade.objects.filter(tema__icontains=obj)
-    elif start_date and end_date:
-        end_date = parse(end_date) + timedelta(1)
-        atividades = Atividade.objects.filter(
-            data_inicio__gte=start_date, data_encerramento__lte=end_date)
-    elif start_date:
-        atividades = Atividade.objects.filter(data_inicio=start_date)
-    elif end_date:
-        atividades = Atividade.objects.filter(data_encerramento=end_date)
-    elif last_days:
-        try:
-            last_days = int(last_days)
-            today = datetime.now().date()
-            start_date = today - timedelta(days=last_days)
-            atividades = Atividade.objects.filter(data_inicio__gte=start_date)
-        except ValueError:
-            atividades = Atividade.objects.all()
-    else:
-        atividades = Atividade.objects.all()
+    # Cria um objeto BytesIO para armazenar o PDF
+    buffer = BytesIO()
 
-    context = {'atividades': atividades}
+    # Cria o documento PDF usando o ReportLab
+    doc = SimpleDocTemplate(buffer, pagesize=A4)
 
-    html_index = render_to_string('core/listas/relatorio.html', context)
+    # Cria uma lista para adicionar elementos ao PDF
+    elements = []
+    styles = getSampleStyleSheet()
+    style_title = ParagraphStyle(
+        name='TitleStyle',
+        parent=styles['Title'],
+        fontSize=16,
+    )
+    style_paragraph = ParagraphStyle(
+        name='CenteredParagraph', alignment=1,
+        parent=styles['Normal'],
+        fontSize=12,
+    )
 
-    # Defina um estilo CSS para a tabela
-    table_style = """
-    table {
-        border-collapse: collapse;
-    }
-    th {
-        border: 1px solid #000;  /* Adicione bordas às células da tabela */
-        padding: 5px;
-        background-color: lightgray;  /* Defina a cor de fundo das células */
-    }
-    img{
-        width: 60px
-    }
-    """
+   # Adiciona o cabeçalho com a imagem e o título
+    # header_frame = Frame(inch, doc.height + inch, doc.width, inch)
+    image_path = os.path.join(
+        settings.BASE_DIR, 'static', 'img', 'Logo-ufac-cor.png')
+    logo = Image(image_path, width=40, height=56)
 
-    weasyprint_html = HTML(
-        string=html_index, base_url='http://localhost:8000/media')
-    pdf = weasyprint_html.write_pdf(stylesheets=[CSS(string=table_style)])
+    # Título
+    titulo = Paragraph(
+        '<b>REGISTRO DE ATIVIDADES REALIZADAS<br/>NO LABORATÓRIO DE INFORMÁTICA DO LIFE</b>',
+        style_title
+    )
 
+    # Tabela do cabeçalho
+    header_data = [[logo, titulo]]
+    # Tabela do cabeçalho
+    header_table = Table(header_data, colWidths=[50, 400])
+    # Estilo da tabela
+    table_style = TableStyle([
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Alinhamento centralizado
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alinhamento vertical ao meio
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Grade
+        ('FONTSIZE', (0, 0), (-1, -1), 12),  # Tamanho da fonte
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),  # Nome da fonte
+    ])
+
+    header_table.setStyle(table_style)
+
+    # Adicione a tabela de cabeçalho à lista de elementos
+    c = canvas.Canvas("relatório.pdf")
+    elements.append(header_table)
+    elements.append(Spacer(1, 20))
+
+    # Para cada relatório, crie uma tabela de dados
+    for relatorio in relatorios:
+        data_inicio_formatada = relatorio.data_inicio.strftime('%d/%m/%Y')
+        data_encerramento_formatada = relatorio.data_encerramento.strftime(
+            '%d/%m/%Y')
+        data = [
+            ['Tema:', Paragraph(relatorio.tema, style_paragraph)],
+            ['Descrição:', Paragraph(
+                relatorio.descricao, getSampleStyleSheet()['Normal'])],
+            ['Nome do Responsável:', Paragraph(
+                relatorio.usuario.username, getSampleStyleSheet()['Normal'])],
+            ['Quantidade de Participantes:', Paragraph(
+                str(relatorio.quantidade_ptc), getSampleStyleSheet()['Normal'])],
+            ['Data de Início:', Paragraph(
+                str(data_inicio_formatada), getSampleStyleSheet()['Normal'])],
+            ['Data de Encerramento:', Paragraph(
+                str(data_encerramento_formatada), getSampleStyleSheet()['Normal'])],
+        ]
+
+        table = Table(data, colWidths=[150, 300])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('LEFTPADDING', (0, 0), (-1, -1), 5),
+            ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+            ('TOPPADDING', (0, 0), (-1, -1), 8),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+        ]))
+
+        # Adicione a tabela à lista de elementos
+        # table_in_frame = KeepInFrame(0, 0, [table], mode="shrink")
+        elements.append(table)
+        # Adicione um espaço em branco após a tabela
+        elements.append(Spacer(1, 10))
+
+        # # Adicione um FrameBreak para passar para a próxima página
+        # elements.append(FrameBreak())
+
+    # Adicione um parágrafo para a assinatura do responsável
+    line = Table(
+        [[Paragraph('<u>' + ' ' * 100 + '</u>', style_paragraph)]], colWidths=[500])
+    elements.append(line)
+
+    def footer(canvas, doc):
+        canvas.saveState()
+        footer = Paragraph(
+            f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
+            getSampleStyleSheet()['Normal']
+        )
+        w, h = footer.wrap(doc.width, doc.bottomMargin)
+        footer.drawOn(canvas, doc.leftMargin, h)
+        canvas.restoreState()
+
+    frame = Frame(doc.leftMargin, doc.bottomMargin,
+                  doc.width, doc.height, id='normal')
+    template = PageTemplate(id='test', frames=frame, onPage=footer)
+    doc.addPageTemplates([template])
+
+    # Adicione o parágrafo alinhado ao centro
+    assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
+    elements.append(assinatura)
+
+    # Construa o PDF
+    doc.build(elements, c)
+
+    # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename=Relatório-de-Atividades-LIFE' + \
-        datetime.now().strftime("%Y-%m-%d %H-%M-%S") + '.pdf'
-    response['Content-Transfer-Encoding'] = 'binary'
+    response['Content-Disposition'] = 'inline; filename=Relatório' + \
+        '-' + datetime.now().strftime("%d-%m-%y") + '.pdf'
+    response.write(buffer.getvalue())
+    buffer.close()
 
-    with tempfile.NamedTemporaryFile(delete=True) as output:
-        output.write(pdf)
-        output.flush()
-        output.seek(0)
-        response.write(output.read())
     return response
 
 
 def exibir_relatorio(request, pk):
     relatorio = get_object_or_404(Atividade, id=pk)
-    return render(request, 'core/listas/exibir_relatorio.html', {'relatorio': relatorio})
-
+    context = {
+        'relatorio': relatorio,
+        'breadcrumb': [
+            {'title': 'Inicio', 'url': '/home/'},
+            {'title': 'atividades', 'url': '/listar/atividades/'},
+            {'title': 'detalhes', 'url': '/detalhes/'},
+        ]
+    }
+    return render(request, 'core/listas/exibir_relatorio.html', context)
 
 def gerar_pdf_relatorio(request, pk):
 
@@ -419,6 +626,21 @@ def gerar_pdf_relatorio(request, pk):
     # Adicione um espaço em branco após a tabela
     elements.append(Spacer(1, 20))
 
+    def footer(canvas, doc):
+        canvas.saveState()
+        footer = Paragraph(
+            f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
+            getSampleStyleSheet()['Normal']
+        )
+        w, h = footer.wrap(doc.width, doc.bottomMargin)
+        footer.drawOn(canvas, doc.leftMargin, h)
+        canvas.restoreState()
+
+    frame = Frame(doc.leftMargin, doc.bottomMargin,
+                  doc.width, doc.height, id='normal')
+    template = PageTemplate(id='test', frames=frame, onPage=footer)
+    doc.addPageTemplates([template])
+
     # Adicione um parágrafo para a assinatura do responsável
     line = Table(
         [[Paragraph('<u>' + '&nbsp;' * 100 + '</u>', style_paragraph)]], colWidths=[500])
@@ -441,66 +663,23 @@ def gerar_pdf_relatorio(request, pk):
     return response
 
 
-class ChangePasswordView(LoginRequiredMixin, FormView):
-    template_name = 'core/usuarios/change_password.html'
-    form_class = PasswordChangeForm
-    success_url = reverse_lazy('listar-atividade')
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user
-        return kwargs
-
-    def form_valid(self, form):
-        form.save()
-        update_session_auth_hash(self.request, form.user)
-        messages.success(self.request, 'Sua senha foi atualizada com sucesso!')
-        return super().form_valid(form)
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        context['titulo'] = "Alterar Senha"
-        context['botao'] = "Alterar"
-        context['url'] = reverse('listar-atividade')
-        return context
-
-
-class MyPasswordResetConfirm(PasswordResetConfirmView):
-    '''
-    Requer password_reset_confirm.html
-    '''
-    template_name = 'core/usuarios/password_reset_confirm.html'
-    def form_valid(self, form):
-        self.user.is_active = True
-        self.user.save()
-        messages.success(self.request, 'Sua senha foi atualizada com sucesso!')
-        return super(MyPasswordResetConfirm, self).form_valid(form)
-
-
-class MyPasswordReset(PasswordResetView):
-    '''
-    Requer
-    registration/password_reset_form.html
-    registration/password_reset_email.html
-    registration/password_reset_subject.txt  Opcional
-    '''
-    template_name = 'core/usuarios/password_reset_form.html'
-    ...
-
-
-class MyPasswordResetDone(PasswordResetDoneView):
-    '''
-    Requer
-    registration/password_reset_done.html
-    '''
-    
-    template_name = 'core/usuarios/password_reset_done.html'
-    ...
-
-
-class MyPasswordResetComplete(PasswordResetCompleteView):
-    '''
-    Requer password_reset_complete.html
-    '''
-    template_name = 'core/usuarios/password_reset_complete.html'
-    ...
+# def login_view(request):
+#     if request.method == 'POST':
+#         cpf = request.POST['cpf']
+#         password = request.POST['password']
+#         print(cpf)
+#         print(password)
+#         user = authenticate(request, cpf=cpf, password=password)
+#         print(user)
+#         if user is not None:
+#             login(request, user)
+#             print('entrou aqui')
+#             # Autenticação bem-sucedida, redirecione para a página de sucesso ou faça o que for necessário
+#             messages.success(request, 'Bem Vindo (a) '+ user.first_name)
+#             return redirect('home')
+#         else:
+#             # Autenticação falhou, lide com isso de acordo
+#             messages.debug(request, 'Ops! Aconteceu algum erro.') 
+#     # Renderize o formulário de login
+#     return render(request, 'core/usuarios/login.html')

@@ -1,64 +1,85 @@
-body#corpo{
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+
+body#corpo {
     margin: 0;
     padding: 0;
     background-color: #F3F6FC;
+    font-family: 'Roboto', sans-serif;
 }
 
-main#conteudo{
+main#conteudo {
     margin-top: 30px;
-    
+
     margin-bottom: 30px;
 }
 
-#user{
+#user {
     color: white;
 }
 
-footer div{
+footer div {
     color: #3b3b3b;
 }
 
 
-a#link_user{
+a#link_user {
     width: 150px;
     text-align: center;
 }
 
-a#sdra{
+a#sdra {
     font-size: 15px;
 }
 
 div#bloco-atividade {
-   border-radius: 10px;
-   padding: 20px;
-   align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+    padding: 20px;
+    align-items: center;
 }
 
 div#bloco-atividade:hover {
-    background-color: #cfcfcf;
+    background-color: #DEE2E6;
 }
 
 
-
-
-
-div#bloco-atividade span#titulo-relatorio{
+div#bloco-atividade span#titulo-relatorio {
     text-justify: auto;
- }
- 
- /* div#btrel{
-    display: flex;
-    align-items: center;
-    text-align: center;
- } */
+}
 
- a.cancel, button.register{
+a.cancel,
+button.register {
     width: 200px;
- }
+}
 
- div#conteudo{
+div#conteudo {
     border-radius: 10px;
     background-color: #fff;
-    
-    
- }
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
+}
+
+#navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
+}
+
+header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
+}
+
+#crumb {
+    color: #6C757D;
+    font-weight:bold;
+    text-decoration: none;
+    display: inline-block;
+    /* Para aplicar a transição corretamente */
+    /* Transição suave da largura durante 0.3 segundos */
+}
+
+#crumb:hover {
+    text-decoration: underline;/* Aumenta a largura do link ao passar o mouse */
+}
+
+ol.breadcrumb{
+    border-bottom: 1px solid #cfcfcf;
+}
+

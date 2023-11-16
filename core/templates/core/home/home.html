@@ -1,0 +1,26 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block titulo %}
+<title>Atividades</title>
+{% endblock %}
+
+{% block main %}
+
+    {% include 'core/breadcrumb.html' %}
+
+
+<div class="container col-8 mb-3 " id="home_conteudo">
+    <div class="row">
+        <div class="col mx-2" id="conteudo">
+            <a class="card text-center"  style="height: 300px;" href="{% url 'listar-atividade' %}"> suas atividade registradas </a>
+        </div>
+        <div class="col" id="conteudo">
+            <a class="card text-center"  style="height: 300px;" href="{% url 'cadastro-atividade' %}"> registre sua atividade</a>
+        </div>
+
+    </div>
+
+
+</div>
+{% endblock main %}

@@ -6,7 +6,10 @@
 <title>Detalhes</title>
 {% endblock titulo %}
 {% block main %}
-<div class="container col-8 mb-3 shadow " id="conteudo">
+
+    {% include 'core/breadcrumb.html' %}
+
+<div class="container col-8 mb-3" id="conteudo">
   <h1>Detalhes do Relatório</h1>
   <hr>
 
