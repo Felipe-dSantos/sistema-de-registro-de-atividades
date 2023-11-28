@@ -1,26 +1,50 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block titulo %}
-<title>Atividades</title>
+{% block title %}
+<title>SIRA-Atividades</title>
 {% endblock %}
 
 {% block main %}
 
-    {% include 'core/breadcrumb.html' %}
+{% include 'core/breadcrumb.html' %}
 
+<div class="container col-8 mb-3" id="home_conteudo">
+  <div class="row">
+    <div class="col-md-6">
+      <a href="{% url 'listar-atividade' %}" id="card_link">
+        <div class="card border-primary mb-3" id="card_link" style="max-width: 100%; min-height: 10rem;">
 
-<div class="container col-8 mb-3 " id="home_conteudo">
-    <div class="row">
-        <div class="col mx-2" id="conteudo">
-            <a class="card text-center"  style="height: 300px;" href="{% url 'listar-atividade' %}"> suas atividade registradas </a>
+          <div class="card-body text-primary">
+            <h5 class="card-title">Minhas Atividades</h5>
+            <p class="card-text">aqui você tem acesso a todas suas atividades registradas</p>
+
+          </div>
+          <div class="card-footer text-bg-primary d-flex justify-content-between align-items-center">
+
+            <span>Acessar</span> <i class="fa-solid fa-circle-arrow-right"></i>
+          </div>
         </div>
-        <div class="col" id="conteudo">
-            <a class="card text-center"  style="height: 300px;" href="{% url 'cadastro-atividade' %}"> registre sua atividade</a>
-        </div>
-
+      </a>
     </div>
 
+    <div class="col-md-6">
+      <a href="{% url 'cadastro-atividade' %}" id="card_link">
+        <div class="card border-primary mb-3" id="card_link"   style="max-width: 100%; min-height: 10rem">
 
+          <div class="card-body text-primary">
+            <h5 class="card-title">Registro de atividades</h5>
+            <p class="card-text">Faça registro de uma nova atividade</p>
+
+          </div>
+          <div class="card-footer text-bg-primary d-flex justify-content-between align-items-center">
+
+            <span>Fazer registro</span> <i class="fa-solid fa-circle-arrow-right"></i>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
 </div>
+
 {% endblock main %}

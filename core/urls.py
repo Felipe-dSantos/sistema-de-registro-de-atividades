@@ -30,6 +30,7 @@ urlpatterns = [
     # create 
     path('cadastro-atividade/', AtividadeCreate.as_view(),
          name='cadastro-atividade'),
+     # path('cadastro-atividade/', AtividadeCreate, name='cadastro-atividade'),
     path('cadastro-local/', LocalCreate.as_view(), name='cadastro-local'),
     # update 
     path('editar/local/<int:pk>', LocalUpdate.as_view(), name='editar-local'),

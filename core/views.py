@@ -1,4 +1,5 @@
 # Importações de módulos padrão
+from .models import Atividade, Arquivo
 from django.views.generic import TemplateView
 from reportlab.platypus import FrameBreak
 from reportlab.platypus import Image
@@ -16,9 +17,9 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from datetime import timedelta
 from django.shortcuts import render
-from .models import Atividade
+from .models import Arquivo, Atividade
 from datetime import datetime
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 import datetime
 import tempfile
 from io import BytesIO
@@ -42,9 +43,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import View, CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.forms.models import BaseModelForm
-from .forms import AtividadeForm
+from .forms import ArquivoForm, ArquivoFormSet, AtividadeForm
 from django.templatetags.static import static
 from django.conf import settings
+from django.forms import inlineformset_factory
 import os
 
 
@@ -154,10 +156,9 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
         context['breadcrumb'] = [
             {'title': 'Inicio', 'url': '/home/'},
             {'title': 'alterar senha', 'url': '/alterar_senha/'},
-            
+
         ]
         return context
-    
 
 
 class Home(TemplateView):
@@ -169,6 +170,7 @@ class Home(TemplateView):
             {'title': 'Inicio', 'url': '/home/'},
         ]
         return context
+
 
 class HomeTecnico(TemplateView):
     template_name = 'inicioTecnico.html'
@@ -233,40 +235,115 @@ class LocalList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 class AtividadeCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
     model = Atividade
-    fields = ['tema', 'descricao', 'local',
-              'quantidade_ptc', 'data_inicio', 'data_encerramento', 'arquivos']
+    fields = ['tema', 'descricao', 'local', 'quantidade_ptc',
+              'data_inicio', 'data_encerramento', 'duracao']
     template_name = 'core/registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
     success_message = 'Atividade registrada com Sucesso!'
-
-    def form_valid(self, form):
-
-        # captura o usuario que esta fazendo o cadastro
-        form.instance.usuario = self.request.user
-        url = super().form_valid(form)
-        messages.success(self.request, self.success_message)
-
-        return url
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['titulo'] = "Registro de Atividade"
         context['botao'] = "Registrar"
         context['url'] = reverse('listar-atividade')
-        context['breadcrumb'] = [
-            {'title': 'Inicio', 'url': '/home/'},
-            {'title': 'atividades', 'url': '/listar/atividades/'},
-            {'title': 'registro de atividade', 'url': '/cadastro-atividade/'},
-        ]
+
+        # Criando o formset de Arquivos relacionados à Atividade
+        ArquivoFormSet = inlineformset_factory(
+            Atividade, Arquivo, fields=['arquivo',], extra=3)
+
+        if self.request.POST:
+            # Se dados forem submetidos, popula os formulários com os dados enviados
+            context['formset'] = ArquivoFormSet(
+                self.request.POST, self.request.FILES)
+        else:
+            # Se não, cria um formset vazio
+            context['formset'] = ArquivoFormSet()
 
         return context
+
+    def form_valid(self, form):
+        form.instance.usuario = self.request.user
+        url = super().form_valid(form)
+        messages.success(self.request, self.success_message)
+
+        # Adicione aqui a lógica para salvar os arquivos associados à atividade
+        
+        formset = ArquivoFormSet(
+            self.request.POST, self.request.FILES, instance=self.object)
+
+        if formset.is_valid():
+            formset.save()
+
+        return url
+# class AtividadeCreate(LoginRequiredMixin, CreateView):
+#     login_url = reverse_lazy('login')
+#     model = Atividade
+#     fields = ['tema', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao']
+#     template_name = 'core/registros/form-upload.html'
+#     success_url = reverse_lazy('listar-atividade')
+#     success_message = 'Atividade registrada com Sucesso!'
+
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(*args, **kwargs)
+#         context['titulo'] = "Registro de Atividade"
+#         context['botao'] = "Registrar"
+#         context['url'] = reverse('listar-atividade')
+
+#         # Criando o formset de Arquivos relacionados à Atividade
+#         ArquivoFormSet = inlineformset_factory(Atividade, Arquivo, fields=['arquivo',], extra=1)
+
+#         if self.request.POST:
+#             # Se dados forem submetidos, popula os formulários com os dados enviados
+#             context['formset'] = ArquivoFormSet(self.request.POST, self.request.FILES)
+#         else:
+#             # Se não, cria um formset vazio
+#             context['formset'] = ArquivoFormSet()
+
+#         return context
+
+#     def form_valid(self, form):
+#         form.instance.usuario = self.request.user
+#         url = super().form_valid(form)
+
+#         # Adicione aqui a lógica para salvar os arquivos associados à atividade
+#         formset = ArquivoFormSet(self.request.POST, self.request.FILES, instance=self.object)
+
+#         if formset.is_valid():
+#             for form in formset:
+#                 if form.cleaned_data.get('arquivo'):
+#                     arquivo = form.save(commit=False)  # Obtém o objeto Arquivo sem salvá-lo ainda
+#                     arquivo.atividade = self.object  # Define a atividade para cada arquivo
+#                     arquivo.save()  # Salva o objeto Arquivo
+#         else:
+#             return super().form_invalid(form)
+
+#         messages.success(self.request, self.success_message)
+#         return super().form_valid(form)
+
+
+# @login_required
+# def AtividadeCreate(request):
+#     success_message = 'Atividade registrada com Sucesso!'
+#     if request.method == 'POST':
+#         form = AtividadeForm(request.POST, request.FILES)
+#         formset = ArquivoFormSet(request.POST, request.FILES, instance=form.instance)
+#         if form.is_valid() and formset.is_valid():
+#             form.save()
+#             formset.save()
+#             messages.success(request, success_message)
+#             return redirect('listar-atividade')
+#     else:
+#         form = AtividadeForm()
+#         formset = ArquivoFormSet()
+
+#     return render(request, 'core/registros/form-upload.html', {'form': form, 'formset': formset})
 
 
 class AtividadeUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
     model = Atividade
     fields = ['tema', 'descricao', 'local', 'quantidade_ptc',
-              'data_inicio', 'data_encerramento', 'arquivos']
+              'data_inicio', 'data_encerramento', 'arquivo']
     template_name = 'core/registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
 
@@ -306,12 +383,13 @@ class AtividadeList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         self.object_list = Atividade.objects.filter(usuario=self.request.user)
         return self.object_list
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['breadcrumb'] = [
             {'title': 'Inicio', 'url': '/home/'},
             {'title': 'atividades', 'url': '/listar-atividade/'},
-            
+
         ]
         return context
 
@@ -392,20 +470,20 @@ class CustomLoginRedirectView(View):
 #     response.write(pdf)
 
 #     return response
-
 def export_pdf(request):
+    # Obtendo todas as atividades do modelo Atividade
+    atividades = Atividade.objects.all()
 
-    # Obtenha todas as atividades
-    relatorios = Atividade.objects.all()
-
-    # Cria um objeto BytesIO para armazenar o PDF
+    # Criando um objeto BytesIO para armazenar o PDF
     buffer = BytesIO()
 
-    # Cria o documento PDF usando o ReportLab
+    # Criando o documento PDF usando o ReportLab
     doc = SimpleDocTemplate(buffer, pagesize=A4)
 
-    # Cria uma lista para adicionar elementos ao PDF
+    # Criando uma lista para adicionar elementos ao PDF
     elements = []
+
+    # Obtendo o estilo de parágrafo para o cabeçalho
     styles = getSampleStyleSheet()
     style_title = ParagraphStyle(
         name='TitleStyle',
@@ -433,7 +511,7 @@ def export_pdf(request):
     # Tabela do cabeçalho
     header_data = [[logo, titulo]]
     # Tabela do cabeçalho
-    header_table = Table(header_data, colWidths=[50, 400])
+    header_table = Table(header_data, colWidths=[50, 415])
     # Estilo da tabela
     table_style = TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Alinhamento centralizado
@@ -450,54 +528,39 @@ def export_pdf(request):
     elements.append(header_table)
     elements.append(Spacer(1, 20))
 
-    # Para cada relatório, crie uma tabela de dados
-    for relatorio in relatorios:
-        data_inicio_formatada = relatorio.data_inicio.strftime('%d/%m/%Y')
-        data_encerramento_formatada = relatorio.data_encerramento.strftime(
-            '%d/%m/%Y')
-        data = [
-            ['Tema:', Paragraph(relatorio.tema, style_paragraph)],
-            ['Descrição:', Paragraph(
-                relatorio.descricao, getSampleStyleSheet()['Normal'])],
-            ['Nome do Responsável:', Paragraph(
-                relatorio.usuario.username, getSampleStyleSheet()['Normal'])],
-            ['Quantidade de Participantes:', Paragraph(
-                str(relatorio.quantidade_ptc), getSampleStyleSheet()['Normal'])],
-            ['Data de Início:', Paragraph(
-                str(data_inicio_formatada), getSampleStyleSheet()['Normal'])],
-            ['Data de Encerramento:', Paragraph(
-                str(data_encerramento_formatada), getSampleStyleSheet()['Normal'])],
-        ]
+    # Criando listas para armazenar os dados das colunas
+    temas = ['Tema']
+    responsaveis = ['Nome do Responsável']
+    participantes = ['Nº de Participantes']
+    datas_inicio = ['Início']
+    datas_encerramento = ['Encerramento']
 
-        table = Table(data, colWidths=[150, 300])
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('LEFTPADDING', (0, 0), (-1, -1), 5),
-            ('RIGHTPADDING', (0, 0), (-1, -1), 8),
-            ('TOPPADDING', (0, 0), (-1, -1), 8),
-            ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
-        ]))
+    # Preenchendo as listas com os dados das atividades
+    for atividade in atividades:
+        nome_completo = f"{atividade.usuario.first_name} {atividade.usuario.last_name}"
 
-        # Adicione a tabela à lista de elementos
-        # table_in_frame = KeepInFrame(0, 0, [table], mode="shrink")
-        elements.append(table)
-        # Adicione um espaço em branco após a tabela
-        elements.append(Spacer(1, 10))
+        temas.append(atividade.tema)
+        responsaveis.append(nome_completo)
+        participantes.append(str(atividade.quantidade_ptc))
+        datas_inicio.append(atividade.data_inicio.strftime('%d/%m/%Y'))
+        datas_encerramento.append(
+            atividade.data_encerramento.strftime('%d/%m/%Y'))
 
-        # # Adicione um FrameBreak para passar para a próxima página
-        # elements.append(FrameBreak())
+    # Organizando os dados em colunas
+    colunas = [temas, responsaveis, participantes,
+               datas_inicio, datas_encerramento]
+    tabela_dados = list(map(list, zip(*colunas)))
+    # Criando a tabela com os dados organizados como colunas
+    table = Table(tabela_dados)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Cor de fundo do cabeçalho
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),  # Cor do texto do cabeçalho
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        # Outros estilos da tabela...
+    ]))
 
-    # Adicione um parágrafo para a assinatura do responsável
-    line = Table(
-        [[Paragraph('<u>' + ' ' * 100 + '</u>', style_paragraph)]], colWidths=[500])
-    elements.append(line)
+    elements.append(table)
+    elements.append(Spacer(1, 20))
 
     def footer(canvas, doc):
         canvas.saveState()
@@ -515,26 +578,161 @@ def export_pdf(request):
     doc.addPageTemplates([template])
 
     # Adicione o parágrafo alinhado ao centro
-    assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
-    elements.append(assinatura)
 
     # Construa o PDF
     doc.build(elements, c)
 
-    # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
+    # Retornando o PDF como uma resposta HTTP para abrir em uma nova guia
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename=Relatório' + \
-        '-' + datetime.now().strftime("%d-%m-%y") + '.pdf'
+    response['Content-Disposition'] = 'inline; filename=Relatorio.pdf'
     response.write(buffer.getvalue())
     buffer.close()
 
     return response
+# def export_pdf(request):
+
+#     # Obtenha todas as atividades
+#     relatorios = Atividade.objects.all()
+
+#     # Cria um objeto BytesIO para armazenar o PDF
+#     buffer = BytesIO()
+
+#     # Cria o documento PDF usando o ReportLab
+#     doc = SimpleDocTemplate(buffer, pagesize=A4)
+
+#     # Cria uma lista para adicionar elementos ao PDF
+#     elements = []
+#     styles = getSampleStyleSheet()
+#     style_title = ParagraphStyle(
+#         name='TitleStyle',
+#         parent=styles['Title'],
+#         fontSize=16,
+#     )
+#     style_paragraph = ParagraphStyle(
+#         name='CenteredParagraph', alignment=1,
+#         parent=styles['Normal'],
+#         fontSize=12,
+#     )
+
+#    # Adiciona o cabeçalho com a imagem e o título
+#     # header_frame = Frame(inch, doc.height + inch, doc.width, inch)
+#     image_path = os.path.join(
+#         settings.BASE_DIR, 'static', 'img', 'Logo-ufac-cor.png')
+#     logo = Image(image_path, width=40, height=56)
+
+#     # Título
+#     titulo = Paragraph(
+#         '<b>REGISTRO DE ATIVIDADES REALIZADAS<br/>NO LABORATÓRIO DE INFORMÁTICA DO LIFE</b>',
+#         style_title
+#     )
+
+#     # Tabela do cabeçalho
+#     header_data = [[logo, titulo]]
+#     # Tabela do cabeçalho
+#     header_table = Table(header_data, colWidths=[50, 400])
+#     # Estilo da tabela
+#     table_style = TableStyle([
+#         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Alinhamento centralizado
+#         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),  # Alinhamento vertical ao meio
+#         ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Grade
+#         ('FONTSIZE', (0, 0), (-1, -1), 12),  # Tamanho da fonte
+#         ('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),  # Nome da fonte
+#     ])
+
+#     header_table.setStyle(table_style)
+
+#     # Adicione a tabela de cabeçalho à lista de elementos
+#     c = canvas.Canvas("relatório.pdf")
+#     elements.append(header_table)
+#     elements.append(Spacer(1, 20))
+
+#     # Para cada relatório, crie uma tabela de dados
+#     for relatorio in relatorios:
+#         data_inicio_formatada = relatorio.data_inicio.strftime('%d/%m/%Y')
+#         data_encerramento_formatada = relatorio.data_encerramento.strftime(
+#             '%d/%m/%Y')
+#         data = [
+#             ['Tema:', Paragraph(relatorio.tema, style_paragraph)],
+#             ['Descrição:', Paragraph(
+#                 relatorio.descricao, getSampleStyleSheet()['Normal'])],
+#             ['Nome do Responsável:', Paragraph(
+#                 relatorio.usuario.username, getSampleStyleSheet()['Normal'])],
+#             ['Quantidade de Participantes:', Paragraph(
+#                 str(relatorio.quantidade_ptc), getSampleStyleSheet()['Normal'])],
+#             ['Data de Início:', Paragraph(
+#                 str(data_inicio_formatada), getSampleStyleSheet()['Normal'])],
+#             ['Data de Encerramento:', Paragraph(
+#                 str(data_encerramento_formatada), getSampleStyleSheet()['Normal'])],
+#         ]
+
+#         table = Table(data, colWidths=[150, 300])
+#         table.setStyle(TableStyle([
+#             ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+#             ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+#             ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+#             ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+#             ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+#             ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+#             ('GRID', (0, 0), (-1, -1), 1, colors.black),
+#             ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+#             ('LEFTPADDING', (0, 0), (-1, -1), 5),
+#             ('RIGHTPADDING', (0, 0), (-1, -1), 8),
+#             ('TOPPADDING', (0, 0), (-1, -1), 8),
+#             ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
+#         ]))
+
+#         # Adicione a tabela à lista de elementos
+#         # table_in_frame = KeepInFrame(0, 0, [table], mode="shrink")
+#         elements.append(table)
+#         # Adicione um espaço em branco após a tabela
+#         elements.append(Spacer(1, 10))
+
+#         # # Adicione um FrameBreak para passar para a próxima página
+#         # elements.append(FrameBreak())
+
+#     # Adicione um parágrafo para a assinatura do responsável
+#     line = Table(
+#         [[Paragraph('<u>' + ' ' * 100 + '</u>', style_paragraph)]], colWidths=[500])
+#     elements.append(line)
+
+#     def footer(canvas, doc):
+#         canvas.saveState()
+#         footer = Paragraph(
+#             f"Gerado em: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}",
+#             getSampleStyleSheet()['Normal']
+#         )
+#         w, h = footer.wrap(doc.width, doc.bottomMargin)
+#         footer.drawOn(canvas, doc.leftMargin, h)
+#         canvas.restoreState()
+
+#     frame = Frame(doc.leftMargin, doc.bottomMargin,
+#                   doc.width, doc.height, id='normal')
+#     template = PageTemplate(id='test', frames=frame, onPage=footer)
+#     doc.addPageTemplates([template])
+
+#     # Adicione o parágrafo alinhado ao centro
+#     assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
+#     elements.append(assinatura)
+
+#     # Construa o PDF
+#     doc.build(elements, c)
+
+#     # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
+#     response = HttpResponse(content_type='application/pdf')
+#     response['Content-Disposition'] = 'inline; filename=Relatório' + \
+#         '-' + datetime.now().strftime("%d-%m-%y") + '.pdf'
+#     response.write(buffer.getvalue())
+#     buffer.close()
+
+#     return response
 
 
 def exibir_relatorio(request, pk):
     relatorio = get_object_or_404(Atividade, id=pk)
+    arquivos = relatorio.arquivo.all()  # Use o nome correto do relacionamento
     context = {
         'relatorio': relatorio,
+        'arquivos': arquivos,
         'breadcrumb': [
             {'title': 'Inicio', 'url': '/home/'},
             {'title': 'atividades', 'url': '/listar/atividades/'},
@@ -663,7 +861,6 @@ def gerar_pdf_relatorio(request, pk):
     return response
 
 
-
 # def login_view(request):
 #     if request.method == 'POST':
 #         cpf = request.POST['cpf']
@@ -680,6 +877,6 @@ def gerar_pdf_relatorio(request, pk):
 #             return redirect('home')
 #         else:
 #             # Autenticação falhou, lide com isso de acordo
-#             messages.debug(request, 'Ops! Aconteceu algum erro.') 
+#             messages.debug(request, 'Ops! Aconteceu algum erro.')
 #     # Renderize o formulário de login
 #     return render(request, 'core/usuarios/login.html')

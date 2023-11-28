@@ -186,3 +186,8 @@ MESSAGE_TAGS = {
 }
 
 # AUTHENTICATION_BACKENDS = ['core.auth_backends.CPFAuth']
+
+
+
+# Formato abreviado para datas (para exibição em locais onde espaço é limitado)
+SHORT_DATE_FORMAT = 'd/m/Y'

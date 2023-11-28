@@ -5,7 +5,7 @@
 
 {% block main %}
 
-  {% include 'core/breadcrumb.html' %}
+{% include 'core/breadcrumb.html' %}
 
 <div class="container col-8 mb-3" id="conteudo">
   <h3 style="margin-top: 15px;">{{ titulo }}</h3>
@@ -45,10 +45,26 @@
         {{ form.data_encerramento|add_class:"form-control"|attr:"type:date"}}
       </div>
     </div>
+    <div class=" mb-3 form-group">
+      <label for="{{ form.duracao.id_for_label }}" class="form-label">Duração da atividade</label>
+      {{ form.duracao|add_class:"form-control"}}
+    </div>
+    {{ formset.management_form }}
+    <div class=" form-group">
+      <label for="{{ formset.arquivo.id_for_label }}" class="form-label">Faça upload de arquivos ou imagens relacionados a atividade </label>
+      <span class="lead-sx dark" disable>(Opcional)</span>
+    </div>
+    
+    {% for arquivo_form in formset %}
+    <div class=" mb-3 form-group">
+      {{ arquivo_form.arquivo|add_class:"form-control"}}
+    </div>
+        
+    {% endfor %}
 
     <div class="mb-3 form-group">
-      <label for="{{ form.arquivos.id_for_label }}" class="form-label">Arquivos</label>
-      {{ form.arquivos|add_class:"form-control" }}
+      <button type="button" id="add-form" class="btn btn-success mt-3">Adicionar mais arquivos</button>
+
     </div>
 
     <button type="submit" id="submit-button" class="btn btn-success mb-3 register">{{ botao }}</button>
@@ -64,8 +80,40 @@
 </footer>
 {% endblock footer %}
 
-{% block scrpits %}
+{% block scripts %}
+<script src="{% static 'js/jquery-3.6.4.min.js' %}"></script> 
 <script>
+    $(document).ready(function() {
+      
+        $('#add-form').on('click', function() {
+            var form_idx = $('div input[type="file"]').length;
+            var new_form = $('#id_arquivo-TOTAL_FORMS').val(form_idx + 1);
+            var new_input = '<div> <input type="file" class="form-control mt-3" name="arquivos-' + form_idx + '-arquivo" id="id_arquivos-' + form_idx + '-arquivo" multiple></div>';
+            $(this).before(new_input);
+        });
+    });
+
+    $(document).on('click', '.delete-form', function () {
+    $(this).parent().remove();
+    form_idx--;
+    $('#id_arquivos-TOTAL_FORMS').val(form_idx);
+
+    $('#submit-button').on('click', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Validação manual do formulário
+            var form = $('form')[0];
+            if (!form.checkValidity()) {
+                window.alert('Por favor, preencha todos os campos corretamente.');
+                return false;
+            }
+
+            // Se a validação for bem-sucedida, envie o formulário
+            form.submit();
+        });
+});
+</script>
+<!-- <script>
   document.addEventListener('DOMContentLoaded', function () {
     const submitButton = document.getElementById('submit-button');
 
@@ -109,6 +157,6 @@
       }
     });
   });
-</script>
+</script> -->
 
-{% endblock scrpits %}
+{% endblock scripts %}

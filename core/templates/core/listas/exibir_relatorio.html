@@ -20,6 +20,27 @@
   <p>Data de Encerramento: {{ relatorio.data_encerramento }}</p>
   <p>Quantidade de Participantes: {{ relatorio.quantidade_ptc }}</p>
   <!-- <p>anexo: <a href="{{ relatorio.arquivo.url }}" target="_blank">{{ relatorio.arquivo.title }}</a></p> -->
+  {% if arquivos %} 
+  <p>Arquivos anexados:</p>
+  {% for arquivo in arquivos %}
+  
+      {% if arquivo.arquivo and arquivo.arquivo.url %}
+          <a href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}">
+              {% if arquivo.is_doc %}
+                  <i class="fa-solid fa-file-word fa-2xl"></i>
+              {% elif arquivo.is_pdf %}
+              <iframe class="my-4" src="{% static 'js/pdfjs/web/viewer.html' %}?file={{ arquivo.arquivo.url }}" width="100%" height="600px"></iframe>
+              {% elif arquivo.is_image %}
+              <img src="{{ arquivo.arquivo.url }}" alt="{{ arquivo.arquivo.name }}" style="border-radius: 10px;" width="100%" height="600px">
+              {% else %}
+                  <i class="fa-solid fa-file fa-2xl"></i>
+              {% endif %}
+          </a>
+      {% endif %}
+  {% endfor %}
+{% else %}
+  <p>Nenhum arquivo anexado</p>
+{% endif %}
 
 
 
