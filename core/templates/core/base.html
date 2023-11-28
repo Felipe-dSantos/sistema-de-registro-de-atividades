@@ -21,13 +21,13 @@
 <body id="corpo">
     {% if request.user.is_authenticated %}
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary " id="navbar">
+        <nav class="navbar navbar-expand-lg navbar-dark" id="navbar">
             <div class="container-fluid">
                 <div id="logoimg" class="text-center">
                     <img id="logo" src="/static/img/Logo-ufac.png" style="max-width: 25px; margin-right: 20px;" alt="">
                 </div>
                 <a id="sdra" class="navbar-brand" href="#">Universidade Federal do Acre - UFAC <br>Sistema de Registro
-                    de Atividades - SIRA</a>
+                    de Atividades - SRA</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
     
 
    
-    <script src="https://kit.fontawesome.com/f1b27c82b7.js" crossorigin="anonymous" defer></script>
+    <script src="https://kit.fontawesome.com/f1b27c82b7.js" crossorigin="anonymous"></script>
     <!-- <script src="https://cdn.datatables.net/v/bs5/dt-1.13.6/datatables.min.js"></script> -->
 
     {% block scripts %}

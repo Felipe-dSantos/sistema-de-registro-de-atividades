@@ -24,7 +24,7 @@ class Atividade(models.Model):
     descricao = models.TextField()
     local = models.ForeignKey(Local, on_delete=models.CASCADE)
     quantidade_ptc = models.IntegerField()
-    data_inicio = models.DateField('Data de inicio', blank=True)
+    data_inicio = models.DateField('Data de inicio')
     data_encerramento = models.DateField('Data de encerramento')
     duracao = models.CharField(max_length=20)
     # calcula o intervalo entre a data de inicio e data de encerramento de uma atividade

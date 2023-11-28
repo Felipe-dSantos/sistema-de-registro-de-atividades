@@ -7,14 +7,17 @@
 
 {% block main %}
 {% include 'core/breadcrumb.html' %}
-
+<div class="container-fluid col-8 mb-3 page-context-header" id="header-page">
+    <div class="page-header-headings">
+        <h1 class="h2" style="font-weight: 700;">Lista de Atividades</h1>
+    </div>
+</div>
 <div class="container col-8 mb-3" id="conteudo">
     <div class="container p-3 text-center" id="titulo_lista">
         {% include 'core/mensagens.html' %}
+
         <div class="d-flex justify-content-between align-items-center">
-            <div class="col text-start ">
-                <h3 id="teste">Lista de Atividades</h3>
-            </div>
+
             <div class="col text-end ">
                 <a href="{% url 'cadastro-atividade' %}" class="btn btn-success">Registrar Atividade</a>
             </div>
@@ -22,16 +25,15 @@
     </div>
 
     {% for atividade in object_list %}
-    
-        <div id="bloco-atividade" class="row relatorio-item border  p-3 m-2 ">
-            <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
-            <div class="col text-end">
-                <a href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-primary btn-sm"
-                    title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg"
-                        style="color: #fff;"></i></a>
-            </div>
+
+    <div id="bloco-atividade" class="row relatorio-item border  p-3 m-2 ">
+        <span id="titulo-relatorio" class="col">Relatório - {{ atividade.tema }} </span>
+        <div class="col text-end">
+            <a href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-primary btn-sm"
+                title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg" style="color: #fff;"></i></a>
         </div>
-  
+    </div>
+
     {% endfor %}
 
 

@@ -19,8 +19,8 @@ __pycache__/
 /cache/
 
 # Diretório de arquivos estáticos coletados
-/staticfiles/
-
+/static/js/pdfjs
+/uploads/
 # Diretório de arquivos de mídia enviados pelo usuário
 /media/
 *.png

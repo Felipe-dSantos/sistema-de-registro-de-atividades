@@ -246,6 +246,11 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
         context['titulo'] = "Registro de Atividade"
         context['botao'] = "Registrar"
         context['url'] = reverse('listar-atividade')
+        context['breadcrumb'] = [
+            {'title': 'Inicio', 'url': '/home/'},
+            {'title': 'Atividades', 'url': '/listar/atividades/'},
+            {'title': 'Registro de atividade', 'url': '/cadastro-atividade/'},
+        ]
 
         # Criando o formset de Arquivos relacionados à Atividade
         ArquivoFormSet = inlineformset_factory(
@@ -388,9 +393,8 @@ class AtividadeList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['breadcrumb'] = [
             {'title': 'Inicio', 'url': '/home/'},
-            {'title': 'atividades', 'url': '/listar-atividade/'},
-
-        ]
+            {'title': 'Atividades', 'url': '/listar-atividade/'},
+            ]
         return context
 
 
@@ -735,8 +739,8 @@ def exibir_relatorio(request, pk):
         'arquivos': arquivos,
         'breadcrumb': [
             {'title': 'Inicio', 'url': '/home/'},
-            {'title': 'atividades', 'url': '/listar/atividades/'},
-            {'title': 'detalhes', 'url': '/detalhes/'},
+            {'title': 'Atividades', 'url': '/listar/atividades/'},
+            {'title': 'Detalhes', 'url': '/detalhes/'},
         ]
     }
     return render(request, 'core/listas/exibir_relatorio.html', context)
@@ -859,24 +863,3 @@ def gerar_pdf_relatorio(request, pk):
     buffer.close()
 
     return response
-
-
-# def login_view(request):
-#     if request.method == 'POST':
-#         cpf = request.POST['cpf']
-#         password = request.POST['password']
-#         print(cpf)
-#         print(password)
-#         user = authenticate(request, cpf=cpf, password=password)
-#         print(user)
-#         if user is not None:
-#             login(request, user)
-#             print('entrou aqui')
-#             # Autenticação bem-sucedida, redirecione para a página de sucesso ou faça o que for necessário
-#             messages.success(request, 'Bem Vindo (a) '+ user.first_name)
-#             return redirect('home')
-#         else:
-#             # Autenticação falhou, lide com isso de acordo
-#             messages.debug(request, 'Ops! Aconteceu algum erro.')
-#     # Renderize o formulário de login
-#     return render(request, 'core/usuarios/login.html')

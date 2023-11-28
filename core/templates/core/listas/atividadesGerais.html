@@ -73,8 +73,8 @@
                     <td>{{ atividade.tema }}</td>
                     <td>{{ atividade.usuario}}</td>
                     <td>{{ atividade.quantidade_ptc }}</td>
-                    <td>{{ atividade.data_inicio }}</td>
-                    <td>{{ atividade.data_encerramento }}</td>
+                    <td>{{ atividade.data_inicio|date:"d/m/Y"  }}</td>
+                    <td>{{ atividade.data_encerramento|date:"d/m/Y"  }}</td>
                     <td>
                         <a href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-primary btn-sm"
                             title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg"

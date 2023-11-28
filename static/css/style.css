@@ -55,11 +55,14 @@ button.register {
 div#conteudo {
     border-radius: 10px;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+    margin: auto; 
+    padding: 30px;
 }
 
 #navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+    background-color: #0C4B9D;
 }
 
 header {
@@ -67,23 +70,30 @@ header {
 }
 
 #crumb {
-    color: #6C757D;
-    font-weight:bold;
+    color: #003365;
+    font-weight:300;
     text-decoration: none;
     display: inline-block;
-    /* Para aplicar a transição corretamente */
-    /* Transição suave da largura durante 0.3 segundos */
+    text-transform: uppercase;
 }
 
 #crumb:hover {
-    text-decoration: underline;/* Aumenta a largura do link ao passar o mouse */
+    text-decoration: underline;
 }
 
-ol.breadcrumb{
-    border-bottom: 1px solid #cfcfcf;
+#div_breadcrumb, #header-page{
+    padding: 0;
 }
 
 #card_link{
     text-decoration: none;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
+}
+
+#label-detalhes{
+    background-color: #0C4B9D;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    margin-right: 10px;
 }
