@@ -15,7 +15,7 @@
 </div>
 <div class="container col-8 mb-3" id="conteudo">
   <p><span id="label-detalhes">Tema:</span> {{ relatorio.tema }}</p>
-  <p><span id="label-detalhes">Descrição:</span> {{ relatorio.descricao }}</p>
+  <p id="p-descricao" ><span id="label-detalhes">Descrição:</span> {{ relatorio.descricao }}</p>
   <p><span id="label-detalhes">Local:</span> {{ relatorio.local }}</p>
   <p><span id="label-detalhes">Data de Início:</span> {{ relatorio.data_inicio }}</p>
   <p><span id="label-detalhes">Data de Encerramento:</span> {{ relatorio.data_encerramento }}</p>
@@ -26,11 +26,11 @@
   {% for arquivo in arquivos %}
   
       {% if arquivo.arquivo and arquivo.arquivo.url %}
-          <a href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}" target="">
+          <a href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}" target="blank">
               {% if arquivo.is_doc %}
                   <i class="fa-solid fa-file-word fa-2xl"></i>
               {% elif arquivo.is_pdf %}
-              <i class="fa-regular fa-file-pdf fa-2xl"></i>
+              <img src="{% static 'img/pdf-svgrepo-com.svg' %}" alt="Ícone PDF">
               {% elif arquivo.is_image %}
               <img  src="{{ arquivo.arquivo.url }}" alt="{{ arquivo.arquivo.name }}" style="border-radius: 5px;" width="40px" height="40px">
               {% else %}

@@ -33,7 +33,7 @@ a#sdra {
 }
 
 div#bloco-atividade {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, .08); */
     padding: 20px;
     align-items: center;
 }
@@ -52,12 +52,17 @@ button.register {
     width: 200px;
 }
 
-div#conteudo {
+div#conteudo, div#conteudoForm {
     border-radius: 10px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
     margin: auto; 
     padding: 30px;
+    
+}
+
+div#conteudoForm{
+    border-top: 10px solid #0C4B9D;
 }
 
 #navbar {
@@ -96,4 +101,32 @@ header {
     padding: 5px;
     border-radius: 4px;
     margin-right: 10px;
+}
+
+#label-form{
+    font-weight: bold;
+}
+
+
+
+input[type="search"]:focus {
+    box-shadow: none;
+    outline: none;
+   
+    border: 2px solid #0C4B9D; /* Cor verde quando o input está em foco */
+}
+
+
+#searchButton{
+    background-color: #0C4B9D;
+}
+
+#p-descricao {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    white-space: normal;
+    box-sizing: border-box;
 }

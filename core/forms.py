@@ -5,6 +5,10 @@ from django.core.exceptions import ValidationError
 from django.forms.widgets import DateInput # need to import
 from multiupload.fields import MultiFileField
 
+
+
+
+
 from .models import Arquivo, Atividade
 from django import forms
 from .models import Atividade
@@ -26,8 +30,12 @@ class AtividadeForm(forms.ModelForm):
 
     class Meta:
         model = Atividade
-        fields = '__all__'
+        fields = ['descricao']
+        widgets = {
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 5})  # Defina o número de linhas aqui
+        }
 
+   
 class ArquivoForm(forms.ModelForm):
     class Meta:
         model = Arquivo

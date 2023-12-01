@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import AbstractUser
@@ -27,25 +28,30 @@ class Atividade(models.Model):
     data_inicio = models.DateField('Data de inicio')
     data_encerramento = models.DateField('Data de encerramento')
     duracao = models.CharField(max_length=20)
+    data_registro = models.DateTimeField(default=timezone.now)
     # calcula o intervalo entre a data de inicio e data de encerramento de uma atividade
 
-
     def __str__(self):
-        return f"{self.tema} , Local: {self.local} Data de inicio: {self.data_inicio} - Data de encerramento: {self.data_encerramento}"
+        return self.tema
 
     def get_absolute_url(self):
         return reverse('exibir-relatorio', args=[str(self.id)])
 
+    def save(self, *args, **kwargs):
+        # Atualiza a data de criação apenas se o objeto ainda não existe no banco de dados
+        if not self.id:
+            self.data_registro = timezone.now()
 
+        super(Atividade, self).save(*args, **kwargs)
 
 class Arquivo(models.Model):
     arquivo = models.FileField(upload_to='arquivos/')
-    Atividade = models.ForeignKey(Atividade, related_name='arquivo', on_delete=models.CASCADE)
-    
+    Atividade = models.ForeignKey(
+        Atividade, related_name='arquivo', on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.arquivo.name 
-    
-    
+        return self.arquivo.name
+
     def is_doc(self):
         return self.arquivo.name.lower().endswith('.doc') or self.arquivo.name.lower().endswith('.docx')
 

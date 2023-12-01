@@ -1,4 +1,5 @@
 # Importações de módulos padrão
+from django.contrib.auth.models import User
 from .models import Atividade, Arquivo
 from django.views.generic import TemplateView
 from reportlab.platypus import FrameBreak
@@ -21,6 +22,7 @@ from .models import Arquivo, Atividade
 from datetime import datetime
 from django.http import HttpResponse, HttpResponseRedirect
 import datetime
+from django.utils import timezone
 import tempfile
 from io import BytesIO
 from reportlab.pdfgen import canvas
@@ -47,6 +49,7 @@ from .forms import ArquivoForm, ArquivoFormSet, AtividadeForm
 from django.templatetags.static import static
 from django.conf import settings
 from django.forms import inlineformset_factory
+from django.db.models import Q
 import os
 
 
@@ -272,7 +275,7 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
         messages.success(self.request, self.success_message)
 
         # Adicione aqui a lógica para salvar os arquivos associados à atividade
-        
+
         formset = ArquivoFormSet(
             self.request.POST, self.request.FILES, instance=self.object)
 
@@ -385,17 +388,24 @@ class AtividadeList(LoginRequiredMixin, ListView):
     template_name = 'core/listas/Atividade.html'
     paginate_by = 6
 
-    def get_queryset(self):
-        self.object_list = Atividade.objects.filter(usuario=self.request.user)
-        return self.object_list
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['breadcrumb'] = [
             {'title': 'Inicio', 'url': '/home/'},
             {'title': 'Atividades', 'url': '/listar-atividade/'},
-            ]
+        ]
+
         return context
+
+    def get_queryset(self):
+        search_term = self.request.GET.get('search')
+        queryset = Atividade.objects.filter(usuario=self.request.user)
+
+        if search_term:
+            queryset = queryset.filter(tema__icontains=search_term)
+            
+        queryset = queryset.order_by('-data_registro')
+        return queryset
 
 
 class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
@@ -403,11 +413,13 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     group_required = [u"Administrador", u"Tecnico"]
     model = Atividade
     template_name = 'core/listas/atividadesGerais.html'
-    paginate_by = 6
+    paginate_by = 30
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['url'] = reverse('listar-atividade-geral')
+        context['locais'] = Local.objects.all()
+        context['usuario'] = User.objects.all()
         return context
 
     def get_queryset(self):
@@ -415,6 +427,8 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
         last_days = self.request.GET.get('last_days')
+        local = self.request.GET.get('local')
+        search_term = self.request.GET.get('search')
 
         if start_date and end_date:
             # Converte em data e adiciona um dia ao fim
@@ -441,8 +455,36 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
             except ValueError:
                 # Lida com valor inválido para last_days
                 queryset = Atividade.objects.all()
+
+        elif 'mes' in self.request.GET:
+            try:
+                # Obter o mês da URL
+                selected_month = int(self.request.GET.get('mes'))
+                # Obter o ano atual
+                current_year = timezone.now().year
+                # Criar uma data com o ano atual e o mês selecionado
+                start_date = timezone.datetime(
+                    current_year, selected_month, 1).date()
+                end_date = start_date + timezone.timedelta(days=32)
+                # Filtrar atividades com base no mês selecionado
+                queryset = Atividade.objects.filter(
+                    data_inicio__gte=start_date,
+                    data_inicio__lt=end_date,
+                )
+            except (ValueError, TypeError):
+                # Lida com valores inválidos para o mês
+                queryset = Atividade.objects.all()
+
+        elif local:
+            # Filtrar atividades por local, usando o parâmetro 'local' da URL
+            queryset = Atividade.objects.filter(local_id=local)
+
         else:
             queryset = Atividade.objects.all()
+
+        if search_term:
+            queryset = queryset.filter(Q(tema__icontains=search_term) | Q(
+                usuario__username__icontains=search_term))
 
         return queryset
 
@@ -744,6 +786,7 @@ def exibir_relatorio(request, pk):
         ]
     }
     return render(request, 'core/listas/exibir_relatorio.html', context)
+
 
 def gerar_pdf_relatorio(request, pk):
 

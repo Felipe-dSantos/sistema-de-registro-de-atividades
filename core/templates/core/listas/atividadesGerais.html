@@ -6,48 +6,97 @@
 {% endblock %}
 
 {% block main %}
+<div class="container-fluid col-10 mb-3 page-context-header" id="header-page">
+    <div class="page-header-headings">
+        <h1 class="h2" style="font-weight: 700;">Lista de Atividades Gerais</h1>
+    </div>
+</div>
 <div class="container-fluid col-10 mb-3" id="conteudo">
     <div class="container mt-3 pt-3">
-        <div class="row">
-            <div class="col-md-6">
-                <h3>Lista de Atividades Gerais</h3>
+        
+        <div class="col-6 mb-3">
+            <form method="GET" id="filterForm">
+                <div class="input-group col-auto">
+                    <input class=" input-group form-control form-control-sm" id="searchInput" name="search" type="search" value="{{ request.GET.search }}" placeholder="Buscar por tema ou Responsável"  style="min-width: none; max-width: 400px;">
+                    <button type="submit" class="btn" id="searchButton"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#ffffff" d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg></i></button>
+                </div>
+            </form>
+        </div>
+        <div >
+            <p class="mb-0">Filtrar por:</p>
+        </div>
+        <div class="row g-2 align-items-center">
+            
+            <div class="col-auto">
+                <form method="GET">
+                    <select name="local"  class="form-select form-select-sm" onchange="this.form.submit()" style="max-width: 160px;">
+                        <option value="" {% if not request.GET.local %} selected {% endif %} disabled>Local</option>
+                        {% for local in locais %}
+                            <option value="{{ local.id }}" {% if request.GET.local == local.id %} selected {% endif %}>{{ local.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="month" value="{{ request.GET.month}}">
+                    <input type="hidden" name="last_days" value="{{ request.GET.last_days }}">
+                    <input type="hidden" name="start_date" value="{{ request.GET.start_date }}">
+                    <input type="hidden" name="end_date" value="{{ request.GET.end_date }}">
+                </form>
             </div>
-            <div class="col-md-6 text-md-end">
-                <a class="btn btn-success "
+            <div class="col-auto">
+                <form method="GET">
+                    <select name="last_days" class="form-select form-select-sm" onchange="this.form.submit()" style="max-width: 160px;" aria-placeholder="teste">
+                        <option value="" selected disabled>Período</option>
+                        <option value="15" {% if request.GET.last_days == '15' %} selected {% endif %}>Últimos 15 dias</option>
+                        <option value="30" {% if request.GET.last_days == '30' %} selected {% endif %}>Últimos 30 dias</option>
+                        <option value="60" {% if request.GET.last_days == '60' %} selected {% endif %}>Últimos 60 dias</option>
+                        <option value="90" {% if request.GET.last_days == '90' %} selected {% endif %}>Últimos 90 dias</option>
+                    </select>
+                    <input type="hidden" name="local" value="{{ request.GET.local }}">
+                </form>
+            </div>
+            <div class="col-auto">
+                <form method="GET">
+                    <select name="month" id="month" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 160px;">
+                        <option value="" {% if not request.GET.month %} selected {% endif %} disabled>Mês</option>
+                    <option value="1" {% if request.GET.month == '1' %} selected {% endif %}>Janeiro</option>
+                    <option value="2" {% if request.GET.month == '2' %} selected {% endif %}>Fevereiro</option>
+                    <option value="3" {% if request.GET.month == '3' %} selected {% endif %}>Março</option>
+                    <option value="4" {% if request.GET.month == '4' %} selected {% endif %}>Abril</option>
+                    <option value="5" {% if request.GET.month == '5' %} selected {% endif %}>Maio</option>
+                    <option value="6" {% if request.GET.month == '6' %} selected {% endif %}>Junho</option>
+                    <option value="7" {% if request.GET.month == '7' %} selected {% endif %}>Julho</option>
+                    <option value="8" {% if request.GET.month == '8' %} selected {% endif %}>Agosto</option>
+                    <option value="9" {% if request.GET.month == '9' %} selected {% endif %}>Setembro</option>
+                    <option value="10" {% if request.GET.month == '10' %} selected {% endif %}>Outubro</option>
+                    <option value="11" {% if request.GET.month == '11' %} selected {% endif %}>Novembro</option>
+                    <option value="12" {% if request.GET.month == '12' %} selected {% endif %}>Dezembro</option>
+                    </select>
+                    <input type="hidden" name="local" value="{{ request.GET.local }}">
+                </form>
+            </div>
+            <div class="col-auto">
+                <form action="{% url 'listar-atividade-geral' %}" method="GET" class="row g-1 align-items-center">
+                    <div class="col-auto">
+                        <label for="start_date" class="col-form-label col-form-label-sm">De:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input class="form-control form-control-sm" name="start_date" type="date" value="{{request.GET.start_date}}" id="start_date_input" placeholder="Selecione a data" onchange="this.form.submit()">
+                    </div>
+                    <div class="col-auto">
+                        <label for="end_date" class="col-form-label col-form-label-sm d-md-inline">até:</label>
+                    </div>
+                    <div class="col-auto">
+                        <input class="form-control form-control-sm" name="end_date" type="date" value="{{request.GET.end_date}}" placeholder="Selecione a data" onchange="this.form.submit()">
+                    </div>
+                    <!-- <div class="col-auto">
+                        <button class="btn btn-primary btn-sm" type="submit">Filtrar</button>
+                    </div> -->
+                    <input type="hidden" name="local" value="{{ request.GET.local }}">
+                </form>
+            </div>
+            <div class="col-auto text-md-end">
+                <a class="btn btn-success btn-sm "
                     href="{% url 'export-pdf' %}?obj={{ request.GET.obj|default:'' }}&start_date={{ request.GET.start_date|default:'' }}&end_date={{ request.GET.end_date|default:'' }}&last_days={{ request.GET.last_days|default:'' }}"
                     target="_blank">Gerar Relatório</a>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-4 col-12">
-                <a class="btn btn-outline-primary m-1" href="?last_days=15">Últimos 15 dias</a>
-                <a class="btn btn-outline-primary m-1" href="?last_days=30">Últimos 30 dias</a>
-                <a class="btn btn-outline-primary m-1" href="?last_days=60">Últimos 60 dias</a>
-                <a class="btn btn-outline-primary m-1" href="?last_days=90">Últimos 90 dias</a>
-            </div>
-            <div class="col-md-3 col-12">
-                <form action="{% url 'listar-atividade-geral' %}" method="GET">
-                    <div class="row align-items-center">
-                        <div class="col-md-3 col-12 text-md-end ">
-                            <label for="start_date">De</label>
-                        </div>
-                        <div class="col-md-7 col-12 m-1">
-                            <input class="form-control" name="start_date" type="date" value="{{request.GET.start_date}}"
-                                id="start_date_input" placeholder="Selecione a data">
-                        </div>
-                        <div class="col-md-3 col-12 text-md-end">
-                            <label for="end_date">até</label>
-                        </div>
-                        <div class="col-md-7 col-12 form-group m-1">
-                            <input class="form-control" name="end_date" type="date" value="{{request.GET.end_date}}"
-                                placeholder="Selecione a data">
-                        </div>
-                        <div class="col-md-1 col-12 form-group text-md-end">
-                            <button class="btn btn-primary" type="submit">Filtrar</button>
-                        </div>
-                    </div>
-                </form>
-
             </div>
         </div>
     </div>
@@ -57,8 +106,9 @@
         <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Local</th>
+                    
                     <th scope="col">Tema</th>
+                    <th scope="col">Local</th>
                     <th scope="col">Responsável</th>
                     <th scope="col">Participantes</th>
                     <th scope="col">Início</th>
@@ -69,16 +119,15 @@
             <tbody>
                 {% for atividade in object_list %}
                 <tr onclick="table-active">
-                    <td>{{ atividade.local }}</td>
                     <td>{{ atividade.tema }}</td>
+                    <td>{{ atividade.local }}</td>
                     <td>{{ atividade.usuario}}</td>
                     <td>{{ atividade.quantidade_ptc }}</td>
                     <td>{{ atividade.data_inicio|date:"d/m/Y"  }}</td>
                     <td>{{ atividade.data_encerramento|date:"d/m/Y"  }}</td>
                     <td>
                         <a href="{% url 'exibir-relatorio' atividade.pk  %}" class="btn btn-primary btn-sm"
-                            title="Detalhes da atividade"> <i class="fa-solid fa-circle-info fa-lg"
-                                style="color: #fff;"></i></a>
+                            title="Detalhes da atividade"><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.--><path fill="#ffffff" d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -139,4 +188,9 @@
 {% endblock footer %}
 
 {% block scripts %}
+<script>
+    function submitForm() {
+        document.getElementById("filterForm").submit();
+    }
+</script>
 {% endblock scripts %}

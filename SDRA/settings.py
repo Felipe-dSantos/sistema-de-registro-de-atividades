@@ -190,4 +190,4 @@ MESSAGE_TAGS = {
 
 
 # Formato abreviado para datas (para exibição em locais onde espaço é limitado)
-SHORT_DATE_FORMAT = 'd/m/Y'
+DATE_FORMAT = 'd/m/Y'
