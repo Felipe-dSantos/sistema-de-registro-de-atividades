@@ -2,51 +2,77 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% load widget_tweaks %}
+{% block titulo %}
+<title>Registro</title>
+{% endblock titulo %}
 
 {% block main %}
-<div class="container col-8 mb-3 shadow " id="conteudo">
-  <h3 style="margin-top: 15px;">{{ titulo }}</h3>
-  <hr>
+
+{% include 'core/breadcrumb.html' %}
+
+<div class="container-fluid col-8 mb-4 page-context-header" id="header-page">
+  <div class="page-header-headings">
+      <h1 class="h2" style="font-weight: 700;">{{ titulo }}</h1>
+  </div>
+</div>
+
+<div class="container col-8 mb-3" id="conteudoForm">
 
   <form method="POST" action="{% url 'cadastro-atividade' %}" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="mb-3 form-group">
-      <label for="{{ form.tema.id_for_label }} floatingInput" class="form-label">Tema</label>
+      <label for="{{ form.tema.id_for_label }} floatingInput" class="form-label mt-3" id="label-form">Tema:</label>
       {{ form.tema|add_class:"form-control"}}
     </div>
 
     <div class="mb-3 form-group">
-      <label for="{{ form.descricao.id_for_label }}" class="form-label">Descrição</label>
-      {{ form.descricao|add_class:"form-control" }}
+      <label for="{{ form.descricao.id_for_label }}" class="form-label" id="label-form">Descrição:</label>
+      <textarea name="{{ form.descricao.name }}" id="{{ form.descricao.id_for_label }}" class="form-control" rows="3"></textarea>
     </div>
 
     <div class="mb-3 form-group">
-      <label for="{{ form.local.id_for_label }}" class="form-label">Local</label>
+      <label for="{{ form.local.id_for_label }}" class="form-label" id="label-form">Local:</label>
       {{ form.local|add_class:"form-select" }}
     </div>
 
     <div class="mb-3 form-group">
-      <label for="{{ form.quantidade_ptc.id_for_label }}" class="form-label">Quantidade de Participantes</label>
+      <label for="{{ form.quantidade_ptc.id_for_label }}" class="form-label" id="label-form">Quantidade de Participantes:</label>
       {{ form.quantidade_ptc|add_class:"form-control" }}
     </div>
 
     <div class="mb-3 row">
       <div class="col-md-6 form-group">
-        <label for="{{ form.data_inicio.id_for_label }}" class="form-label">Data de Início</label>
+        <label for="{{ form.data_inicio.id_for_label }}" class="form-label" id="label-form">Data de Início:</label>
         {{ form.data_inicio|add_class:"form-control"|attr:"type:date" }}
       </div>
 
       <div class="col-md-6 form-group">
-        <label for="{{ form.data_encerramento.id_for_label }}" class="form-label">Data de Encerramento</label>
+        <label for="{{ form.data_encerramento.id_for_label }}" class="form-label" id="label-form">Data de Encerramento:</label>
         {{ form.data_encerramento|add_class:"form-control"|attr:"type:date"}}
       </div>
     </div>
-
-    <div class="mb-3 form-group">
-      <label for="{{ form.arquivos.id_for_label }}" class="form-label">Arquivos</label>
-      {{ form.arquivos|add_class:"form-control" }}
+    <div class=" mb-3 form-group">
+      <label for="{{ form.duracao.id_for_label }}" class="form-label" id="label-form">Duração da atividade:</label>
+      {{ form.duracao|add_class:"form-control"}}
     </div>
+    {{ formset.management_form }}
+    <div class=" form-group">
+      <label for="{{ formset.arquivo.id_for_label }}" class="form-label" id="label-form">Faça upload de arquivos ou imagens relacionados a atividade </label>
+      <span class="lead-sx dark" disable>(Opcional)</span>
+    </div>
+    
+    {% for arquivo_form in formset %}
+    <div class=" mb-3 form-group">
+      {{ arquivo_form.arquivo|add_class:"form-control"}}
+    </div>
+        
+    {% endfor %}
+
+    <!-- <div class="mb-3 form-group">
+      <button type="button" id="add-form" class="btn btn-success mt-3">Adicionar mais arquivos</button>
+
+    </div> -->
 
     <button type="submit" id="submit-button" class="btn btn-success mb-3 register">{{ botao }}</button>
     <a href="{{ url }}" class="btn btn-danger mb-3 cancel">Cancelar</a>
@@ -61,51 +87,37 @@
 </footer>
 {% endblock footer %}
 
-{% block scrpits %}
+<!-- {% block scripts %}
+<script src="{% static 'js/jquery-3.6.4.min.js' %}"></script> 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const submitButton = document.getElementById('submit-button');
-
-    submitButton.addEventListener('click', async function (event) {
-      event.preventDefault();  // Impede o envio padrão do formulário
-
-      // Envie o formulário usando JavaScript
-      const form = document.querySelector('form');
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch(form.action, {
-          method: form.method,
-          body: formData,
+    $(document).ready(function() {
+      
+        $('#add-form').on('click', function() {
+            var form_idx = $('div input[type="file"]').length;
+            var new_form = $('#id_arquivo-TOTAL_FORMS').val(form_idx + 1);
+            var new_input = '<div> <input type="file" class="form-control mt-3" name="arquivos-' + form_idx + '-arquivo" id="id_arquivos-' + form_idx + '-arquivo" multiple></div>';
+            $(this).before(new_input);
         });
-
-        if (response.ok) {
-          // Se a resposta for bem-sucedida, crie um blob do PDF
-          const blob = await response.blob();
-
-          // Crie um objeto URL para o blob
-          const url = window.URL.createObjectURL(blob);
-
-          // Crie um link temporário para o objeto URL
-          const a = document.createElement('a');
-          a.style.display = 'none';
-          a.href = url;
-          a.download = 'Relatório.pdf';  // Nome do arquivo de download
-          document.body.appendChild(a);
-
-          // Acione o clique no link
-          a.click();
-
-          // Remova o link temporário e libere o objeto URL
-          window.URL.revokeObjectURL(url);
-        } else {
-          console.error('Erro ao gerar o PDF:', response.statusText);
-        }
-      } catch (error) {
-        console.error('Erro ao gerar o PDF:', error);
-      }
     });
-  });
-</script>
 
-{% endblock scrpits %}
+    $(document).on('click', '.delete-form', function () {
+    $(this).parent().remove();
+    form_idx--;
+    $('#id_arquivos-TOTAL_FORMS').val(form_idx);
+
+    $('#submit-button').on('click', function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Validação manual do formulário
+            var form = $('form')[0];
+            if (!form.checkValidity()) {
+                window.alert('Por favor, preencha todos os campos corretamente.');
+                return false;
+            }
+
+            // Se a validação for bem-sucedida, envie o formulário
+            form.submit();
+        });
+});
+</script> -->
+{% endblock scripts %}

@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-&+llfpu)pz3lbomx@&k_+z&!+94oq1_y)9j51-8+irf-u0pt2p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS = ['127.0.0.1']
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # Application definition
@@ -184,3 +184,10 @@ MESSAGE_TAGS = {
     messages.WARNING: 'warnig',
     messages.ERROR: 'danger'
 }
+
+# AUTHENTICATION_BACKENDS = ['core.auth_backends.CPFAuth']
+
+
+
+# Formato abreviado para datas (para exibição em locais onde espaço é limitado)
+DATE_FORMAT = 'd/m/Y'

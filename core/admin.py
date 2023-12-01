@@ -1,34 +1,54 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
+from django.contrib.admin.filters import SimpleListFilter
+from calendar import month_name
 from core.forms import AtividadeForm
-# from .forms import CustomUserCreateForm, CustomUserChangeForm
-# from .models import CustomUser
-from .models import Atividade, Local
+from .models import Arquivo, Atividade, Local
+from django.db.models import Q
 
-# @admin.register(CustomUser)
-# class CustomUserAdmin(UserAdmin):
-#     add_form = CustomUserCreateForm
-#     form = CustomUserChangeForm
-#     model = CustomUser
-    
-#     list_display = ( 'first_name', 'last_name', 'email', 'password', 'is_staff')
-#     fieldsets = (
-#         (None, {'fields': ('email', 'password')}),
-#         ('Informações Pessoais', {'fields': ('first_name', 'last_name')}),
-#         ('Permições', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permission')})
+class MesFilter(SimpleListFilter):
+    title = 'Mês'
+    parameter_name = 'mes'
+
+    def lookups(self, request, model_admin):
         
-#     )
+        meses_pt_br = [
+            ('1', 'Janeiro'),
+            ('2', 'Fevereiro'),
+            ('3', 'Março'),
+            ('4', 'Abril'),
+            ('5', 'Maio'),
+            ('6', 'Junho'),
+            ('7', 'Julho'),
+            ('8', 'Agosto'),
+            ('9', 'Setembro'),
+            ('10', 'Outubro'),
+            ('11', 'Novembro'),
+            ('12', 'Dezembro'),
+        ]
+        return meses_pt_br
+
+    def queryset(self, request, queryset):
+       if self.value():
+            mes_selecionado = int(self.value())
+            return queryset.filter(
+                Q(data_inicio__month=mes_selecionado) | Q(data_encerramento__month=mes_selecionado)
+            )
+class ArquivoInline(admin.TabularInline):
+    model = Arquivo
+    extra = 3
+    
+class AtividadeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'tema', 'usuario', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao')
+    list_filter = ('local',MesFilter)
+    inlines = [
+        ArquivoInline
+    ]
+    
 
 
-class ListaAtividades(admin.ModelAdmin):
-    form = AtividadeForm
-    list_display = ('tema', 'usuario', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento')
-
-    # def display_arquivos(self, obj):
-    #     return ", ".join([str(arquivo) for arquivo in obj.arquivos.all()])
-    # display_arquivos.short_description = 'Arquivos Anexados'
 
 # Register your models here.
-admin.site.register(Atividade, ListaAtividades) 
+admin.site.register(Atividade, AtividadeAdmin) 
 admin.site.register(Local) 
+
