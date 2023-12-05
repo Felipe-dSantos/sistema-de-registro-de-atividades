@@ -105,7 +105,7 @@ DATABASES = {
         'NAME': 'sdra',
         'USER': 'admin',
         'PASSWORD': 'd2K7ROHSV0Qn94scFTH96RspgdrKhDgV',
-        'HOST': 'dpg-clnp3ugfvntc73b5hbig-a.oregon-postgres.render.com/sdra', # Pode ser 'localhost' se estiver rodando localmente
+        'HOST': 'dpg-clnp3ugfvntc73b5hbig-a', # Pode ser 'localhost' se estiver rodando localmente
         'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
     }
 }
