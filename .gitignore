@@ -27,3 +27,6 @@ __pycache__/
 # Arquivos de dependências gerados pelo gerenciador de pacotes pip
 /requirements.txt
 /pip.lock
+venv.bat
+.vercel
+staticfiles
