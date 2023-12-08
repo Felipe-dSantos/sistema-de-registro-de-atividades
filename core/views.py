@@ -68,7 +68,7 @@ from django.contrib import messages
 
 # views para registro de usuarios
 class UsuarioCreate(CreateView):
-    template_name = 'core/usuarios/form.html'
+    template_name = 'usuarios/form.html'
     form_class = UsuarioForm
     success_url = reverse_lazy('login')
     success_message = 'Usuário cadastrado com Sucesso!'
@@ -98,7 +98,7 @@ class MyPasswordReset(PasswordResetView):
     registration/password_reset_email.html
     registration/password_reset_subject.txt  Opcional
     '''
-    template_name = 'core/usuarios/password_reset_form.html'
+    template_name = 'usuarios/password_reset_form.html'
     ...
 
 
@@ -108,7 +108,7 @@ class MyPasswordResetDone(PasswordResetDoneView):
     registration/password_reset_done.html
     '''
 
-    template_name = 'core/usuarios/password_reset_done.html'
+    template_name = 'usuarios/password_reset_done.html'
     ...
 
 
@@ -116,7 +116,7 @@ class MyPasswordResetConfirm(PasswordResetConfirmView):
     '''
     Requer password_reset_confirm.html
     '''
-    template_name = 'core/usuarios/password_reset_confirm.html'
+    template_name = 'usuarios/password_reset_confirm.html'
 
     def form_valid(self, form):
         self.user.is_active = True
@@ -129,14 +129,14 @@ class MyPasswordResetComplete(PasswordResetCompleteView):
     '''
     Requer password_reset_complete.html
     '''
-    template_name = 'core/usuarios/password_reset_complete.html'
+    template_name = 'usuarios/password_reset_complete.html'
     ...
 
 # view para alterar senha
 
 
 class ChangePasswordView(LoginRequiredMixin, FormView):
-    template_name = 'core/usuarios/change_password.html'
+    template_name = 'usuarios/change_password.html'
     form_class = PasswordChangeForm
     success_url = reverse_lazy('listar-atividade')
 
@@ -165,7 +165,7 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
 
 
 class Home(TemplateView):
-    template_name = 'core/home/home.html'
+    template_name = 'home/home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -191,7 +191,7 @@ class LocalCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     group_required = u"Administrador"
     model = Local
     fields = ['nome']
-    template_name = 'core/registros/form.html'
+    template_name = 'registros/form.html'
     success_url = reverse_lazy('listar-local')
 
     def get_context_data(self, *args, **kwargs):
@@ -206,7 +206,7 @@ class LocalUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     group_required = u"Administrador"
     model = Local
     fields = ['nome']
-    template_name = 'core/registros/form.html'
+    template_name = 'registros/form.html'
     success_url = reverse_lazy('listar-local')
 
     def get_context_data(self, *args, **kwargs):
@@ -222,7 +222,7 @@ class LocalDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"Administrador"
     model = Local
-    template_name = 'core/registros/form_excluir.html'
+    template_name = 'registros/form_excluir.html'
     success_url = reverse_lazy('listar-local')
 
 
@@ -230,7 +230,7 @@ class LocalList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     group_required = [u"Administrador", u"Docente"]
     model = Local
-    template_name = 'core/listas/Local.html'
+    template_name = 'listas/Local.html'
 
 ################### CRUD ATIVIDADE #########################
 
@@ -240,7 +240,7 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
     model = Atividade
     fields = ['tema', 'descricao', 'local', 'quantidade_ptc',
               'data_inicio', 'data_encerramento', 'duracao']
-    template_name = 'core/registros/form-upload.html'
+    template_name = 'registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
     success_message = 'Atividade registrada com Sucesso!'
 
@@ -287,7 +287,7 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
 #     login_url = reverse_lazy('login')
 #     model = Atividade
 #     fields = ['tema', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao']
-#     template_name = 'core/registros/form-upload.html'
+#     template_name = 'registros/form-upload.html'
 #     success_url = reverse_lazy('listar-atividade')
 #     success_message = 'Atividade registrada com Sucesso!'
 
@@ -344,7 +344,7 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
 #         form = AtividadeForm()
 #         formset = ArquivoFormSet()
 
-#     return render(request, 'core/registros/form-upload.html', {'form': form, 'formset': formset})
+#     return render(request, 'registros/form-upload.html', {'form': form, 'formset': formset})
 
 
 class AtividadeUpdate(LoginRequiredMixin, UpdateView):
@@ -352,7 +352,7 @@ class AtividadeUpdate(LoginRequiredMixin, UpdateView):
     model = Atividade
     fields = ['tema', 'descricao', 'local', 'quantidade_ptc',
               'data_inicio', 'data_encerramento', 'arquivo']
-    template_name = 'core/registros/form-upload.html'
+    template_name = 'registros/form-upload.html'
     success_url = reverse_lazy('listar-atividade')
 
     def get_object(self, queryset=None):
@@ -372,7 +372,7 @@ class AtividadeUpdate(LoginRequiredMixin, UpdateView):
 class AtividadeDelete(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     model = Atividade
-    template_name = 'core/registros/form_excluir.html'
+    template_name = '/registros/form_excluir.html'
     success_url = reverse_lazy('listar-atividade')
 
     def get_object(self, queryset=None):
@@ -385,7 +385,7 @@ class AtividadeDelete(LoginRequiredMixin, DeleteView):
 class AtividadeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Atividade
-    template_name = 'templates/core/listas/Atividade.html'
+    template_name = '/listas/Atividade.html'
     paginate_by = 6
 
     def get_context_data(self, **kwargs):
@@ -412,7 +412,7 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     group_required = [u"Administrador", u"Tecnico"]
     model = Atividade
-    template_name = 'core/listas/atividadesGerais.html'
+    template_name = 'listas/atividadesGerais.html'
     paginate_by = 30
 
     def get_context_data(self, *args, **kwargs):
@@ -785,7 +785,7 @@ def exibir_relatorio(request, pk):
             {'title': 'Detalhes', 'url': '/detalhes/'},
         ]
     }
-    return render(request, 'core/listas/exibir_relatorio.html', context)
+    return render(request, 'listas/exibir_relatorio.html', context)
 
 
 def gerar_pdf_relatorio(request, pk):

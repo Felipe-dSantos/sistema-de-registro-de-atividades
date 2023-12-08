@@ -1,4 +1,4 @@
-{% extends "core/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
 
@@ -24,7 +24,7 @@
     <p class="lead">
         Faça seu Login para acessar o sistema
     </p>
-    {% include 'core/mensagens.html' %}
+    {% include 'mensagens.html' %}
     <form action="" method="POST">
         {% csrf_token %}
 

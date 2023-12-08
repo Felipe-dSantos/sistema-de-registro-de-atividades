@@ -1,4 +1,4 @@
-{% extends "core/base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block titulo %}
@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block main %}
-{% include 'core/breadcrumb.html' %}
+{% include 'breadcrumb.html' %}
 <div class="container-fluid col-8 mb-3 page-context-header" id="header-page">
     <div class="page-header-headings">
         <h1 class="h2" style="font-weight: 700;">Lista de Atividades</h1>
@@ -14,7 +14,7 @@
 </div>
 <div class="container col-8 mb-3" id="conteudo">
     <div class="container p-3 text-center" id="titulo_lista">
-        {% include 'core/mensagens.html' %}
+        {% include 'mensagens.html' %}
 
         <div class="row">
             <div class="col-6 mb-3 px-0">
