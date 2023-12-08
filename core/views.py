@@ -251,7 +251,7 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
         context['url'] = reverse('listar-atividade')
         context['breadcrumb'] = [
             {'title': 'Inicio', 'url': '/home/'},
-            {'title': 'Atividades', 'url': '/listar/atividades/'},
+            {'title': 'Atividades', 'url': '/listar-atividade/'},
             {'title': 'Registro de atividade', 'url': '/cadastro-atividade/'},
         ]
 
@@ -385,7 +385,7 @@ class AtividadeDelete(LoginRequiredMixin, DeleteView):
 class AtividadeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Atividade
-    template_name = 'core/listas/Atividade.html'
+    template_name = 'templates/core/listas/Atividade.html'
     paginate_by = 6
 
     def get_context_data(self, **kwargs):
