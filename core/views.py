@@ -385,7 +385,7 @@ class AtividadeDelete(LoginRequiredMixin, DeleteView):
 class AtividadeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Atividade
-    template_name = '/listas/Atividade.html'
+    template_name = 'listas/Atividade.html'
     paginate_by = 6
 
     def get_context_data(self, **kwargs):
