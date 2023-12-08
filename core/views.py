@@ -392,7 +392,7 @@ class AtividadeList(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['breadcrumb'] = [
             {'title': 'Inicio', 'url': '/home/'},
-            {'title': 'Atividades', 'url': '/listar-atividade/'},
+            {'title': 'Atividades', 'url': '/listar/atividade/'},
         ]
 
         return context
