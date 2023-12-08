@@ -20,7 +20,7 @@ from .views import (
 urlpatterns = [
     # url de login e logout
     path('login/', auth_views.LoginView.as_view(
-        template_name='usuarios/login.html'
+        template_name='core/usuarios/login.html'
     ), name="login"),
     path('custom_login_redirect/', CustomLoginRedirectView.as_view(),
          name='custom_login_redirect'),

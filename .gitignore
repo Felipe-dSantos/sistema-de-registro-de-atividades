@@ -29,5 +29,5 @@ __pycache__/
 /pip.lock
 venv.bat
 .vercel
-staticfiles
-static
+# staticfiles
+# static

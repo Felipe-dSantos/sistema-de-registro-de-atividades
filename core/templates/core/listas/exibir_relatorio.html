@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block titulo %}
+<title>Detalhes</title>
+{% endblock titulo %}
+{% block main %}
+
+  {% include 'core/breadcrumb.html' %}
+  <div class="container-fluid col-8 mb-3 page-context-header" id="header-page">
+    <div class="page-header-headings">
+        <h1 class="h2" style="font-weight: 700;">Detalhes do Relatório</h1>
+    </div>
+</div>
+<div class="container col-8 mb-3" id="conteudo">
+  <p><span id="label-detalhes">Tema:</span> {{ relatorio.tema }}</p>
+  <p id="p-descricao" ><span id="label-detalhes">Descrição:</span> {{ relatorio.descricao }}</p>
+  <p><span id="label-detalhes">Local:</span> {{ relatorio.local }}</p>
+  <p><span id="label-detalhes">Data de Início:</span> {{ relatorio.data_inicio }}</p>
+  <p><span id="label-detalhes">Data de Encerramento:</span> {{ relatorio.data_encerramento }}</p>
+  <p><span id="label-detalhes">Quantidade de Participantes:</span> {{ relatorio.quantidade_ptc }}</p>
+  <!-- <p>anexo: <a href="{{ relatorio.arquivo.url }}" target="_blank">{{ relatorio.arquivo.title }}</a></p> -->
+  {% if arquivos %} 
+  <p>Arquivos anexados:</p>
+  {% for arquivo in arquivos %}
+  
+      {% if arquivo.arquivo and arquivo.arquivo.url %}
+          <a href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}" target="blank">
+              {% if arquivo.is_doc %}
+                  <i class="fa-solid fa-file-word fa-2xl"></i>
+              {% elif arquivo.is_pdf %}
+              <img src="{% static 'img/pdf-svgrepo-com.svg' %}" alt="Ícone PDF">
+              {% elif arquivo.is_image %}
+              <img  src="{{ arquivo.arquivo.url }}" alt="{{ arquivo.arquivo.name }}" style="border-radius: 5px;" width="40px" height="40px">
+              {% else %}
+                  <i class="fa-solid fa-file fa-2xl"></i>
+              {% endif %}
+          </a>
+      {% endif %}
+  {% endfor %}
+{% else %}
+  <p>Nenhum arquivo anexado</p>
+{% endif %}
+
+
+
+  <div class="py-3">
+    <a onclick="goBack()" class="btn btn-secondary"><i class="fa-solid fa-arrow-left px-2"
+        style="color: #ffffff;"></i>Voltar para a Lista</a>
+
+    <a href="{% url 'gerar-pdf-relatorio' relatorio.pk %}" class="btn btn-success" target="_blank"> <i
+        class="fa-regular fa-file-pdf px-2" style="color: #ffffff;"></i>Gerar PDF</a>
+  </div>
+</div>
+</div>
+<script>
+  function goBack() {
+    window.history.back();
+  }
+</script>
+{% endblock %}

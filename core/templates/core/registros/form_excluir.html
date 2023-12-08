@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block main %}
+  <h3 style="margin-top: 15px ;">Excluir Registro</h3>
+
+  <p class="lead">
+    Confirme para excluir resgistro
+  </p>
+  <hr>
+
+  <form action="" method="POST">
+
+    <P>
+        Deseja excluir o registro <b>{{object}} </b>?
+    </P>
+    {% csrf_token %}
+
+    {{form.as_p}}
+
+    <button type="submit" class="btn btn-danger">Confirmar</button>
+    <a href="{% url 'listar-atividade'%}" class="btn btn-primary">Cancelar</a>
+  </form>
+{% endblock main %}

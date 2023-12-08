@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block titulo %}
+<title>Login</title>
+{% endblock titulo %}
+
+
+{% block main %}
+
+
+
+<div class="col-md-4 mx-auto p-3" id="conteudo">
+    {% if request.user.is_authenticated %}
+    <h3> Ação não permitida</h3>
+    <hr>
+    <p class="lead">
+        se vc não conseguiu acessar essa opção é por que você não tem permissão
+    </p>
+    {% else %}
+    <h3 style="margin-top: 15px ;" class="text-center">Bem vindo!</h3>
+    <hr>
+    <p class="lead">
+        Faça seu Login para acessar o sistema
+    </p>
+    {% include 'core/mensagens.html' %}
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        {{ form|crispy }}
+        <div class="d-grid gap-2">
+            <a href="{% url 'password_reset' %}" class="text-end text-teal-500 hover:underline ml-auto">Esqueceu a
+                senha?</a>
+
+            <button type="submit" class="btn btn-primary text-center">Entrar</button>
+            <span class="text-center">Não é Registrado no sistema?<a
+                    href="{% url 'registrar-usuario' %}">Registre-se</a></span>
+            <!-- Adicionado botão de esqueci minha senha -->
+        </div>
+
+    </form>
+    {% endif %}
+</div>
+
+
+{% endblock main %}
+
+{% block footer %}
+<footer id="rodape" class=" fixed-bottom  text-center text-white">
+    <div class="container-fluid  p-3 ">
+        © 2023 Copyright: Felipe dos Santos & Alexandre Lira
+    </div>
+</footer>
+{% endblock footer %}
