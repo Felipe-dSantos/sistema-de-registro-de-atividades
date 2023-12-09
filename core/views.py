@@ -906,15 +906,15 @@ def gerar_pdf_relatorio(request, pk):
     assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
     elements.append(assinatura)
 
-    logging.debug('Iniciando a geração do PDF...')
-    try:
-        # Seu código para gerar o PDF...
-        doc.build(elements)
-        # ... (código para criar e retornar a resposta HTTP)
-    except Exception as e:
-        # Se algo der errado, registre o erro no log
-        logging.error(f'Erro ao gerar o PDF: {e}')
-    # Construa o PDF
+    # logging.debug('Iniciando a geração do PDF...')
+    # try:
+    #     # Seu código para gerar o PDF...
+    #     doc.build(elements)
+    #     # ... (código para criar e retornar a resposta HTTP)
+    # except Exception as e:
+    #     # Se algo der errado, registre o erro no log
+    #     logging.error(f'Erro ao gerar o PDF: {e}')
+    # # Construa o PDF
     doc.build(elements)
 
     # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
