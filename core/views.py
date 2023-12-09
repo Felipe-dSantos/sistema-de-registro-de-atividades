@@ -547,7 +547,8 @@ def export_pdf(request):
 
    # Adiciona o cabeçalho com a imagem e o título
     # header_frame = Frame(inch, doc.height + inch, doc.width, inch)
-    image_path = os.path.join(settings.MEDIA_ROOT, 'img/Logo-ufac-cor.png')
+    image_path = os.path.join(
+        settings.BASE_DIR, 'static', 'img', 'Logo-ufac-cor.png')
     logo = Image(image_path, width=40, height=56)
 
     # Título
@@ -626,17 +627,6 @@ def export_pdf(request):
     doc.addPageTemplates([template])
 
     # Adicione o parágrafo alinhado ao centro
-    logging.debug('Iniciando a geração do PDF...')
-    try:
-        # Seu código para gerar o PDF...
-        doc.build(elements, c)
-        # ... (código para criar e retornar a resposta HTTP)
-    except Exception as e:
-        # Se algo der errado, registre o erro no log
-        logging.error(f'Erro ao gerar o PDF: {e}')
-    # Construa o PDF
-
-    # Construa o PDF
     doc.build(elements, c)
 
     # Retornando o PDF como uma resposta HTTP para abrir em uma nova guia
@@ -906,15 +896,6 @@ def gerar_pdf_relatorio(request, pk):
     assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
     elements.append(assinatura)
 
-    # logging.debug('Iniciando a geração do PDF...')
-    # try:
-    #     # Seu código para gerar o PDF...
-    #     doc.build(elements)
-    #     # ... (código para criar e retornar a resposta HTTP)
-    # except Exception as e:
-    #     # Se algo der errado, registre o erro no log
-    #     logging.error(f'Erro ao gerar o PDF: {e}')
-    # # Construa o PDF
     doc.build(elements)
 
     # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
