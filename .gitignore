@@ -20,10 +20,10 @@ __pycache__/
 
 # Diretório de arquivos estáticos coletados
 /static/js/pdfjs
-/uploads/
+/uploads/arquivos
 # Diretório de arquivos de mídia enviados pelo usuário
-/media/
-*.png
+
+
 # Arquivos de dependências gerados pelo gerenciador de pacotes pip
 
 /pip.lock
