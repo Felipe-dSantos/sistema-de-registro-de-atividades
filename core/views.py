@@ -517,6 +517,8 @@ class CustomLoginRedirectView(View):
 #     response.write(pdf)
 
 #     return response
+# Configure o logger
+logging.basicConfig(level=logging.DEBUG)
 def export_pdf(request):
     # Obtendo todas as atividades do modelo Atividade
     atividades = Atividade.objects.all()
@@ -625,6 +627,15 @@ def export_pdf(request):
     doc.addPageTemplates([template])
 
     # Adicione o parágrafo alinhado ao centro
+    logging.debug('Iniciando a geração do PDF...')
+    try:
+        # Seu código para gerar o PDF...
+        doc.build(elements, c)
+        # ... (código para criar e retornar a resposta HTTP)
+    except Exception as e:
+        # Se algo der errado, registre o erro no log
+        logging.error(f'Erro ao gerar o PDF: {e}')
+    # Construa o PDF
 
     # Construa o PDF
     doc.build(elements, c)
@@ -787,10 +798,6 @@ def exibir_relatorio(request, pk):
         ]
     }
     return render(request, 'core/listas/exibir_relatorio.html', context)
-
-
-# Configure o logger
-logging.basicConfig(level=logging.DEBUG)
 
 
 def gerar_pdf_relatorio(request, pk):
