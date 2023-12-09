@@ -791,7 +791,6 @@ import logging
 
 # Configure o logger
 logging.basicConfig(level=logging.DEBUG)
-
 def gerar_pdf_relatorio(request, pk):
 
     relatorio = get_object_or_404(Atividade, id=pk)
@@ -894,21 +893,29 @@ def gerar_pdf_relatorio(request, pk):
     line = Table(
         [[Paragraph('<u>' + '&nbsp;' * 100 + '</u>', style_paragraph)]], colWidths=[500])
     elements.append(line)
-    
+
+# Adicione o parágrafo alinhado ao centro
+    assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
+    elements.append(assinatura)
+
+    # Construa o PDF
+    doc.build(elements)
+
+    # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename=Relatório' + \
+        '-' + datetime.now().strftime("%d-%m-%y") + '.pdf'
+
     logging.debug('Iniciando a geração do PDF...')
     try:
-            # Código para gerar o PDF...
-            doc.build(elements)
-            # Adicionar resposta HTTP para retornar o PDF
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'inline; filename=Relatório' + \
-                '-' + datetime.now().strftime("%d-%m-%y") + '.pdf'
-            response.write(buffer.getvalue())
-            buffer.close()
-            logging.debug('PDF gerado com sucesso.')
-            return response
+        # Seu código para gerar o PDF...
+        doc.build(elements)
+        response.write(buffer.getvalue())
     except Exception as e:
-            # Se algo der errado, registre o erro no log
-            logging.error(f'Erro ao gerar o PDF: {e}')
+        # Se algo der errado, registre o erro no log
+        logging.error(f'Erro ao gerar o PDF: {e}')
+        # Em caso de erro, defina um conteúdo vazio ou de erro no PDF
+        response.write(b'')
 
+    buffer.close()
     return response
