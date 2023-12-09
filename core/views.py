@@ -787,6 +787,10 @@ def exibir_relatorio(request, pk):
     }
     return render(request, 'core/listas/exibir_relatorio.html', context)
 
+import logging
+
+# Configure o logger
+logging.basicConfig(level=logging.DEBUG)
 
 def gerar_pdf_relatorio(request, pk):
 
@@ -890,6 +894,15 @@ def gerar_pdf_relatorio(request, pk):
     line = Table(
         [[Paragraph('<u>' + '&nbsp;' * 100 + '</u>', style_paragraph)]], colWidths=[500])
     elements.append(line)
+    
+    logging.debug('Iniciando a geração do PDF...')
+    try:
+        # Seu código para gerar o PDF...
+        doc.build(elements)
+        # ... (código para criar e retornar a resposta HTTP)
+    except Exception as e:
+        # Se algo der errado, registre o erro no log
+        logging.error(f'Erro ao gerar o PDF: {e}')
 
 # Adicione o parágrafo alinhado ao centro
     assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
