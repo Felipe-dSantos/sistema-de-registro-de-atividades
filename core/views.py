@@ -1,4 +1,5 @@
 # Importações de módulos padrão
+import logging
 from django.contrib.auth.models import User
 from .models import Atividade, Arquivo
 from django.views.generic import TemplateView
@@ -403,7 +404,7 @@ class AtividadeList(LoginRequiredMixin, ListView):
 
         if search_term:
             queryset = queryset.filter(tema__icontains=search_term)
-            
+
         queryset = queryset.order_by('-data_registro')
         return queryset
 
@@ -787,10 +788,11 @@ def exibir_relatorio(request, pk):
     }
     return render(request, 'core/listas/exibir_relatorio.html', context)
 
-import logging
 
 # Configure o logger
 logging.basicConfig(level=logging.DEBUG)
+
+
 def gerar_pdf_relatorio(request, pk):
 
     relatorio = get_object_or_404(Atividade, id=pk)
@@ -898,8 +900,6 @@ def gerar_pdf_relatorio(request, pk):
     assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
     elements.append(assinatura)
 
-    # Construa o PDF
-    doc.build(elements)
     logging.debug('Iniciando a geração do PDF...')
     try:
         # Seu código para gerar o PDF...
@@ -908,6 +908,9 @@ def gerar_pdf_relatorio(request, pk):
     except Exception as e:
         # Se algo der errado, registre o erro no log
         logging.error(f'Erro ao gerar o PDF: {e}')
+    # Construa o PDF
+    doc.build(elements)
+
     # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename=Relatório' + \
