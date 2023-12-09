@@ -824,7 +824,8 @@ def gerar_pdf_relatorio(request, pk):
     )
 
     # Adiciona o cabeçalho com a imagem e o título
-    image_path = os.path.join(settings.MEDIA_ROOT, 'img/Logo-ufac-cor.png')
+    image_path = os.path.join(
+        settings.BASE_DIR, 'static', 'img', 'Logo-ufac-cor.png')
     logo = Image(image_path, width=40, height=56),
     titulo = Paragraph(
         '<b>REGISTRO DE ATIVIDADES REALIZADAS<br/>NO LABORATÓRIO DE INFORMÁTICA DO LIFE</b>', style_title)
