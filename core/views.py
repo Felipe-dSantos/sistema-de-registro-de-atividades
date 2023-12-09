@@ -546,7 +546,7 @@ def export_pdf(request):
    # Adiciona o cabeçalho com a imagem e o título
     # header_frame = Frame(inch, doc.height + inch, doc.width, inch)
     image_path = os.path.join(
-        settings.BASE_DIR, 'static', 'img', 'Logo-ufac.svg')
+        settings.BASE_DIR, 'staticfiles', 'img', 'Logo-ufac-cor.png')
     logo = Image(image_path, width=40, height=56)
 
     # Título
