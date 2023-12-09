@@ -897,25 +897,18 @@ def gerar_pdf_relatorio(request, pk):
     
     logging.debug('Iniciando a geração do PDF...')
     try:
-        # Seu código para gerar o PDF...
-        doc.build(elements)
-        # ... (código para criar e retornar a resposta HTTP)
+            # Código para gerar o PDF...
+            doc.build(elements)
+            # Adicionar resposta HTTP para retornar o PDF
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'inline; filename=Relatório' + \
+                '-' + datetime.now().strftime("%d-%m-%y") + '.pdf'
+            response.write(buffer.getvalue())
+            buffer.close()
+            logging.debug('PDF gerado com sucesso.')
+            return response
     except Exception as e:
-        # Se algo der errado, registre o erro no log
-        logging.error(f'Erro ao gerar o PDF: {e}')
-
-# Adicione o parágrafo alinhado ao centro
-    assinatura = Paragraph('<b>Assinatura do Responsável</b>', style_paragraph)
-    elements.append(assinatura)
-
-    # Construa o PDF
-    doc.build(elements)
-
-    # Retorne o PDF como uma resposta HTTP para abrir em uma nova guia
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename=Relatório' + \
-        '-' + datetime.now().strftime("%d-%m-%y") + '.pdf'
-    response.write(buffer.getvalue())
-    buffer.close()
+            # Se algo der errado, registre o erro no log
+            logging.error(f'Erro ao gerar o PDF: {e}')
 
     return response
