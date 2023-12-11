@@ -501,29 +501,27 @@ def export_pdf(request):
     elements.append(Spacer(1, 20))
 
     # Criando listas para armazenar os dados das colunas
-    temas = ['Tema']
-    responsaveis = ['Nome do Responsável']
-    participantes = ['Nº de Participantes']
-    datas_inicio = ['Início']
-    datas_encerramento = ['Encerramento']
+    # temas = ['Tema']
+    # responsaveis = ['Nome do Responsável']
+    # participantes = ['Nº de Participantes']
+    # datas_inicio = ['Início']
+    # datas_encerramento = ['Encerramento']
+
+    data = [['Tema', 'Nome do Responsável', 'Nº de Participantes', 'Início', 'Encerramento']]
 
     # Preenchendo as listas com os dados das atividades
     for atividade in atividades:
         nome_completo = f"{atividade.usuario.first_name} {atividade.usuario.last_name}"
-
-        temas.append(atividade.tema)
-        responsaveis.append(nome_completo)
-        participantes.append(str(atividade.quantidade_ptc))
-        datas_inicio.append(atividade.data_inicio.strftime('%d/%m/%Y'))
-        datas_encerramento.append(
-            atividade.data_encerramento.strftime('%d/%m/%Y'))
-
-    # Organizando os dados em colunas
-    colunas = [temas, responsaveis, participantes,
-               datas_inicio, datas_encerramento]
-    tabela_dados = list(map(list, zip(*colunas)))
-    # Criando a tabela com os dados organizados como colunas
-    table = Table(tabela_dados)
+        data.append([
+            
+            atividade.tema,
+            nome_completo,
+            str(atividade.quantidade_ptc),
+            atividade.data_inicio.strftime('%d/%m/%Y'),
+            atividade.data_encerramento.strftime('%d/%m/%Y')
+        ])
+        
+    table = Table(data)
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Cor de fundo do cabeçalho
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),  # Cor do texto do cabeçalho
