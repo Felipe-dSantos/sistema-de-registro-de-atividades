@@ -8,12 +8,12 @@
 {% block main %}
 
   {% include 'core/breadcrumb.html' %}
-  <div class="container-fluid col-8 mb-3 page-context-header" id="header-page">
+  <div class="container-fluid col-11 mb-3 page-context-header" id="header-page">
     <div class="page-header-headings">
         <h1 class="h2" style="font-weight: 700;">Detalhes do Relatório</h1>
     </div>
 </div>
-<div class="container col-8 mb-3" id="conteudo">
+<div class="container col-11 mb-3" id="conteudo">
   <p><span id="label-detalhes">Tema:</span> {{ relatorio.tema }}</p>
   <p id="p-descricao" ><span id="label-detalhes">Descrição:</span> {{ relatorio.descricao }}</p>
   <p><span id="label-detalhes">Local:</span> {{ relatorio.local }}</p>

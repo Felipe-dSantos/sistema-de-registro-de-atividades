@@ -6,12 +6,12 @@
 {% endblock %}
 
 {% block main %}
-<div class="container-fluid col-10 mb-3 page-context-header" id="header-page">
+<div class="container-fluid col-11 mb-3 page-context-header" id="header-page">
     <div class="page-header-headings">
         <h1 class="h2" style="font-weight: 700;">Lista de Atividades Gerais</h1>
     </div>
 </div>
-<div class="container-fluid col-10 mb-3" id="conteudo">
+<div class="container-fluid col-11 mb-3" id="conteudo">
     <div class="container mt-3 pt-3">
         
         <div class="col-6 mb-3">
@@ -32,13 +32,14 @@
                     <select name="local"  class="form-select form-select-sm" onchange="this.form.submit()" style="max-width: 160px;">
                         <option value="" {% if not request.GET.local %} selected {% endif %} disabled>Local</option>
                         {% for local in locais %}
-                            <option value="{{ local.id }}" {% if request.GET.local == local.id %} selected {% endif %}>{{ local.nome }}</option>
+                        <option value="{{ local.id }}" {% if request.GET.local|stringformat:"i" == local.id|stringformat:"i" %} selected {% endif %}>{{ local.nome }}</option>
+
                         {% endfor %}
                     </select>
-                    <input type="hidden" name="month" value="{{ request.GET.month}}">
+                    <!-- <input type="hidden" name="month" value="{{ request.GET.month}}">
                     <input type="hidden" name="last_days" value="{{ request.GET.last_days }}">
                     <input type="hidden" name="start_date" value="{{ request.GET.start_date }}">
-                    <input type="hidden" name="end_date" value="{{ request.GET.end_date }}">
+                    <input type="hidden" name="end_date" value="{{ request.GET.end_date }}"> -->
                 </form>
             </div>
             <div class="col-auto">
@@ -57,15 +58,16 @@
                 <form method="GET">
                     <select name="month" id="month" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 160px;">
                         <option value="" {% if not request.GET.month %} selected {% endif %} disabled>Mês</option>
-                    <option value="1" {% if request.GET.month == '1' %} selected {% endif %}>Janeiro</option>
-                    <option value="2" {% if request.GET.month == '2' %} selected {% endif %}>Fevereiro</option>
-                    <option value="3" {% if request.GET.month == '3' %} selected {% endif %}>Março</option>
-                    <option value="4" {% if request.GET.month == '4' %} selected {% endif %}>Abril</option>
-                    <option value="5" {% if request.GET.month == '5' %} selected {% endif %}>Maio</option>
-                    <option value="6" {% if request.GET.month == '6' %} selected {% endif %}>Junho</option>
-                    <option value="7" {% if request.GET.month == '7' %} selected {% endif %}>Julho</option>
-                    <option value="8" {% if request.GET.month == '8' %} selected {% endif %}>Agosto</option>
-                    <option value="9" {% if request.GET.month == '9' %} selected {% endif %}>Setembro</option>
+                        <option value="" {% if not request.GET.month %} {% endif %} >Todos</option>
+                    <option value="01" {% if request.GET.month == '01' %} selected {% endif %}>Janeiro</option>
+                    <option value="02" {% if request.GET.month == '02' %} selected {% endif %}>Fevereiro</option>
+                    <option value="03" {% if request.GET.month == '03' %} selected {% endif %}>Março</option>
+                    <option value="04" {% if request.GET.month == '04' %} selected {% endif %}>Abril</option>
+                    <option value="05" {% if request.GET.month == '05' %} selected {% endif %}>Maio</option>
+                    <option value="06" {% if request.GET.month == '06' %} selected {% endif %}>Junho</option>
+                    <option value="07" {% if request.GET.month == '07' %} selected {% endif %}>Julho</option>
+                    <option value="08" {% if request.GET.month == '08' %} selected {% endif %}>Agosto</option>
+                    <option value="09" {% if request.GET.month == '09' %} selected {% endif %}>Setembro</option>
                     <option value="10" {% if request.GET.month == '10' %} selected {% endif %}>Outubro</option>
                     <option value="11" {% if request.GET.month == '11' %} selected {% endif %}>Novembro</option>
                     <option value="12" {% if request.GET.month == '12' %} selected {% endif %}>Dezembro</option>

@@ -31,3 +31,4 @@ venv.bat
 .vercel
 # staticfiles
 # static
+populate_data.py

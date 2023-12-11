@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&+llfpu)pz3lbomx@&k_+z&!+94oq1_y)9j51-8+irf-u0pt2p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = False
+DEBUG = True
 
-DEBUG = 'RENDER' not in os.environ
+# DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = ['*']
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -92,29 +92,30 @@ WSGI_APPLICATION = 'SDRA.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-#Local
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'sdra',
-#         'USER': 'root',
-#         'PASSWORD': 'root',
-#         'HOST': 'localhost', # Pode ser 'localhost' se estiver rodando localmente
-#         'PORT': '3306', # Normalmente, o MySQL usa a porta 3306
-#     }
-# }
 
-#produção
+#Local
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sdra',
-        'USER': 'admin',
-        'PASSWORD': 'd2K7ROHSV0Qn94scFTH96RspgdrKhDgV',
-        'HOST': 'dpg-clnp3ugfvntc73b5hbig-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
-        'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost', # Pode ser 'localhost' se estiver rodando localmente
+        'PORT': '3306', # Normalmente, o MySQL usa a porta 3306
     }
 }
+
+#produção
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'sdra',
+#         'USER': 'admin',
+#         'PASSWORD': 'd2K7ROHSV0Qn94scFTH96RspgdrKhDgV',
+#         'HOST': 'dpg-clnp3ugfvntc73b5hbig-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
+#         'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -188,22 +189,22 @@ LOGIN_URL = 'login'
 # settings.py
 
 # Use SMTP
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# # The host to use for sending email.
-# EMAIL_HOST = 'smtp.gmail.com'
+# The host to use for sending email.
+EMAIL_HOST = 'smtp.gmail.com'
 
-# # Port to use for the SMTP server defined in EMAIL_HOST.
-# EMAIL_PORT = 587
+# Port to use for the SMTP server defined in EMAIL_HOST.
+EMAIL_PORT = 587
 
-# # Whether to use a TLS (secure) connection when talking to the SMTP server.
-# EMAIL_USE_TLS = True
+# Whether to use a TLS (secure) connection when talking to the SMTP server.
+EMAIL_USE_TLS = True
 
-# # Username to use for the SMTP server defined in EMAIL_HOST.
-# EMAIL_HOST_USER = 'lds.dossantos1@gmail.com'
+# Username to use for the SMTP server defined in EMAIL_HOST.
+EMAIL_HOST_USER = 'lds.dossantos1@gmail.com'
 
-# # Password to use for the SMTP server defined in EMAIL_HOST.
-# EMAIL_HOST_PASSWORD = 'eugckvmjobjpzblqq'
+# Password to use for the SMTP server defined in EMAIL_HOST.
+EMAIL_HOST_PASSWORD = 'eugckvmjobjpzblqq'
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'secondary',

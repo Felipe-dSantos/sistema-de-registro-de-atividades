@@ -284,69 +284,6 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
             formset.save()
 
         return url
-# class AtividadeCreate(LoginRequiredMixin, CreateView):
-#     login_url = reverse_lazy('login')
-#     model = Atividade
-#     fields = ['tema', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao']
-#     template_name = 'core/registros/form-upload.html'
-#     success_url = reverse_lazy('listar-atividade')
-#     success_message = 'Atividade registrada com Sucesso!'
-
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(*args, **kwargs)
-#         context['titulo'] = "Registro de Atividade"
-#         context['botao'] = "Registrar"
-#         context['url'] = reverse('listar-atividade')
-
-#         # Criando o formset de Arquivos relacionados à Atividade
-#         ArquivoFormSet = inlineformset_factory(Atividade, Arquivo, fields=['arquivo',], extra=1)
-
-#         if self.request.POST:
-#             # Se dados forem submetidos, popula os formulários com os dados enviados
-#             context['formset'] = ArquivoFormSet(self.request.POST, self.request.FILES)
-#         else:
-#             # Se não, cria um formset vazio
-#             context['formset'] = ArquivoFormSet()
-
-#         return context
-
-#     def form_valid(self, form):
-#         form.instance.usuario = self.request.user
-#         url = super().form_valid(form)
-
-#         # Adicione aqui a lógica para salvar os arquivos associados à atividade
-#         formset = ArquivoFormSet(self.request.POST, self.request.FILES, instance=self.object)
-
-#         if formset.is_valid():
-#             for form in formset:
-#                 if form.cleaned_data.get('arquivo'):
-#                     arquivo = form.save(commit=False)  # Obtém o objeto Arquivo sem salvá-lo ainda
-#                     arquivo.atividade = self.object  # Define a atividade para cada arquivo
-#                     arquivo.save()  # Salva o objeto Arquivo
-#         else:
-#             return super().form_invalid(form)
-
-#         messages.success(self.request, self.success_message)
-#         return super().form_valid(form)
-
-
-# @login_required
-# def AtividadeCreate(request):
-#     success_message = 'Atividade registrada com Sucesso!'
-#     if request.method == 'POST':
-#         form = AtividadeForm(request.POST, request.FILES)
-#         formset = ArquivoFormSet(request.POST, request.FILES, instance=form.instance)
-#         if form.is_valid() and formset.is_valid():
-#             form.save()
-#             formset.save()
-#             messages.success(request, success_message)
-#             return redirect('listar-atividade')
-#     else:
-#         form = AtividadeForm()
-#         formset = ArquivoFormSet()
-
-#     return render(request, 'core/registros/form-upload.html', {'form': form, 'formset': formset})
-
 
 class AtividadeUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
@@ -387,8 +324,9 @@ class AtividadeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Atividade
     template_name = 'core/listas/atividade_list.html'
-    paginate_by = 6
-
+    paginate_by = 30
+    
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['breadcrumb'] = [
@@ -415,7 +353,8 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     model = Atividade
     template_name = 'core/listas/atividadesGerais.html'
     paginate_by = 30
-
+    
+    
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['url'] = reverse('listar-atividade-geral')
@@ -457,10 +396,10 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
                 # Lida com valor inválido para last_days
                 queryset = Atividade.objects.all()
 
-        elif 'mes' in self.request.GET:
+        elif 'month' in self.request.GET:
             try:
                 # Obter o mês da URL
-                selected_month = int(self.request.GET.get('mes'))
+                selected_month = int(self.request.GET.get('month'))
                 # Obter o ano atual
                 current_year = timezone.now().year
                 # Criar uma data com o ano atual e o mês selecionado
@@ -475,7 +414,6 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
             except (ValueError, TypeError):
                 # Lida com valores inválidos para o mês
                 queryset = Atividade.objects.all()
-
         elif local:
             # Filtrar atividades por local, usando o parâmetro 'local' da URL
             queryset = Atividade.objects.filter(local_id=local)
@@ -486,7 +424,7 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
         if search_term:
             queryset = queryset.filter(Q(tema__icontains=search_term) | Q(
                 usuario__username__icontains=search_term))
-
+        queryset = queryset.order_by('-data_registro')
         return queryset
 
 
@@ -502,22 +440,7 @@ class CustomLoginRedirectView(View):
             return redirect('home')
 
 
-#################### GERAR RELATÓRIO EM PDF#####################################
-# def export_pdf(request):
-#     c=canvas.Canvas('teste.pdf')
-#     c.drawString(200,200, 'olá mundo')
-#     c.showPage()
-#     c.save()
 
-#     response = HttpResponse(content_type='application/pdf')
-#     response['Content-Disposition'] = 'inline; filename="nome_do_arquivo.pdf"'
-
-#     # Escreva o PDF no objeto de resposta
-#     pdf = c.getpdfdata()
-#     response.write(pdf)
-
-#     return response
-# Configure o logger
 logging.basicConfig(level=logging.DEBUG)
 def export_pdf(request):
     # Obtendo todas as atividades do modelo Atividade
