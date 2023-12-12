@@ -204,7 +204,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'lds.dossantos1@gmail.com'
 
 # Password to use for the SMTP server defined in EMAIL_HOST.
-EMAIL_HOST_PASSWORD = 'eugckvmjobjpzblqq'
+EMAIL_HOST_PASSWORD = 'panzapmggxiqhwty'
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'secondary',
