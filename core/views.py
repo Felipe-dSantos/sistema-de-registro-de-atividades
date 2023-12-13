@@ -430,10 +430,10 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 
 class CustomLoginRedirectView(View):
     def get(self, request, *args, **kwargs):
-        if request.user.groups.filter(name='Tecnico').exists():
+        if request.settings.AUTH_USER_MODEL.groups.filter(name='Tecnico').exists():
 
             return redirect('listar-atividade-geral')
-        elif request.user.groups.filter(name='Docente').exists():
+        elif request.settings.AUTH_USER_MODEL.groups.filter(name='Docente').exists():
 
             return redirect('home')
         else:
