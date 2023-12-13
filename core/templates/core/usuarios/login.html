@@ -28,12 +28,19 @@
     <form action="" method="POST">
         {% csrf_token %}
 
-        {{ form|crispy }}
+        <!-- {{ form|crispy }} -->
+        <label for="username" class="form-group">CPF:</label>
+        <input type="text" id="username" name="username" class="form-control mb-3" placeholder="Informe seu cpf" required
+            autofocus>
+
+        <label for="passwprd" class="form-group">Senha:</label>
+        <input type="password" id="password" name="password" class="form-control mb-1" placeholder="Informe senha" required>
+
         <div class="d-grid gap-2">
             <a href="{% url 'password_reset' %}" class="text-end text-teal-500 hover:underline ml-auto">Esqueceu a
                 senha?</a>
 
-            <button type="submit" class="btn btn-primary text-center">Entrar</button>
+            <button type="submit" class="btn btn-primary text-center"  onclick="validarFormulario()">Entrar</button>
             <span class="text-center">Não é Registrado no sistema?<a
                     href="{% url 'registrar-usuario' %}">Registre-se</a></span>
             <!-- Adicionado botão de esqueci minha senha -->

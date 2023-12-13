@@ -46,7 +46,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.edit import View, CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.forms.models import BaseModelForm
-from .forms import ArquivoForm, ArquivoFormSet, AtividadeForm
+from .forms import ArquivoForm, ArquivoFormSet, AtividadeForm, CustomUsuarioCreateForm
 from django.templatetags.static import static
 from django.conf import settings
 from django.forms import inlineformset_factory
@@ -60,7 +60,7 @@ from braces.views import GroupRequiredMixin
 
 # Importações locais
 from .models import Local, Atividade
-from .forms import UsuarioForm
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from dateutil.parser import parse
 from datetime import timedelta, datetime
@@ -70,7 +70,7 @@ from django.contrib import messages
 # views para registro de usuarios
 class UsuarioCreate(CreateView):
     template_name = 'core/usuarios/form.html'
-    form_class = UsuarioForm
+    form_class = CustomUsuarioCreateForm
     success_url = reverse_lazy('login')
     success_message = 'Usuário cadastrado com Sucesso!'
 

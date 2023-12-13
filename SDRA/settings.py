@@ -93,29 +93,29 @@ WSGI_APPLICATION = 'SDRA.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-#Local
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'sdra',
-#         'USER': 'root',
-#         'PASSWORD': 'root',
-#         'HOST': 'localhost', # Pode ser 'localhost' se estiver rodando localmente
-#         'PORT': '3306', # Normalmente, o MySQL usa a porta 3306
-#     }
-# }
-
-#produção
+# Local
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sdra',
-        'USER': 'admin',
-        'PASSWORD': 'd2K7ROHSV0Qn94scFTH96RspgdrKhDgV',
-        'HOST': 'dpg-clnp3ugfvntc73b5hbig-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
-        'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost', # Pode ser 'localhost' se estiver rodando localmente
+        'PORT': '3306', # Normalmente, o MySQL usa a porta 3306
     }
 }
+
+# #produção
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'sdra',
+#         'USER': 'admin',
+#         'PASSWORD': 'd2K7ROHSV0Qn94scFTH96RspgdrKhDgV',
+#         'HOST': 'dpg-clnp3ugfvntc73b5hbig-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
+#         'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -148,24 +148,12 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-# STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static")
-# ]
-
-# STATIC_ROOT = os.path.join(os.path.dirname(
-#     BASE_DIR), "staticfiles")
-
-
-
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles') 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
@@ -178,32 +166,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# configuraçoes de Autenticação
-
-LOGIN_REDIRECT_URL = 'custom_login_redirect'
-LOGOUT_REDIRECT_URL = 'login'
-LOGIN_URL = 'login'
-
-# AUTH_USER_MODEL = 'core.CustomUser'
-
-# settings.py
 
 # Use SMTP
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-# The host to use for sending email.
 EMAIL_HOST = 'smtp.gmail.com'
-
-# Port to use for the SMTP server defined in EMAIL_HOST.
 EMAIL_PORT = 587
-
-# Whether to use a TLS (secure) connection when talking to the SMTP server.
 EMAIL_USE_TLS = True
-
-# Username to use for the SMTP server defined in EMAIL_HOST.
 EMAIL_HOST_USER = 'lds.dossantos1@gmail.com'
-
-# Password to use for the SMTP server defined in EMAIL_HOST.
 EMAIL_HOST_PASSWORD = 'panzapmggxiqhwty'
 
 MESSAGE_TAGS = {
@@ -214,8 +183,11 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-# AUTHENTICATION_BACKENDS = ['core.auth_backends.CPFAuth']
-
+# configuraçoes de Autenticação
+AUTH_USER_MODEL = 'core.CustomUsuario'
+LOGIN_REDIRECT_URL = 'custom_login_redirect'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
 
 
 # Formato abreviado para datas (para exibição em locais onde espaço é limitado)
