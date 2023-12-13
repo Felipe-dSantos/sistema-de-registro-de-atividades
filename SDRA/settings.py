@@ -109,10 +109,10 @@ WSGI_APPLICATION = 'SDRA.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sdra',
+        'NAME': 'sdra2',
         'USER': 'admin',
-        'PASSWORD': 'd2K7ROHSV0Qn94scFTH96RspgdrKhDgV',
-        'HOST': 'dpg-clnp3ugfvntc73b5hbig-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
+        'PASSWORD': 'iFXxJgQLhtRvXIYhCvIC2ipmypkDtE9L',
+        'HOST': 'dpg-clt4co21hbls73eades0-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
         'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
     }
 }
