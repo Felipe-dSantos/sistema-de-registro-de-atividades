@@ -32,14 +32,13 @@
                     <select name="local"  class="form-select form-select-sm" onchange="this.form.submit()" style="max-width: 160px;">
                         <option value="" {% if not request.GET.local %} selected {% endif %} disabled>Local</option>
                         {% for local in locais %}
-                        <option value="{{ local.id }}" {% if request.GET.local|stringformat:"i" == local.id|stringformat:"i" %} selected {% endif %}>{{ local.nome }}</option>
-
+                        <option value="{{ local.id }}" {% if request.GET.local == local.id|stringformat:"s" %} selected {% endif %}>{{ local.nome }}</option>
                         {% endfor %}
                     </select>
-                    <!-- <input type="hidden" name="month" value="{{ request.GET.month}}">
+                    <input type="hidden" name="month" value="{{ request.GET.month}}">
                     <input type="hidden" name="last_days" value="{{ request.GET.last_days }}">
                     <input type="hidden" name="start_date" value="{{ request.GET.start_date }}">
-                    <input type="hidden" name="end_date" value="{{ request.GET.end_date }}"> -->
+                    <input type="hidden" name="end_date" value="{{ request.GET.end_date }}">
                 </form>
             </div>
             <div class="col-auto">
@@ -89,15 +88,13 @@
                     <div class="col-auto">
                         <input class="form-control form-control-sm" name="end_date" type="date" value="{{request.GET.end_date}}" placeholder="Selecione a data" onchange="this.form.submit()">
                     </div>
-                    <!-- <div class="col-auto">
-                        <button class="btn btn-primary btn-sm" type="submit">Filtrar</button>
-                    </div> -->
+                    
                     <input type="hidden" name="local" value="{{ request.GET.local }}">
                 </form>
             </div>
             <div class="col-auto text-md-end">
                 <a class="btn btn-success btn-sm "
-                    href="{% url 'export-pdf' %}?obj={{ request.GET.obj|default:'' }}&start_date={{ request.GET.start_date|default:'' }}&end_date={{ request.GET.end_date|default:'' }}&last_days={{ request.GET.last_days|default:'' }}"
+                    href="{% url 'export-pdf' %}?obj={{ request.GET.obj|default:'' }}&start_date={{ request.GET.start_date|default:'' }}&end_date={{ request.GET.end_date|default:'' }}&last_days={{ request.GET.last_days|default:'' }}&month{{request.GET.month|default:''}}"
                     target="_blank">Gerar Relatório</a>
             </div>
         </div>
@@ -190,6 +187,7 @@
 {% endblock footer %}
 
 {% block scripts %}
+
 <script>
     function submitForm() {
         document.getElementById("filterForm").submit();

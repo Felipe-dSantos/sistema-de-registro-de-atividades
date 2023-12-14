@@ -370,6 +370,9 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
         local = self.request.GET.get('local')
         search_term = self.request.GET.get('search')
 
+        # Começa com todas as atividades
+        queryset = Atividade.objects.all()
+
         if start_date and end_date:
             # Converte em data e adiciona um dia ao fim
             end_date = parse(end_date) + timedelta(1)
@@ -396,7 +399,7 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
                 # Lida com valor inválido para last_days
                 queryset = Atividade.objects.all()
 
-        elif 'month' in self.request.GET:
+        if 'month' in self.request.GET:
             try:
                 # Obter o mês da URL
                 selected_month = int(self.request.GET.get('month'))
@@ -407,23 +410,22 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
                     current_year, selected_month, 1).date()
                 end_date = start_date + timezone.timedelta(days=32)
                 # Filtrar atividades com base no mês selecionado
-                queryset = Atividade.objects.filter(
+                queryset = queryset.filter(
                     data_inicio__gte=start_date,
                     data_inicio__lt=end_date,
                 )
             except (ValueError, TypeError):
                 # Lida com valores inválidos para o mês
-                queryset = Atividade.objects.all()
-        elif local:
-            # Filtrar atividades por local, usando o parâmetro 'local' da URL
-            queryset = Atividade.objects.filter(local_id=local)
+                pass
 
-        else:
-            queryset = Atividade.objects.all()
+        if local:
+            # Filtrar atividades por local, usando o parâmetro 'local' da URL
+            queryset = queryset.filter(local=local)
 
         if search_term:
             queryset = queryset.filter(Q(tema__icontains=search_term) | Q(
                 usuario__username__icontains=search_term))
+
         queryset = queryset.order_by('-data_registro')
         return queryset
 
@@ -445,7 +447,71 @@ logging.basicConfig(level=logging.DEBUG)
 def export_pdf(request):
     # Obtendo todas as atividades do modelo Atividade
     atividades = Atividade.objects.all()
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    last_days = request.GET.get('last_days')
+    local = request.GET.get('local')
+    search_term = request.GET.get('search')
 
+        # Começa com todas as atividades
+    queryset = Atividade.objects.all()
+
+    if start_date and end_date:
+            # Converte em data e adiciona um dia ao fim
+            end_date = parse(end_date) + timedelta(1)
+            # Filtra atividades com base nas datas de início e encerramento
+            queryset = Atividade.objects.filter(
+                data_inicio__gte=start_date, data_encerramento__lte=end_date)
+    elif start_date:
+            # Filtra atividades com base apenas na data de início
+            queryset = Atividade.objects.filter(data_inicio=start_date)
+    elif end_date:
+            # Filtra atividades com base apenas na data de encerramento
+            queryset = Atividade.objects.filter(data_encerramento=end_date)
+    elif last_days:
+            try:
+                last_days = int(last_days)
+                # Data atual
+                today = datetime.now().date()
+                # Data de início do período (30, 60 ou 90 dias atrás)
+                start_date = today - timedelta(days=last_days)
+                # Filtra atividades com base na data de início
+                queryset = Atividade.objects.filter(
+                    data_inicio__gte=start_date)
+            except ValueError:
+                # Lida com valor inválido para last_days
+                queryset = Atividade.objects.all()
+
+    if 'month' in request.GET:
+            try:
+                # Obter o mês da URL
+                selected_month = int(request.GET.get('month'))
+                # Obter o ano atual
+                current_year = timezone.now().year
+                # Criar uma data com o ano atual e o mês selecionado
+                start_date = timezone.datetime(
+                    current_year, selected_month, 1).date()
+                end_date = start_date + timezone.timedelta(days=32)
+                # Filtrar atividades com base no mês selecionado
+                queryset = queryset.filter(
+                    data_inicio__gte=start_date,
+                    data_inicio__lt=end_date,
+                )
+            except (ValueError, TypeError):
+                # Lida com valores inválidos para o mês
+                pass
+
+    if local:
+            # Filtrar atividades por local, usando o parâmetro 'local' da URL
+            queryset = queryset.filter(local=local)
+
+    if search_term:
+            queryset = queryset.filter(Q(tema__icontains=search_term) | Q(
+                usuario__username__icontains=search_term))
+
+    queryset = queryset.order_by('-data_registro')
+    
+    
     # Criando um objeto BytesIO para armazenar o PDF
     buffer = BytesIO()
 
@@ -469,21 +535,20 @@ def export_pdf(request):
     )
 
    # Adiciona o cabeçalho com a imagem e o título
-    # header_frame = Frame(inch, doc.height + inch, doc.width, inch)
     image_path = os.path.join(
         settings.BASE_DIR, 'static', 'img', 'Logo-ufac-cor.png')
     logo = Image(image_path, width=40, height=56)
 
     # Título
     titulo = Paragraph(
-        '<b>REGISTRO DE ATIVIDADES REALIZADAS<br/>NO LABORATÓRIO DE INFORMÁTICA DO LIFE</b>',
+        '<b>REGISTRO DE ATIVIDADES REALIZADAS<br/>NO LABORATÓRIO DE INFORMÁTICA DO LIFE </b>',
         style_title
     )
 
     # Tabela do cabeçalho
     header_data = [[logo, titulo]]
     # Tabela do cabeçalho
-    header_table = Table(header_data, colWidths=[50, 415])
+    header_table = Table(header_data, colWidths=[80, 415])
     # Estilo da tabela
     table_style = TableStyle([
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Alinhamento centralizado
@@ -499,13 +564,6 @@ def export_pdf(request):
     c = canvas.Canvas("relatório.pdf")
     elements.append(header_table)
     elements.append(Spacer(1, 20))
-
-    # Criando listas para armazenar os dados das colunas
-    # temas = ['Tema']
-    # responsaveis = ['Nome do Responsável']
-    # participantes = ['Nº de Participantes']
-    # datas_inicio = ['Início']
-    # datas_encerramento = ['Encerramento']
 
     data = [['Tema', 'Nome do Responsável', 'Nº de Participantes', 'Início', 'Encerramento']]
 
