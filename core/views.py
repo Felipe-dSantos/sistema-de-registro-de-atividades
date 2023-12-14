@@ -1,7 +1,7 @@
 # Importações de módulos padrão
 import logging
 from django.contrib.auth.models import User
-from .models import Atividade, Arquivo
+from .models import Atividade, Arquivo, CustomUsuario
 from django.views.generic import TemplateView
 from reportlab.platypus import FrameBreak
 from reportlab.platypus import Image
@@ -359,7 +359,7 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
         context = super().get_context_data(*args, **kwargs)
         context['url'] = reverse('listar-atividade-geral')
         context['locais'] = Local.objects.all()
-        context['usuario'] = User.objects.all()
+        context['usuario'] = CustomUsuario.objects.all()
         return context
 
     def get_queryset(self):

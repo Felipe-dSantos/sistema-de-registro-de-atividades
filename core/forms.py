@@ -15,6 +15,10 @@ class CustomUsuarioCreateForm(UserCreationForm):
         fields = ('username','first_name', 'last_name')
         labels = {'username': 'CPF',}
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Altere o help_text do campo de senha
+        self.fields['username'].help_text = 'Digite um CPF valido.'
         
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -29,20 +33,6 @@ class CustomUsuarioChangeForm(UserChangeForm):
     class Meta:
         model = CustomUsuario
         fields = ('first_name', 'last_name')
-
-
-# class UsuarioForm(UserCreationForm):
-#     email = forms.EmailField(max_length=100)
-    
-#     class Meta:
-#         model = User
-#         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
-    
-#     def clean_email(self):
-#         e = self.cleaned_data['email']
-#         if User.objects.filter(email=e).exists():
-#             raise ValidationError("o email {} já está em uso.".format(e))
-#         return e
 
 class AtividadeForm(forms.ModelForm):
 

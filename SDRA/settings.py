@@ -109,10 +109,10 @@ WSGI_APPLICATION = 'SDRA.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sdra2',
+        'NAME': 'sdra_c4a7',
         'USER': 'admin',
-        'PASSWORD': 'iFXxJgQLhtRvXIYhCvIC2ipmypkDtE9L',
-        'HOST': 'dpg-clt4co21hbls73eades0-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
+        'PASSWORD': 'w7L3M2s51JfT9Ljq61HWpybySJACOHcS',
+        'HOST': 'dpg-clt55vq1hbls73eakoa0-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
         'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
     }
 }
@@ -130,9 +130,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
 ]
 
 
