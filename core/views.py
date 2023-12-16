@@ -255,11 +255,9 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
             {'title': 'Atividades', 'url': '/listar/atividades/'},
             {'title': 'Registro de atividade', 'url': '/cadastro-atividade/'},
         ]
-
         # Criando o formset de Arquivos relacionados à Atividade
         ArquivoFormSet = inlineformset_factory(
             Atividade, Arquivo, fields=['arquivo',], extra=3)
-
         if self.request.POST:
             # Se dados forem submetidos, popula os formulários com os dados enviados
             context['formset'] = ArquivoFormSet(
@@ -274,9 +272,7 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
         form.instance.usuario = self.request.user
         url = super().form_valid(form)
         messages.success(self.request, self.success_message)
-
         # Adicione aqui a lógica para salvar os arquivos associados à atividade
-
         formset = ArquivoFormSet(
             self.request.POST, self.request.FILES, instance=self.object)
 

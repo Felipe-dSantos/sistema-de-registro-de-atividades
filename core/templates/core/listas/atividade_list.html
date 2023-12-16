@@ -43,9 +43,10 @@
     <div id="bloco-atividade" class="row relatorio-item border p-3 m-2">
         <div class="col">
             <span id="titulo-relatorio" class="row">{{ atividade.tema }}</span>
-            <span class="row" style="font-size: small; color: gray;">Data de registro: {{ atividade.data_registro|date:"d/m/y" }}</span>
+            <span class="row" style="font-size: small; color: gray;">Data de registro: {{
+                atividade.data_registro|date:"d/m/y" }}</span>
         </div>
-        
+
         <div class="col-2 text-end">
             <a href="{% url 'exibir-relatorio' atividade.pk %}" class="btn btn-primary btn-sm"
                 title="Detalhes da atividade">

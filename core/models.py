@@ -53,8 +53,12 @@ class UsuarioManager(BaseUserManager):
 
 
 class CustomUsuario(AbstractUser):
-    cpf = models.CharField(max_length=14, verbose_name=_('CPF'), unique=True)
-    is_staff = models.BooleanField('Membro da equipe', default=False)
+    cpf = models.CharField(max_length=14,
+                           verbose_name=_('CPF'),
+                           unique=True
+                           )
+    is_staff = models.BooleanField('Membro da equipe',
+                                   default=False)
 
     USERNAME_FIELD = 'cpf'
     REQUIRED_FIELDS = ['first_name', 'last_name', ]
@@ -66,15 +70,16 @@ class CustomUsuario(AbstractUser):
 
 
 class Local(models.Model):
-    nome = models.CharField(max_length=255)
-
+    nome = models.CharField(max_length=50)
     def __str__(self):
         return self.nome
 
 
 class Atividade(models.Model):
-    tema = models.CharField(max_length=255)
-    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tema = models.CharField(max_length=50)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                on_delete=models.CASCADE
+                                )
     descricao = models.TextField()
     local = models.ForeignKey(Local, on_delete=models.CASCADE)
     quantidade_ptc = models.IntegerField()
@@ -82,8 +87,7 @@ class Atividade(models.Model):
     data_encerramento = models.DateField('Data de encerramento')
     duracao = models.CharField(max_length=20)
     data_registro = models.DateTimeField(default=timezone.now)
-    # calcula o intervalo entre a data de inicio e data de encerramento de uma atividade
-
+    
     def __str__(self):
         return self.tema
     
@@ -94,17 +98,17 @@ class Atividade(models.Model):
         return reverse('exibir-relatorio', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        # Atualiza a data de criação apenas se o objeto ainda não existe no banco de dados
         if not self.id:
             self.data_registro = timezone.now()
-
         super(Atividade, self).save(*args, **kwargs)
 
 
 class Arquivo(models.Model):
     arquivo = models.FileField(upload_to='arquivos/')
     Atividade = models.ForeignKey(
-        Atividade, related_name='arquivo', on_delete=models.CASCADE)
+        Atividade, related_name='arquivo', 
+        on_delete=models.CASCADE
+        )
 
     def __str__(self):
         return self.arquivo.name
