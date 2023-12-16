@@ -350,7 +350,6 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     template_name = 'core/listas/atividadesGerais.html'
     paginate_by = 30
     
-    
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['url'] = reverse('listar-atividade-geral')
@@ -365,7 +364,7 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
         last_days = self.request.GET.get('last_days')
         local = self.request.GET.get('local')
         search_term = self.request.GET.get('search')
-
+        
         # Começa com todas as atividades
         queryset = Atividade.objects.all()
 
@@ -411,7 +410,6 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
                     data_inicio__lt=end_date,
                 )
             except (ValueError, TypeError):
-                # Lida com valores inválidos para o mês
                 pass
 
         if local:
