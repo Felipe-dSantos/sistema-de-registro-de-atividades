@@ -90,30 +90,30 @@ TEMPLATES = [
 WSGI_APPLICATION = 'SDRA.wsgi.application'
 
 
-# Database n 
+# Database local
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sdra',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost', # Pode ser 'localhost' se estiver rodando localmente
-        'PORT': '3306', # Normalmente, o MySQL usa a porta 3306
-    }
-}
-
-#produção
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'sdra_c4a7',
-#         'USER': 'admin',
-#         'PASSWORD': 'w7L3M2s51JfT9Ljq61HWpybySJACOHcS',
-#         'HOST': 'dpg-clt55vq1hbls73eakoa0-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
-#         'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'sdra',
+#         'USER': 'root',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost', # Pode ser 'localhost' se estiver rodando localmente
+#         'PORT': '3306', # Normalmente, o MySQL usa a porta 3306
 #     }
 # }
+
+# produção
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sdra_c4a7',
+        'USER': 'admin',
+        'PASSWORD': 'w7L3M2s51JfT9Ljq61HWpybySJACOHcS',
+        'HOST': 'dpg-clt55vq1hbls73eakoa0-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
+        'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
