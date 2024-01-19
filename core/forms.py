@@ -38,9 +38,10 @@ class AtividadeForm(forms.ModelForm):
 
     class Meta:
         model = Atividade
-        fields = ['descricao']
+        fields = ['descricao', 'local']
         widgets = {
-            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 5})  # Defina o número de linhas aqui
+            'descricao': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),  # Defina o número de linhas aqui
+            'local': forms.Select(attrs={'class': 'form-select', 'placeholder': 'Selecione o local'})
         }
 
    

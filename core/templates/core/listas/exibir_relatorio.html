@@ -8,9 +8,9 @@
 {% block main %}
 
   {% include 'core/breadcrumb.html' %}
-  <div class="container-fluid col-11 mb-3 page-context-header" id="header-page">
+  <div class="container-fluid col-10 mb-3 page-context-header" id="header-page">
     <div class="page-header-headings">
-        <h1 class="h2" style="font-weight: 700;">Detalhes do Relatório</h1>
+        <h1 class="h2" style="font-weight: 700;">Detalhes da Atividade</h1>
     </div>
 </div>
 <div class="container col-11 mb-3" id="conteudo">
@@ -20,7 +20,7 @@
   <p><span id="label-detalhes">Data de Início:</span> {{ relatorio.data_inicio }}</p>
   <p><span id="label-detalhes">Data de Encerramento:</span> {{ relatorio.data_encerramento }}</p>
   <p><span id="label-detalhes">Quantidade de Participantes:</span> {{ relatorio.quantidade_ptc }}</p>
-  <!-- <p>anexo: <a href="{{ relatorio.arquivo.url }}" target="_blank">{{ relatorio.arquivo.title }}</a></p> -->
+  <p><span id="label-detalhes">Quantidade de Participantes:</span> {{ relatorio.duracao }} horas</p>
   {% if arquivos %} 
   <p>Arquivos anexados:</p>
   {% for arquivo in arquivos %}
@@ -50,7 +50,7 @@
         style="color: #ffffff;"></i>Voltar para a Lista</a>
 
     <a href="{% url 'gerar-pdf-relatorio' relatorio.pk %}" class="btn btn-success" target="_blank"> <i
-        class="fa-regular fa-file-pdf px-2" style="color: #ffffff;"></i>Gerar PDF</a>
+        class="fa-regular fa-file-pdf px-2" style="color: #ffffff;"></i>Gerar Relatório</a>
   </div>
 </div>
 </div>

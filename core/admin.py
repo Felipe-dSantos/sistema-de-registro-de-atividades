@@ -59,11 +59,14 @@ class ArquivoInline(admin.TabularInline):
     extra = 3
     
 class AtividadeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tema', 'usuario', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao')
-    list_filter = ('local',MesFilter)
-    inlines = [
-        ArquivoInline
-    ]
+    list_display = ('id', 'tema', 'get_full_name', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao')
+    list_filter = ('local', MesFilter)
+    inlines = [ArquivoInline]
+
+    def get_full_name(self, obj):
+        return obj.usuario.get_full_name()
+
+    get_full_name.short_description = 'Nome do responsável'
     
 
 

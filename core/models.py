@@ -65,6 +65,9 @@ class CustomUsuario(AbstractUser):
 
     def __str__(self):
         return self.cpf
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
 
     objects = UsuarioManager()
 
@@ -82,7 +85,7 @@ class Atividade(models.Model):
                                 )
     descricao = models.TextField()
     local = models.ForeignKey(Local, on_delete=models.CASCADE)
-    quantidade_ptc = models.IntegerField()
+    quantidade_ptc = models.PositiveIntegerField()
     data_inicio = models.DateField('Data de inicio')
     data_encerramento = models.DateField('Data de encerramento')
     duracao = models.CharField(max_length=20)

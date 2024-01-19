@@ -86,37 +86,22 @@ class UsuarioCreate(CreateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context['titulo'] = "Registro de Usuario"
-        context['botao'] = "Registrar"
+        context['titulo'] = "Cadastro de Usuário"
+        context['botao'] = "Cadastrar"
         return context
 
 
 # views para reset senha
 class MyPasswordReset(PasswordResetView):
-    '''
-    Requer
-    registration/password_reset_form.html
-    registration/password_reset_email.html
-    registration/password_reset_subject.txt  Opcional
-    '''
     template_name = 'core/usuarios/password_reset_form.html'
     ...
 
-
 class MyPasswordResetDone(PasswordResetDoneView):
-    '''
-    Requer
-    registration/password_reset_done.html
-    '''
-
+   
     template_name = 'core/usuarios/password_reset_done.html'
     ...
-
-
 class MyPasswordResetConfirm(PasswordResetConfirmView):
-    '''
-    Requer password_reset_confirm.html
-    '''
+    
     template_name = 'core/usuarios/password_reset_confirm.html'
 
     def form_valid(self, form):
@@ -125,16 +110,12 @@ class MyPasswordResetConfirm(PasswordResetConfirmView):
         messages.success(self.request, 'Sua senha foi atualizada com sucesso!')
         return super(MyPasswordResetConfirm, self).form_valid(form)
 
-
 class MyPasswordResetComplete(PasswordResetCompleteView):
-    '''
-    Requer password_reset_complete.html
-    '''
+   
     template_name = 'core/usuarios/password_reset_complete.html'
     ...
 
 # view para alterar senha
-
 
 class ChangePasswordView(LoginRequiredMixin, FormView):
     template_name = 'core/usuarios/change_password.html'
@@ -255,7 +236,7 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
             {'title': 'Atividades', 'url': '/listar/atividades/'},
             {'title': 'Registro de atividade', 'url': '/cadastro-atividade/'},
         ]
-        # Criando o formset de Arquivos relacionados à Atividade
+        # Cria formset de Arquivos relacionados à Atividade
         ArquivoFormSet = inlineformset_factory(
             Atividade, Arquivo, fields=['arquivo',], extra=3)
         if self.request.POST:
@@ -265,20 +246,17 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
         else:
             # Se não, cria um formset vazio
             context['formset'] = ArquivoFormSet()
-
         return context
-
+    #validação de formulario
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         url = super().form_valid(form)
         messages.success(self.request, self.success_message)
-        # Adicione aqui a lógica para salvar os arquivos associados à atividade
+        #salva os arquivos associados à atividade
         formset = ArquivoFormSet(
             self.request.POST, self.request.FILES, instance=self.object)
-
         if formset.is_valid():
             formset.save()
-
         return url
 
 class AtividadeUpdate(LoginRequiredMixin, UpdateView):
@@ -348,7 +326,7 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     group_required = [u"Administrador", u"Tecnico"]
     model = Atividade
     template_name = 'core/listas/atividadesGerais.html'
-    paginate_by = 30
+    paginate_by = 5
     
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -813,7 +791,7 @@ def gerar_pdf_relatorio(request, pk):
         ['Descrição:', Paragraph(
             relatorio.descricao, getSampleStyleSheet()['Normal'])],
         ['Nome do Responsável:', Paragraph(
-            relatorio.usuario.username, getSampleStyleSheet()['Normal'])],
+            relatorio.usuario.get_full_name(), getSampleStyleSheet()['Normal'])],
         ['Quantidade de Participantes:', Paragraph(
             str(relatorio.quantidade_ptc), getSampleStyleSheet()['Normal'])],
         ['Data de Início:', Paragraph(
