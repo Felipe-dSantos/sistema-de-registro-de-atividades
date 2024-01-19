@@ -18,7 +18,7 @@ class CustomUsuarioCreateForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Altere o help_text do campo de senha
-        self.fields['username'].help_text = 'Digite um CPF valido.'
+        self.fields['username'].help_text = ''
         
     def save(self, commit=True):
         user = super().save(commit=False)
