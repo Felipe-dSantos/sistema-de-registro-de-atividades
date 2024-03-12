@@ -15,7 +15,7 @@
     <div class="card">
         <div class="h3 card-header border-none" style="margin: 0">
             <div class=" d-flex justify-content-center">
-                <a class="" href="/monitoria/">
+                <a class="" href="#">
                     <img alt="Logo UFAC" src="{% static 'img/logo_ufac.png' %}" id="logo_ufac">
                 </a>
             </div>
@@ -26,10 +26,12 @@
         </div>
         {% if not request.user.is_authenticated %}
         <div class="card-body" id="body_login">
+            
+            {% include 'core/mensagens.html' %}
             <p class="lead text-center">
                 Faça seu Login para acessar o sistema
             </p>
-            {% include 'core/mensagens.html' %}
+            
             <form action="" method="POST">
                 {% csrf_token %}
             

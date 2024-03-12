@@ -16,14 +16,18 @@ class CustomUsuarioAdmin(UserAdmin):
     add_form = CustomUsuarioCreateForm
     form = CustomUsuarioChangeForm
     model = CustomUsuario
-    list_display = ('id', 'cpf' , 'first_name', 'last_name',  'is_staff')
+    list_display = ('id', 'cpf' , 'first_name', 'last_name', 'get_groups_display',  'is_staff')
     fieldsets = (
-        (None, {'fields': ('cpf', 'password')}),
+        (None, {'fields': ('cpf',  'password')}),
         ('Informações Pessoais', {'fields': ('first_name', 'last_name')}),
         ('Permissões', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions' )}),
         ('Datas importantes', {'fields': ('last_login', 'date_joined')}),
         
     )
+    def get_groups_display(self, obj):
+        return ", ".join([group.name for group in obj.groups.all()])
+    
+    get_groups_display.short_description = 'Grupos'
 
 
 class MesFilter(SimpleListFilter):

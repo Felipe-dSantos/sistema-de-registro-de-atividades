@@ -9,7 +9,9 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
 
 class CustomUsuarioCreateForm(UserCreationForm):
-    # cpf = forms.CharField(label='CPF')
+    # first_name = forms.CharField(label='Primeiro nome*')
+    # last_name = forms.CharField(label='Sobrenome*')
+
     class Meta:
         model = CustomUsuario
         fields = ('username','first_name', 'last_name')
@@ -19,7 +21,19 @@ class CustomUsuarioCreateForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         # Altere o help_text do campo de senha
         self.fields['username'].help_text = ''
+    #     self.fields['first_name'].label = 'Primeiro nome*'
+    #     self.fields['last_name'].label = 'Sobrenome*'
         
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     first_name = cleaned_data.get('first_name')
+    #     last_name = cleaned_data.get('last_name')
+
+    #     if not first_name:
+    #         self.add_error('first_name', 'Este campo é obrigatório.')
+    #     if not last_name:
+    #         self.add_error('last_name', 'Este campo é obrigatório.')
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
@@ -27,7 +41,7 @@ class CustomUsuarioCreateForm(UserCreationForm):
         if commit:
             user.save()
         return user
-    
+
 
 class CustomUsuarioChangeForm(UserChangeForm):
     class Meta:
@@ -35,7 +49,7 @@ class CustomUsuarioChangeForm(UserChangeForm):
         fields = ('first_name', 'last_name')
 
 class AtividadeForm(forms.ModelForm):
-
+    
     class Meta:
         model = Atividade
         fields = ['descricao', 'local']

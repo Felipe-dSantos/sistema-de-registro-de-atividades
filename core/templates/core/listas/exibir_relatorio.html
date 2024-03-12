@@ -26,7 +26,8 @@
   {% for arquivo in arquivos %}
   
       {% if arquivo.arquivo and arquivo.arquivo.url %}
-          <a href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}" target="blank">
+      <div class="border border-primary rounded col-4 p-3">
+          <a  href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}" target="blank">
               {% if arquivo.is_doc %}
                   <i class="fa-solid fa-file-word fa-2xl"></i>
               {% elif arquivo.is_pdf %}
@@ -36,7 +37,10 @@
               {% else %}
                   <i class="fa-solid fa-file fa-2xl"></i>
               {% endif %}
+              <span>{{ arquivo.arquivo.name }}</span>
           </a>
+        </div>
+          <br>
       {% endif %}
   {% endfor %}
 {% else %}

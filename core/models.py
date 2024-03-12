@@ -61,7 +61,7 @@ class CustomUsuario(AbstractUser):
                                    default=False)
 
     USERNAME_FIELD = 'cpf'
-    REQUIRED_FIELDS = ['first_name', 'last_name', ]
+    REQUIRED_FIELDS = ['first_name', 'last_name',]
 
     def __str__(self):
         return self.cpf
@@ -107,7 +107,7 @@ class Atividade(models.Model):
 
 
 class Arquivo(models.Model):
-    arquivo = models.FileField(upload_to='arquivos/')
+    arquivo = models.FileField(upload_to='')
     Atividade = models.ForeignKey(
         Atividade, related_name='arquivo', 
         on_delete=models.CASCADE

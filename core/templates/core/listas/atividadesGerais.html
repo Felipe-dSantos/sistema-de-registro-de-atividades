@@ -58,18 +58,18 @@
                     <select name="month" id="month" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 160px;">
                         <option value="" {% if not request.GET.month %} selected {% endif %} disabled>Mês</option>
                         <option value="" {% if not request.GET.month %} {% endif %} >Todos</option>
-                    <option value="01" {% if request.GET.month == '01' %} selected {% endif %}>Janeiro</option>
-                    <option value="02" {% if request.GET.month == '02' %} selected {% endif %}>Fevereiro</option>
-                    <option value="03" {% if request.GET.month == '03' %} selected {% endif %}>Março</option>
-                    <option value="04" {% if request.GET.month == '04' %} selected {% endif %}>Abril</option>
-                    <option value="05" {% if request.GET.month == '05' %} selected {% endif %}>Maio</option>
-                    <option value="06" {% if request.GET.month == '06' %} selected {% endif %}>Junho</option>
-                    <option value="07" {% if request.GET.month == '07' %} selected {% endif %}>Julho</option>
-                    <option value="08" {% if request.GET.month == '08' %} selected {% endif %}>Agosto</option>
-                    <option value="09" {% if request.GET.month == '09' %} selected {% endif %}>Setembro</option>
-                    <option value="10" {% if request.GET.month == '10' %} selected {% endif %}>Outubro</option>
-                    <option value="11" {% if request.GET.month == '11' %} selected {% endif %}>Novembro</option>
-                    <option value="12" {% if request.GET.month == '12' %} selected {% endif %}>Dezembro</option>
+                        <option value="01" {% if request.GET.month == '01' %} selected {% endif %}>Janeiro</option>
+                        <option value="02" {% if request.GET.month == '02' %} selected {% endif %}>Fevereiro</option>
+                        <option value="03" {% if request.GET.month == '03' %} selected {% endif %}>Março</option>
+                        <option value="04" {% if request.GET.month == '04' %} selected {% endif %}>Abril</option>
+                        <option value="05" {% if request.GET.month == '05' %} selected {% endif %}>Maio</option>
+                        <option value="06" {% if request.GET.month == '06' %} selected {% endif %}>Junho</option>
+                        <option value="07" {% if request.GET.month == '07' %} selected {% endif %}>Julho</option>
+                        <option value="08" {% if request.GET.month == '08' %} selected {% endif %}>Agosto</option>
+                        <option value="09" {% if request.GET.month == '09' %} selected {% endif %}>Setembro</option>
+                        <option value="10" {% if request.GET.month == '10' %} selected {% endif %}>Outubro</option>
+                        <option value="11" {% if request.GET.month == '11' %} selected {% endif %}>Novembro</option>
+                        <option value="12" {% if request.GET.month == '12' %} selected {% endif %}>Dezembro</option>
                     </select>
                     <input type="hidden" name="local" value="{{ request.GET.local }}">
                 </form>
@@ -94,8 +94,8 @@
             </div>
             <div class="col-auto text-md-end">
                 <a class="btn btn-success btn-sm "
-                    href="{% url 'export-pdf' %}?obj={{ request.GET.obj|default:'' }}&start_date={{ request.GET.start_date|default:'' }}&end_date={{ request.GET.end_date|default:'' }}&last_days={{ request.GET.last_days|default:'' }}&month{{request.GET.month|default:''}}"
-                    target="_blank">Gerar Relatório</a>
+                <a href="{% url 'export-pdf' %}?search={{ request.GET.search }}&start_date={{ request.GET.start_date }}&end_date={{ request.GET.end_date }}&last_days={{ request.GET.last_days }}&month={{ request.GET.month }}&local={{ request.GET.local }}"
+                 target="_blank">Gerar Relatório</a>
             </div>
         </div>
     </div>

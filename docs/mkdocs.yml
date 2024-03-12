@@ -1,0 +1,11 @@
+site_name: Sistema de Registro de Atividades-Docs
+nav:
+  - Home: index.md
+  - Introdução: introducao.md
+  - Configurações: configuracao.md
+  - Aplicação:
+    - Models: core/models.md
+    - Views: core/views.md
+    - Forms: core/forms.md
+  
+theme: readthedocs
