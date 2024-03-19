@@ -18,16 +18,18 @@
 
 </head>
 
-<body id="corpo">
+<body id="corpo" >
     {% if request.user.is_authenticated %}
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark" id="navbar">
+        <nav class="navbar navbar-expand-lg navbar-dark px-3" id="navbar">
             <div class="container-fluid">
-                <div id="logoimg" class="text-center">
-                    <img id="logo" src="/static/img/Logo-ufac.png" style="max-width: 25px; margin-right: 20px;" alt="">
-                </div>
+                <span id="logoimg" class="text-center">
+                    <img id="logo" src="/static/img/logo-ufac.png" style="max-width: 25px; margin-right: 20px;" alt="">
+                </span>
+                <span>
                 <a id="sdra" class="navbar-brand" href="#">Universidade Federal do Acre - UFAC <br>Sistema de Registro
                     de Atividades - SRA</a>
+                </span>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -72,13 +74,9 @@
     </main>
 
 
-    <!-- {% block footer %}
-    <footer id="rodape" class="text-center text-white">
-        <div class="container-fluid  p-3 ">
-            © 2023 Copyright: Felipe dos Santos & Alexandre Lira
-        </div>
-    </footer>
-    {% endblock footer %} -->
+    {% block footer %}
+    
+    {% endblock footer %}
 
     
 

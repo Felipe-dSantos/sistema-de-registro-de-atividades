@@ -7,7 +7,7 @@
 
 {% block main %}
 
-<!-- {% include 'core/breadcrumb.html' %} -->
+
 
 <div class="container col-8 mb-3" id="home_conteudo">
   <div class="row">
@@ -48,3 +48,37 @@
 </div>
 
 {% endblock main %}
+{% block footer %}
+<style>
+  .rodape {
+      background-color: #c6cbd1; /* Cor de fundo escura */
+      color: #403f3f; /* Cor do texto branco */
+      padding: 20px; /* Espaçamento interno */
+      font-size: 14px; /* Tamanho da fonte */
+      text-align: right; /* Alinhamento do texto à direita */
+  }
+
+  .rodape a {
+      color: #fff; /* Cor do link branco */
+  }
+
+  .rodape a:hover {
+      color: #ccc; /* Cor do link branco ao passar o mouse */
+  }
+
+  .rodape img {
+      width: 100px; /* Largura do ícone */
+      height: auto; /* Altura automática para manter a proporção */
+      margin-bottom: 10px; /* Margem inferior para separar o ícone do texto */
+  }
+</style>
+
+<div class="modal-footer rodape fixed-bottom d-flex justify-content-end" >
+  <div class="mr-3">
+    © 2024 Copyright: Alexandre Lira & Felipe dos Santos
+  </div>
+  <br>
+</div>
+
+
+{% endblock footer %}

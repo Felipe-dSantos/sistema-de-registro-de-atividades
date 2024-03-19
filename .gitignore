@@ -20,13 +20,15 @@ __pycache__/
 
 # Diretório de arquivos estáticos coletados
 /static/js/pdfjs
-/uploads/
+
 # Diretório de arquivos de mídia enviados pelo usuário
-/media/
-*.png
+
+
 # Arquivos de dependências gerados pelo gerenciador de pacotes pip
 
 /pip.lock
 venv.bat
 .vercel
-staticfiles
+# staticfiles
+# static
+populate_data.py

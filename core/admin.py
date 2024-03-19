@@ -5,6 +5,30 @@ from calendar import month_name
 from core.forms import AtividadeForm
 from .models import Arquivo, Atividade, Local
 from django.db.models import Q
+from django.contrib.auth.admin import UserAdmin
+
+from core.forms import CustomUsuarioCreateForm, CustomUsuarioChangeForm
+from .models import CustomUsuario
+
+
+@admin.register(CustomUsuario)
+class CustomUsuarioAdmin(UserAdmin):
+    add_form = CustomUsuarioCreateForm
+    form = CustomUsuarioChangeForm
+    model = CustomUsuario
+    list_display = ('id', 'cpf' , 'first_name', 'last_name', 'get_groups_display',  'is_staff')
+    fieldsets = (
+        (None, {'fields': ('cpf',  'password')}),
+        ('Informações Pessoais', {'fields': ('first_name', 'last_name')}),
+        ('Permissões', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions' )}),
+        ('Datas importantes', {'fields': ('last_login', 'date_joined')}),
+        
+    )
+    def get_groups_display(self, obj):
+        return ", ".join([group.name for group in obj.groups.all()])
+    
+    get_groups_display.short_description = 'Grupos'
+
 
 class MesFilter(SimpleListFilter):
     title = 'Mês'
@@ -39,11 +63,14 @@ class ArquivoInline(admin.TabularInline):
     extra = 3
     
 class AtividadeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tema', 'usuario', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao')
-    list_filter = ('local',MesFilter)
-    inlines = [
-        ArquivoInline
-    ]
+    list_display = ('id', 'tema', 'get_full_name', 'descricao', 'local', 'quantidade_ptc', 'data_inicio', 'data_encerramento', 'duracao')
+    list_filter = ('local', MesFilter)
+    inlines = [ArquivoInline]
+
+    def get_full_name(self, obj):
+        return obj.usuario.get_full_name()
+
+    get_full_name.short_description = 'Nome do responsável'
     
 
 

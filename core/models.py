@@ -1,53 +1,117 @@
 from django.utils import timezone
+from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import Group
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import User
 from django.urls import reverse
-from multiupload.fields import MultiFileField
-# Signals
-from django.db.models import signals
 from django.template.defaultfilters import slugify
+from django.utils.translation import gettext as _
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+
+
+class UsuarioManager(BaseUserManager):
+    use_in_migrations = True
+
+    def normalize_cpf(self, cpf):
+        # Remove caracteres especiais
+        cpf = ''.join(filter(str.isdigit, str(cpf)))
+
+        # Verifica se o CPF possui 11 dígitos
+        if len(cpf) != 11:
+            raise ValueError('CPF deve conter 11 dígitos após a normalização')
+
+        return cpf
+
+    def _create_user(self, cpf, password, **extra_fields):
+        if not cpf:
+            raise ValueError('O cpf é obrigatório')
+
+        cpf = self.normalize_cpf(cpf)
+        user = self.model(cpf=cpf, username=cpf, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
+    def create_user(self, cpf, password=None, **extra_fields):
+        extra_fields.setdefault('is_superuser', False)
+
+        return self._create_user(cpf, password, **extra_fields)
+
+    def create_superuser(self, cpf, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser precisa ter is_superuser=True')
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser precisa ter is_staff=True')
+        return self._create_user(cpf, password, **extra_fields)
+
+
+class CustomUsuario(AbstractUser):
+    cpf = models.CharField(max_length=14,
+                           verbose_name=_('CPF'),
+                           unique=True
+                           )
+    is_staff = models.BooleanField('Membro da equipe',
+                                   default=False)
+
+    USERNAME_FIELD = 'cpf'
+    REQUIRED_FIELDS = ['first_name', 'last_name',]
+
+    def __str__(self):
+        return self.cpf
+    
+    def get_full_name(self):
+        return f"{self.first_name} {self.last_name}"
+
+    objects = UsuarioManager()
 
 
 class Local(models.Model):
-    nome = models.CharField(max_length=255)
-
+    nome = models.CharField(max_length=50)
     def __str__(self):
         return self.nome
 
 
 class Atividade(models.Model):
-    tema = models.CharField(max_length=255)
-    usuario = models.ForeignKey(User, on_delete=models.PROTECT)
+    tema = models.CharField(max_length=50)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, 
+                                on_delete=models.CASCADE
+                                )
     descricao = models.TextField()
     local = models.ForeignKey(Local, on_delete=models.CASCADE)
-    quantidade_ptc = models.IntegerField()
+    quantidade_ptc = models.PositiveIntegerField()
     data_inicio = models.DateField('Data de inicio')
     data_encerramento = models.DateField('Data de encerramento')
     duracao = models.CharField(max_length=20)
     data_registro = models.DateTimeField(default=timezone.now)
-    # calcula o intervalo entre a data de inicio e data de encerramento de uma atividade
-
+    
     def __str__(self):
         return self.tema
+    
+    def get_usuario_nome_completo(self):
+        return self.usuario.get_full_name() if self.usuario else "Usuário sem nome"
 
     def get_absolute_url(self):
         return reverse('exibir-relatorio', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
-        # Atualiza a data de criação apenas se o objeto ainda não existe no banco de dados
         if not self.id:
             self.data_registro = timezone.now()
-
         super(Atividade, self).save(*args, **kwargs)
 
+
 class Arquivo(models.Model):
-    arquivo = models.FileField(upload_to='arquivos/')
+    arquivo = models.FileField(upload_to='')
     Atividade = models.ForeignKey(
-        Atividade, related_name='arquivo', on_delete=models.CASCADE)
+        Atividade, related_name='arquivo', 
+        on_delete=models.CASCADE
+        )
 
     def __str__(self):
         return self.arquivo.name

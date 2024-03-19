@@ -11,36 +11,54 @@
 
 
 
-<div class="col-md-4 mx-auto p-3" id="conteudo">
-    {% if request.user.is_authenticated %}
-    <h3> Ação não permitida</h3>
-    <hr>
-    <p class="lead">
-        se vc não conseguiu acessar essa opção é por que você não tem permissão
-    </p>
-    {% else %}
-    <h3 style="margin-top: 15px ;" class="text-center">Bem vindo!</h3>
-    <hr>
-    <p class="lead">
-        Faça seu Login para acessar o sistema
-    </p>
-    {% include 'core/mensagens.html' %}
-    <form action="" method="POST">
-        {% csrf_token %}
-
-        {{ form|crispy }}
-        <div class="d-grid gap-2">
-            <a href="{% url 'password_reset' %}" class="text-end text-teal-500 hover:underline ml-auto">Esqueceu a
-                senha?</a>
-
-            <button type="submit" class="btn btn-primary text-center">Entrar</button>
-            <span class="text-center">Não é Registrado no sistema?<a
-                    href="{% url 'registrar-usuario' %}">Registre-se</a></span>
-            <!-- Adicionado botão de esqueci minha senha -->
+<div class="col-md-4 mx-auto p-3">
+    <div class="card">
+        <div class="h3 card-header border-none" style="margin: 0">
+            <div class=" d-flex justify-content-center">
+                <a class="" href="#">
+                    <img alt="Logo UFAC" src="{% static 'img/logo_ufac.png' %}" id="logo_ufac">
+                </a>
+            </div>
+            <div class="d-flex justify-content-center" id="titulo_login">
+                <p class="text-gray text-center" style=" margin-bottom: -3px;">Sistema de Registro de Atividades</p>
+            </div>
+            
         </div>
+        {% if not request.user.is_authenticated %}
+        <div class="card-body" id="body_login">
+            
+            {% include 'core/mensagens.html' %}
+            <p class="lead text-center">
+                Faça seu Login para acessar o sistema
+            </p>
+            
+            <form action="" method="POST">
+                {% csrf_token %}
+            
+                <label for="username" class="form-group">CPF</label>
+                <input type="text" id="username" name="username" class="form-control mb-3" placeholder="___.___.___-__" required
+                    autofocus>
+            
+                <label for="passwprd" class="form-group">Senha</label>
+                <input type="password" id="password" name="password" class="form-control mb-1 placeholder-italic" placeholder="Digite sua senha" required>
+            
+                <div class="d-grid gap-2" id="esqueceu_senha">
+                    <div class="text-end">
+                    <a href="{% url 'password_reset' %}" class="text-end text-teal-500 hover:underline ml-auto">Esqueceu a
+                        senha?</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary text-center"  onclick="validarFormulario()">Acessar</button>
+                    <span class="text-center">Não é cadastrado no sistema?<a
+                            href="{% url 'registrar-usuario' %}">Cadastre-se</a></span>
+                </div>
+            
+            </form>
+            {% else %}
+                
+            {% endif %}
+        </div>
+    </div>
 
-    </form>
-    {% endif %}
 </div>
 
 
@@ -53,3 +71,13 @@
     </div>
 </footer>
 {% endblock footer %}
+
+
+<div class="" id="header_login">
+    <div class="header-content">
+        <img src="{% static 'img/logo-ufac-cor.png' %}" alt="logo da UFAC" id="logo_ufac">
+        <h3 class="text-start">Sistema de Registro de Atividades</h3>
+    </div>
+</div>
+
+<hr>

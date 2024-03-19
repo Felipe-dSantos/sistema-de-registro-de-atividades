@@ -8,25 +8,26 @@
 {% block main %}
 
   {% include 'core/breadcrumb.html' %}
-  <div class="container-fluid col-8 mb-3 page-context-header" id="header-page">
+  <div class="container-fluid col-10 mb-3 page-context-header" id="header-page">
     <div class="page-header-headings">
-        <h1 class="h2" style="font-weight: 700;">Detalhes do Relatório</h1>
+        <h1 class="h2" style="font-weight: 700;">Detalhes da Atividade</h1>
     </div>
 </div>
-<div class="container col-8 mb-3" id="conteudo">
+<div class="container col-11 mb-3" id="conteudo">
   <p><span id="label-detalhes">Tema:</span> {{ relatorio.tema }}</p>
   <p id="p-descricao" ><span id="label-detalhes">Descrição:</span> {{ relatorio.descricao }}</p>
   <p><span id="label-detalhes">Local:</span> {{ relatorio.local }}</p>
   <p><span id="label-detalhes">Data de Início:</span> {{ relatorio.data_inicio }}</p>
   <p><span id="label-detalhes">Data de Encerramento:</span> {{ relatorio.data_encerramento }}</p>
   <p><span id="label-detalhes">Quantidade de Participantes:</span> {{ relatorio.quantidade_ptc }}</p>
-  <!-- <p>anexo: <a href="{{ relatorio.arquivo.url }}" target="_blank">{{ relatorio.arquivo.title }}</a></p> -->
+  <p><span id="label-detalhes">Duração:</span> {{ relatorio.duracao }} horas</p>
   {% if arquivos %} 
   <p>Arquivos anexados:</p>
   {% for arquivo in arquivos %}
   
       {% if arquivo.arquivo and arquivo.arquivo.url %}
-          <a href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}" target="blank">
+      <div class="border border-primary rounded col-4 p-3">
+          <a  href="{{ arquivo.arquivo.url }}" style="text-decoration: none;" title="{{ arquivo.arquivo.name }}" target="blank">
               {% if arquivo.is_doc %}
                   <i class="fa-solid fa-file-word fa-2xl"></i>
               {% elif arquivo.is_pdf %}
@@ -36,7 +37,10 @@
               {% else %}
                   <i class="fa-solid fa-file fa-2xl"></i>
               {% endif %}
+              <span>{{ arquivo.arquivo.name }}</span>
           </a>
+        </div>
+          <br>
       {% endif %}
   {% endfor %}
 {% else %}
@@ -50,7 +54,7 @@
         style="color: #ffffff;"></i>Voltar para a Lista</a>
 
     <a href="{% url 'gerar-pdf-relatorio' relatorio.pk %}" class="btn btn-success" target="_blank"> <i
-        class="fa-regular fa-file-pdf px-2" style="color: #ffffff;"></i>Gerar PDF</a>
+        class="fa-regular fa-file-pdf px-2" style="color: #ffffff;"></i>Gerar Relatório</a>
   </div>
 </div>
 </div>

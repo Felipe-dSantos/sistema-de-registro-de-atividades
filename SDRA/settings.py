@@ -25,8 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&+llfpu)pz3lbomx@&k_+z&!+94oq1_y)9j51-8+irf-u0pt2p'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = True
 
+DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = ['*']
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
@@ -34,19 +35,18 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 # Application definition
 
 INSTALLED_APPS = [
-    # "core.apps.CoreConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.messages',
     'core',
     'crispy_forms',
     'crispy_bootstrap5',
-    # 'django_cleanup.apps.CleanupConfig',
     'widget_tweaks',
     'multiupload',
+    'easy_pdf',
 ]
 
 #Cripy forms
@@ -56,6 +56,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -64,12 +65,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 ROOT_URLCONF = 'SDRA.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'core/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -85,9 +88,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'SDRA.wsgi.application'
 
 
-# Database
+# Database local
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -99,23 +101,34 @@ DATABASES = {
     }
 }
 
+# produção
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'sdra_c4a7',
+#         'USER': 'admin',
+#         'PASSWORD': 'w7L3M2s51JfT9Ljq61HWpybySJACOHcS',
+#         'HOST': 'dpg-clt55vq1hbls73eakoa0-a.oregon-postgres.render.com', # Pode ser 'localhost' se estiver rodando localmente
+#         'PORT': '5432', # Normalmente, o MySQL usa a porta 3306
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    # },
 ]
 
 
@@ -131,15 +144,11 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') 
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles') 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -150,36 +159,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # MEDIA_ROOT = '/Arquivos/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
-MEDIA_URL = "/uploads/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
-# configuraçoes de Autenticação
-
-LOGIN_REDIRECT_URL = 'custom_login_redirect'
-LOGOUT_REDIRECT_URL = 'login'
-LOGIN_URL = 'login'
-
-# AUTH_USER_MODEL = 'core.CustomUser'
-
-# settings.py
 
 # Use SMTP
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'lds.dossantos1@gmail.com'
+EMAIL_HOST_PASSWORD = 'panzapmggxiqhwty'
 
-# # The host to use for sending email.
-# EMAIL_HOST = 'smtp.gmail.com'
-
-# # Port to use for the SMTP server defined in EMAIL_HOST.
-# EMAIL_PORT = 587
-
-# # Whether to use a TLS (secure) connection when talking to the SMTP server.
-# EMAIL_USE_TLS = True
-
-# # Username to use for the SMTP server defined in EMAIL_HOST.
-# EMAIL_HOST_USER = 'lds.dossantos1@gmail.com'
-
-# # Password to use for the SMTP server defined in EMAIL_HOST.
-# EMAIL_HOST_PASSWORD = 'eugckvmjobjpzblqq'
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+MESSAGE_STORAGE_OPTIONS = {
+    'expiration': 5  # Tempo de vida em segundos
+}
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'secondary',
@@ -189,8 +184,11 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
-# AUTHENTICATION_BACKENDS = ['core.auth_backends.CPFAuth']
-
+# configuraçoes de Autenticação
+AUTH_USER_MODEL = 'core.CustomUsuario'
+LOGIN_REDIRECT_URL = 'custom_login_redirect'
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
 
 
 # Formato abreviado para datas (para exibição em locais onde espaço é limitado)

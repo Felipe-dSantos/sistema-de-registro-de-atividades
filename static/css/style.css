@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 
-body#corpo {
+body#corpo{
     margin: 0;
     padding: 0;
-    background-color: #F3F6FC;
+    background-color:#EEEEEE;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -55,7 +55,7 @@ button.register {
 div#conteudo, div#conteudoForm {
     border-radius: 10px;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .08);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
     margin: auto; 
     padding: 30px;
     
@@ -71,7 +71,8 @@ div#conteudoForm{
 }
 
 header {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+
 }
 
 #crumb {
@@ -92,8 +93,7 @@ header {
 
 #card_link{
     text-decoration: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .08)
-}
+   }
 
 #label-detalhes{
     background-color: #0C4B9D;
@@ -129,4 +129,80 @@ input[type="search"]:focus {
     word-wrap: break-word;
     white-space: normal;
     box-sizing: border-box;
+}
+
+.placeholder-italic::placeholder {
+    font-style: italic;
+    font-size: 14px;
+  }
+
+
+
+#header_login .header-content {
+    display: flex;
+    align-items: center;
+  
+}
+
+
+img#logo_ufac {
+    /* Ajuste o tamanho conforme necessário */
+    width: 45px;
+    vertical-align: middle;
+    border-style: none;
+    /* Outros estilos */
+    margin-right: 20px; 
+    margin-left: 20px;
+    margin-bottom: 5px;/* Espaçamento entre a imagem e o texto */
+}
+
+
+
+div.card {
+    border:0;
+    /* margin-bottom: 30px;*/
+    margin-top: 25px; 
+    border-radius: 6px;
+    color: #333333;
+    
+    width: 100%;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+div.card-header{
+    border-bottom: none;
+    background: #fff;
+
+}
+#titulo_login p{
+    font-size: 20px;
+    color: #333333;
+    font-weight:500
+}
+
+#body_login p{
+    font-size: 14px;
+    color: #999999;
+    margin-bottom: -6px;
+}
+
+#body_login form label{
+    color: #777777;
+    font-size: 14px;
+}
+
+#body_login form input:focus {
+    box-shadow: none;
+    outline: none;
+    height: 36px;
+    border: 1px solid #0C4DA2;
+}
+
+#esqueceu_senha a, span{
+    font-size: 14px;
+}
+
+#esqueceu_senha span{
+    font-size: 14px;
+    color: #777777;
 }
