@@ -1,4 +1,6 @@
 # Importações de módulos padrão
+from django.contrib.auth.views import LoginView
+from textwrap import fill
 import logging
 from django.contrib.auth.models import User
 from .models import Atividade, Arquivo, CustomUsuario
@@ -58,6 +60,8 @@ from datetime import timedelta, datetime
 from django.contrib import messages
 
 # views para registro de usuarios
+
+
 class UsuarioCreate(CreateView):
     template_name = 'core/usuarios/form.html'
     form_class = CustomUsuarioCreateForm
@@ -81,16 +85,21 @@ class UsuarioCreate(CreateView):
         return context
 
 # views para reset senha
+
+
 class MyPasswordReset(PasswordResetView):
     template_name = 'core/usuarios/password_reset_form.html'
     ...
 
+
 class MyPasswordResetDone(PasswordResetDoneView):
-   
+
     template_name = 'core/usuarios/password_reset_done.html'
     ...
+
+
 class MyPasswordResetConfirm(PasswordResetConfirmView):
-    
+
     template_name = 'core/usuarios/password_reset_confirm.html'
 
     def form_valid(self, form):
@@ -99,12 +108,15 @@ class MyPasswordResetConfirm(PasswordResetConfirmView):
         messages.success(self.request, 'Sua senha foi atualizada com sucesso!')
         return super(MyPasswordResetConfirm, self).form_valid(form)
 
+
 class MyPasswordResetComplete(PasswordResetCompleteView):
-   
+
     template_name = 'core/usuarios/password_reset_complete.html'
     ...
 
 # view para alterar senha
+
+
 class ChangePasswordView(LoginRequiredMixin, FormView):
     template_name = 'core/usuarios/change_password.html'
     form_class = PasswordChangeForm
@@ -133,6 +145,7 @@ class ChangePasswordView(LoginRequiredMixin, FormView):
         ]
         return context
 
+
 class Home(TemplateView):
     template_name = 'core/home/home.html'
 
@@ -142,6 +155,7 @@ class Home(TemplateView):
             {'title': 'Inicio', 'url': '/home/'},
         ]
         return context
+
 
 class LocalCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
@@ -156,6 +170,7 @@ class LocalCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
         context['titulo'] = "Cadastro de Local"
         context['botao'] = "Cadastrar"
         return context
+
 
 class LocalUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
@@ -173,6 +188,7 @@ class LocalUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 
         return context
 
+
 class LocalDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     group_required = u"Administrador"
@@ -180,11 +196,13 @@ class LocalDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
     template_name = 'core/registros/form_excluir.html'
     success_url = reverse_lazy('listar-local')
 
+
 class LocalList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     group_required = [u"Administrador", u"Docente"]
     model = Local
     template_name = 'core/listas/Local.html'
+
 
 class AtividadeCreate(LoginRequiredMixin, CreateView):
     login_url = reverse_lazy('login')
@@ -216,17 +234,19 @@ class AtividadeCreate(LoginRequiredMixin, CreateView):
             # Se não, cria um formset vazio
             context['formset'] = ArquivoFormSet()
         return context
-    #validação de formulario
+    # validação de formulario
+
     def form_valid(self, form):
         form.instance.usuario = self.request.user
         url = super().form_valid(form)
         messages.success(self.request, self.success_message)
-        #salva os arquivos associados à atividade
+        # salva os arquivos associados à atividade
         formset = ArquivoFormSet(
             self.request.POST, self.request.FILES, instance=self.object)
         if formset.is_valid():
             formset.save()
         return url
+
 
 class AtividadeUpdate(LoginRequiredMixin, UpdateView):
     login_url = reverse_lazy('login')
@@ -249,6 +269,7 @@ class AtividadeUpdate(LoginRequiredMixin, UpdateView):
         context['url'] = reverse('listar-atividade')
         return context
 
+
 class AtividadeDelete(LoginRequiredMixin, DeleteView):
     login_url = reverse_lazy('login')
     model = Atividade
@@ -261,12 +282,13 @@ class AtividadeDelete(LoginRequiredMixin, DeleteView):
             Atividade, pk=pk, usuario=self.request.user)
         return self.object
 
+
 class AtividadeList(LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     model = Atividade
     template_name = 'core/listas/atividade_list.html'
     paginate_by = 30
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['breadcrumb'] = [
@@ -286,13 +308,14 @@ class AtividadeList(LoginRequiredMixin, ListView):
         queryset = queryset.order_by('-data_registro')
         return queryset
 
+
 class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
     login_url = reverse_lazy('login')
     group_required = [u"Administrador", u"Tecnico"]
     model = Atividade
     template_name = 'core/listas/atividadesGerais.html'
     paginate_by = 5
-    
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         context['url'] = reverse('listar-atividade-geral')
@@ -307,7 +330,7 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
         last_days = self.request.GET.get('last_days')
         local = self.request.GET.get('local')
         search_term = self.request.GET.get('search')
-        
+
         # Começa com todas as atividades
         queryset = Atividade.objects.all()
 
@@ -344,8 +367,9 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
                 # Obter o ano atual
                 current_year = timezone.now().year
                 # Criar uma data com o ano atual e o mês selecionado
-                start_date = timezone.datetime(current_year, selected_month, 1).date()
-                
+                start_date = timezone.datetime(
+                    current_year, selected_month, 1).date()
+
                 # Calcular o primeiro dia do mês seguinte
                 next_month = selected_month % 12 + 1
                 next_year = current_year + selected_month // 12
@@ -371,7 +395,8 @@ class AtividadeGeralList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 
         queryset = queryset.order_by('-data_registro')
         return queryset
-    
+
+
 class CustomLoginRedirectView(View):
     def get(self, request, *args, **kwargs):
         if request.user.groups.filter(name='Tecnico').exists():
@@ -383,9 +408,10 @@ class CustomLoginRedirectView(View):
         else:
             return redirect('home')
 
-from textwrap import fill
 
 logging.basicConfig(level=logging.DEBUG)
+
+
 def export_pdf(request):
     # Obtendo todas as atividades do modelo Atividade
     atividades = Atividade.objects.all()
@@ -399,62 +425,62 @@ def export_pdf(request):
     queryset = Atividade.objects.all()
 
     if start_date and end_date:
-            # Converte em data e adiciona um dia ao fim
-            end_date = parse(end_date) + timedelta(1)
-            # Filtra atividades com base nas datas de início e encerramento
-            queryset = Atividade.objects.filter(
-                data_inicio__gte=start_date, data_encerramento__lte=end_date)
+        # Converte em data e adiciona um dia ao fim
+        end_date = parse(end_date) + timedelta(1)
+        # Filtra atividades com base nas datas de início e encerramento
+        queryset = Atividade.objects.filter(
+            data_inicio__gte=start_date, data_encerramento__lte=end_date)
     elif start_date:
-            # Filtra atividades com base apenas na data de início
-            queryset = Atividade.objects.filter(data_inicio=start_date)
+        # Filtra atividades com base apenas na data de início
+        queryset = Atividade.objects.filter(data_inicio=start_date)
     elif end_date:
-            # Filtra atividades com base apenas na data de encerramento
-            queryset = Atividade.objects.filter(data_encerramento=end_date)
+        # Filtra atividades com base apenas na data de encerramento
+        queryset = Atividade.objects.filter(data_encerramento=end_date)
     elif last_days:
-            try:
-                last_days = int(last_days)
-                # Data atual
-                today = datetime.now().date()
-                # Data de início do período (30, 60 ou 90 dias atrás)
-                start_date = today - timedelta(days=last_days)
-                # Filtra atividades com base na data de início
-                queryset = Atividade.objects.filter(
-                    data_inicio__gte=start_date)
-            except ValueError:
-                # Lida com valor inválido para last_days
-                queryset = Atividade.objects.all()
+        try:
+            last_days = int(last_days)
+            # Data atual
+            today = datetime.now().date()
+            # Data de início do período (30, 60 ou 90 dias atrás)
+            start_date = today - timedelta(days=last_days)
+            # Filtra atividades com base na data de início
+            queryset = Atividade.objects.filter(
+                data_inicio__gte=start_date)
+        except ValueError:
+            # Lida com valor inválido para last_days
+            queryset = Atividade.objects.all()
 
     if 'month' in request.GET:
-            try:
-                # Obter o mês da URL
-                selected_month = int(request.GET.get('month'))
-                # Obter o ano atual
-                current_year = timezone.now().year
-                # Criar uma data com o ano atual e o mês selecionado
-                start_date = timezone.datetime(
-                    current_year, selected_month, 1).date()
-                end_date = start_date + timezone.timedelta(days=32)
-                # Filtrar atividades com base no mês selecionado
-                queryset = queryset.filter(
-                    data_inicio__gte=start_date,
-                    data_inicio__lt=end_date,
-                )
-            except (ValueError, TypeError):
-                pass
+        try:
+            # Obter o mês da URL
+            selected_month = int(request.GET.get('month'))
+            # Obter o ano atual
+            current_year = timezone.now().year
+            # Criar uma data com o ano atual e o mês selecionado
+            start_date = timezone.datetime(
+                current_year, selected_month, 1).date()
+            end_date = start_date + timezone.timedelta(days=32)
+            # Filtrar atividades com base no mês selecionado
+            queryset = queryset.filter(
+                data_inicio__gte=start_date,
+                data_inicio__lt=end_date,
+            )
+        except (ValueError, TypeError):
+            pass
 
     if local:
-            # Filtrar atividades por local, usando o parâmetro 'local' da URL
-            queryset = queryset.filter(local=local)
+        # Filtrar atividades por local, usando o parâmetro 'local' da URL
+        queryset = queryset.filter(local=local)
 
     if search_term:
-            queryset = queryset.filter(Q(tema__icontains=search_term) | Q(
-                usuario__username__icontains=search_term))
+        queryset = queryset.filter(Q(tema__icontains=search_term) | Q(
+            usuario__username__icontains=search_term))
 
     queryset = queryset.order_by('-data_registro')
-    
+
     # Criando um objeto BytesIO para armazenar o PDF
     buffer = BytesIO()
-    
+
     doc = SimpleDocTemplate(buffer, pagesize=A4)
 
     # Ajustando as margens do Frame
@@ -521,10 +547,10 @@ def export_pdf(request):
 
     # Preenchendo as listas com os dados das atividades
 
-
     for atividade in queryset:
         nome_completo = f"{atividade.usuario.first_name} {atividade.usuario.last_name}"
-        tema = fill(atividade.tema, width=28)  # Ajuste o valor de 'width' conforme necessário
+        # Ajuste o valor de 'width' conforme necessário
+        tema = fill(atividade.tema, width=28)
         data.append([
             tema,
             nome_completo,
@@ -532,13 +558,13 @@ def export_pdf(request):
             atividade.data_inicio.strftime('%d/%m/%Y'),
             atividade.data_encerramento.strftime('%d/%m/%Y')
         ])
-        
+
     table = Table(data)
     table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Cor de fundo do cabeçalho
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),  # Cor do texto do cabeçalho
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        
+
     ]))
 
     elements.append(table)
@@ -570,9 +596,10 @@ def export_pdf(request):
 
     return response
 
+
 def exibir_relatorio(request, pk):
     relatorio = get_object_or_404(Atividade, id=pk)
-    
+
     arquivos = relatorio.arquivo.all()  # Use o nome correto do relacionamento
     context = {
         'relatorio': relatorio,
@@ -592,11 +619,11 @@ def gerar_pdf_relatorio(request, pk):
     nome_usuario = request.user.get_full_name()
     # Cria um objeto BytesIO para armazenar o PDF
     buffer = BytesIO()
-    
-    # Cria o documento PDF usando o ReportLab
-    doc = SimpleDocTemplate(buffer, pagesize=A4, title="Registro de atividades - LIFE",  topMargin=20, leftMargin=40, rightMargin=40)
 
-    
+    # Cria o documento PDF usando o ReportLab
+    doc = SimpleDocTemplate(buffer, pagesize=A4, title="Registro de atividades - LIFE",
+                            topMargin=20, leftMargin=40, rightMargin=40)
+
     # Cria uma lista para adicionar elementos ao PDF
     elements = []
     styles = getSampleStyleSheet()
@@ -604,7 +631,7 @@ def gerar_pdf_relatorio(request, pk):
         name='TitleStyle',
         parent=styles['Title'],
         fontSize=12,
-        leading = 15 #espaçamento entre linhas
+        leading=15  # espaçamento entre linhas
     )
     style_paragraph = ParagraphStyle(
         name='CenteredParagraph', alignment=1,
@@ -625,7 +652,7 @@ def gerar_pdf_relatorio(request, pk):
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        
+
     ]))
 
     # Adiciona a tabela de cabeçalho à lista de elementos
@@ -647,7 +674,8 @@ def gerar_pdf_relatorio(request, pk):
             str(data_inicio_formatada), getSampleStyleSheet()['Normal'])],
         ['Data de Encerramento:', Paragraph(
             str(data_encerramento_formatada), getSampleStyleSheet()['Normal'])],
-        ['Duração:', Paragraph(str(relatorio.duracao+' horas'), getSampleStyleSheet()['Normal'])],
+        ['Duração:', Paragraph(
+            str(relatorio.duracao+' horas'), getSampleStyleSheet()['Normal'])],
     ]
 
     table = Table(data, colWidths=[145, 395])
@@ -703,7 +731,6 @@ def gerar_pdf_relatorio(request, pk):
 
     return response
 
-from django.contrib.auth.views import LoginView
 class CustomLoginView(LoginView):
     template_name = 'login.html'
 
