@@ -1,11 +1,4 @@
 # Sistema de Registro de Atividade 
-
-## Visão geral
-
-Este repositório foi criado para o desenvolvimento do Sistema de Registro de Atividade, que representa o nosso projeto na disciplina de estágio supervisionado. 
-
-
-
 Bem-vindo ao repositório do Sistema de Registro de Atividade! Este é um projeto  para o desenvolvimento de um Sistema de Registro de Atividade, referente a disciplina de estágio supervisionado. 
 
 
