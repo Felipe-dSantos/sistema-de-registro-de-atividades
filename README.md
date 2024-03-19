@@ -4,7 +4,7 @@ Bem-vindo ao repositório do Sistema de Registro de Atividade! Este é um projet
 
 ## Documentação
 
-Esta documentação contém informações v  sobre como configurar, executar o MkDocs. Utilizamos o MkDocs para gerar a documentação, que é uma ferramenta popular para criar documentação amigável e fácil de navegar.
+Esta documentação contém informações sobre como configurar, executar o MkDocs. Utilizamos o MkDocs para gerar a documentação, que é uma ferramenta popular para criar documentação amigável e fácil de navegar.
 
 ## Pré-requisitos
 
